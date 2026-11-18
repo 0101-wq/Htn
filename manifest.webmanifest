@@ -1,0 +1,43 @@
+{
+  "id": "htn-navigator",
+  "name": "מנווט יתר לחץ דם",
+  "short_name": "מנווט יל״ד",
+  "description": "כלי עזר להחלטה ביתר לחץ דם במבוגרים, לפי הנחיות יל״ד בישראל. עובד גם בלי אינטרנט.",
+  "lang": "he",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F4F6F4",
+  "theme_color": "#F4F6F4",
+  "categories": [
+    "medical",
+    "health"
+  ],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
