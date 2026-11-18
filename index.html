@@ -1,0 +1,1991 @@
+<!doctype html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>מנווט יתר לחץ דם</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#F4F6F4; --surface:#FFFFFF; --sunk:#EBEFEC; --fg:#18211E; --muted:#56635D; --line:#D5DDD8;
+  --accent:#0B6655; --accent-soft:#DDEFE8; --on-accent:#FFFFFF;
+  --crit:#B3261E; --crit-soft:#FBE9E7; --warn:#8A5A00; --warn-soft:#FFF2D6; --ok:#1E6E3A; --ok-soft:#E3F2E7; --info:#3F4E8C; --info-soft:#E8EBF7;
+  --f-display:"IBM Plex Sans Hebrew","Arial Hebrew","Segoe UI",Arial,sans-serif;
+  --f-body:"IBM Plex Sans Hebrew","Arial Hebrew","Segoe UI",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1412; --surface:#161D1A; --sunk:#1D2622; --fg:#E4EBE7; --muted:#9AA9A2; --line:#2B3632;
+  --accent:#4CC2A4; --accent-soft:#16332B; --on-accent:#08241D;
+  --crit:#FF8A80; --crit-soft:#3A1614; --warn:#F2B84B; --warn-soft:#33270E; --ok:#7BD495; --ok-soft:#142E1C; --info:#A9B5F2; --info-soft:#1E2340;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1412; --surface:#161D1A; --sunk:#1D2622; --fg:#E4EBE7; --muted:#9AA9A2; --line:#2B3632;
+  --accent:#4CC2A4; --accent-soft:#16332B; --on-accent:#08241D;
+  --crit:#FF8A80; --crit-soft:#3A1614; --warn:#F2B84B; --warn-soft:#33270E; --ok:#7BD495; --ok-soft:#142E1C; --info:#A9B5F2; --info-soft:#1E2340;
+  color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+[hidden]:not([hidden=until-found i]){display:none!important}
+img{max-width:100%}
+body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.55}
+.app{max-width:1280px;margin:0 auto;padding-block:20px 96px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:20px}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(26px,4vw,34px);line-height:1.15;margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:4px 0 0;font-size:14px}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tools label{font-size:13px;color:var(--muted)}
+select,input[type=number]{font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:7px 9px;min-width:0}
+input[type=number]{width:100%;font-family:var(--f-mono);font-variant-numeric:tabular-nums;direction:ltr;text-align:right}
+select:focus-visible,input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:7px 12px}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:980px){.layout{grid-template-columns:minmax(0,1fr)}}
+form{display:flex;flex-direction:column;gap:14px;min-width:0}
+fieldset{border:1px solid var(--line);background:var(--surface);border-radius:var(--r);padding:14px 16px 16px;margin:0;min-width:0}
+legend{font-family:var(--f-display);font-weight:700;font-size:18px;padding:0 6px}
+.hint{color:var(--muted);font-size:13px;margin:2px 0 10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px 14px}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field>span{font-size:13px;color:var(--muted)}
+.pair{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;direction:ltr}
+.pair i{font-style:normal;color:var(--muted);font-family:var(--f-mono)}
+.unit{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:6px 14px}
+.checks label,.radio label{display:flex;gap:8px;align-items:flex-start;font-size:14px;cursor:pointer}
+.checks input,.radio input{margin-top:4px;accent-color:var(--accent)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;flex-wrap:wrap}
+.seg label{display:flex;align-items:center;gap:6px;padding:7px 12px;cursor:pointer;font-size:14px;border-inline-start:1px solid var(--line)}
+.seg label:first-child{border-inline-start:0}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label:has(input:checked){background:var(--accent);color:var(--on-accent)}
+.seg label:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:-2px}
+.sublabel{font-size:13px;color:var(--muted);margin:12px 0 6px;font-weight:600}
+.oob{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px 14px}
+
+aside#results{position:sticky;top:max(12px,env(safe-area-inset-top,0px));display:flex;flex-direction:column;gap:12px;min-width:0;max-height:calc(100vh - 24px);overflow-y:auto;overscroll-behavior:contain;padding-inline-end:2px}
+@media (max-width:980px){aside#results{position:static;max-height:none;overflow:visible}}
+.verdict{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.reading{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px}
+.bp{font-family:var(--f-mono);font-size:34px;font-variant-numeric:tabular-nums;direction:ltr;line-height:1}
+.bp small{font-size:13px;color:var(--muted);margin-inline-start:4px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{font-size:12.5px;padding:3px 9px;border-radius:999px;background:var(--sunk);color:var(--fg);border:1px solid var(--line);white-space:nowrap}
+.chip.c-crit{background:var(--crit-soft);color:var(--crit);border-color:transparent}
+.chip.c-warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.chip.c-ok{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.chip.c-acc{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.card h2{font-family:var(--f-display);font-size:17px;margin:0 0 8px;display:flex;align-items:center;gap:8px}
+.card h2 .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:none}
+.card.stop{border:2px solid var(--crit);background:var(--crit-soft)}
+.card.stop h2{color:var(--crit)}
+.card.stop h2 .dot{background:var(--crit)}
+ul.items{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+ul.items li{display:flex;gap:8px;align-items:flex-start;min-width:0}
+ul.items li .mk{flex:none;width:6px;height:6px;border-radius:50%;background:var(--muted);margin-top:9px}
+ul.items li.l-crit .mk{background:var(--crit)} ul.items li.l-warn .mk{background:var(--warn)} ul.items li.l-ok .mk{background:var(--ok)} ul.items li.l-key .mk{background:var(--accent)}
+ul.items li.l-key .tx{font-weight:600}
+ul.items li.l-crit .tx{color:var(--crit);font-weight:600}
+ul.items li.l-alert{background:var(--warn-soft);border-radius:6px;padding:6px 8px}
+ul.items li.l-alert .mk{background:var(--warn)}
+ul.items li.l-alert .tx{color:var(--warn);font-weight:600}
+.tx{min-width:0;flex:1}
+.ref{font-size:11.5px;color:var(--muted);background:var(--sunk);border-radius:6px;padding:1px 6px;margin-inline-start:6px;white-space:nowrap;display:inline-block}
+.ref.ext{color:var(--info);background:var(--info-soft)}
+.drugs{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+details.dg{border:1px solid var(--line);border-radius:8px;background:var(--sunk)}
+details.dg summary{cursor:pointer;padding:8px 10px;font-weight:600;font-size:14px}
+.dnote{font-size:12.5px;color:var(--muted);padding:0 10px 10px}
+.lowend{color:var(--warn);font-weight:600}
+.empty{color:var(--muted)}
+.bp2{font-family:var(--f-mono);font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.card.inval{border:2px solid var(--warn);background:var(--warn-soft)}
+.card.inval h2{color:var(--warn)}
+.card.inval h2 .dot{background:var(--warn)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+select:disabled{opacity:.6;cursor:not-allowed}
+section.rules{margin-top:28px}
+section.rules h2{font-family:var(--f-display);font-size:22px;margin:0 0 4px}
+.rulegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;margin-top:12px}
+.rule{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;min-width:0}
+.rule b{display:block;font-size:14px;margin-bottom:4px}
+.rule p{margin:0;font-size:13.5px;color:var(--fg)}
+.rule .src{font-size:12px;color:var(--muted);margin-top:6px}
+footer.disc{margin-top:24px;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.mbar{display:none}
+@media (prefers-reduced-motion:no-preference){.card,.verdict{transition:border-color .2s}}
+
+/* --- interface v2: short form, bottom line first, folded detail --- */
+input[type=text].bpin{font:inherit;font-family:var(--f-mono);font-variant-numeric:tabular-nums;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:7px 9px;width:100%;min-width:0;direction:ltr;text-align:right}
+input.bpin.bad{border-color:var(--crit);background:var(--crit-soft)}
+.tabs{display:flex;gap:6px;margin:-6px 0 16px;flex-wrap:wrap}
+.tabs button{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:7px 14px;font-size:14px}
+.tabs button[aria-selected=true]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.tabs .t-result,.tabs .m{display:none}
+.pane-rules{display:none}
+.app[data-view=rules] .layout{display:none}
+.app[data-view=rules] .pane-rules{display:block;margin-top:0}
+@media (min-width:981px){.app[data-view=result] .tabs .t-form{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}}
+@media (max-width:980px){
+  .tabs{position:sticky;top:0;z-index:15;background:var(--bg);padding:8px 0;margin:-8px 0 12px}
+  .tabs .t-result{display:inline-flex}.tabs .m{display:inline}.tabs .d{display:none}
+  .app[data-view=form] #results{display:none}
+  .app[data-view=result] #f{display:none}
+  .app[data-view=result] ~ .mbar,.app[data-view=rules] ~ .mbar{display:none}
+}
+.pills{display:flex;flex-wrap:wrap;gap:7px}
+.pills label{position:relative;display:inline-flex;align-items:center;min-height:36px;padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:14px;cursor:pointer;user-select:none;transition:background .15s,border-color .15s,color .15s;gap:5px}
+.pills input{position:absolute;opacity:0;pointer-events:none}
+.pills label:has(input:checked){background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.pills label:has(input:checked)::before{content:"✓";font-weight:700;font-size:12.5px;line-height:1}
+.pills label:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+details.more{margin-top:12px;border-top:1px dashed var(--line);padding-top:8px}
+details.more.flat{margin-top:0;border-top:0;padding-top:0}
+details.more>summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--accent);padding:4px 0}
+details.more[open]>summary{margin-bottom:8px}
+details.more .cnt{font-weight:500;font-size:12.5px;color:var(--muted);margin-inline-start:6px}
+fieldset.slim{padding:10px 16px}
+.vtop{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.reftog{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.reftog input{accent-color:var(--accent)}
+#results.norefs .ref{display:none}
+.card.bl{border:2px solid var(--accent)}
+.card.bl dl{margin:0;display:flex;flex-direction:column;gap:8px}
+.card.bl dl>div{display:grid;grid-template-columns:76px minmax(0,1fr);gap:10px;align-items:baseline}
+.card.bl dt{font-size:12.5px;color:var(--muted);font-weight:600}
+.card.bl dd{margin:0;min-width:0}
+.card.bl dd p{margin:0 0 4px;font-weight:600}
+.card.bl dd p:last-child{margin-bottom:0}
+.card.bl .warns{margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.foldhint{margin:4px 2px -4px;font-size:12.5px;color:var(--muted)}
+details.fold{padding:0}
+details.fold>summary{list-style:none;cursor:pointer;padding:11px 16px;display:flex;align-items:center}
+details.fold>summary::-webkit-details-marker{display:none}
+details.fold>summary h2{margin:0;flex:1;font-size:16px}
+details.fold>summary::after{content:"";width:8px;height:8px;border-inline-end:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);margin-inline-start:8px;flex:none}
+details.fold[open]>summary::after{transform:rotate(-135deg)}
+details.fold>ul.items,details.fold>.drugs{padding:0 16px 14px;margin-top:0}
+details.fold>.drugs{padding-top:2px}
+.card h2 .n{font-family:var(--f-body);font-size:12px;font-weight:500;color:var(--muted);background:var(--sunk);border-radius:999px;padding:1px 7px}
+.chgdot{width:8px;height:8px;border-radius:50%;background:var(--info);flex:none}
+ul.items li.chg,.card.bl dd p.chg{box-shadow:inset 3px 0 0 var(--info);padding-inline-start:8px}
+[dir=rtl] ul.items li.chg,[dir=rtl] .card.bl dd p.chg{box-shadow:inset -3px 0 0 var(--info)}
+.samples{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+@media (max-width:980px){
+  .mbar{display:flex;position:fixed;inset:auto 0 0 0;z-index:20;background:var(--surface);border-top:1px solid var(--line);padding:0!important}
+  .mbar button{display:flex;align-items:center;gap:8px;width:100%;border:0;border-radius:0;background:transparent;text-align:start;
+    padding-block:12px calc(12px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .mbar .mtxt{flex:1;font-size:13.5px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mbar .go{color:var(--accent);font-weight:600;white-space:nowrap;font-size:13.5px}
+}
+
+/* --- v3 UI & Clinical UX Upgrades --- */
+.bg-cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:8px;margin-top:4px}
+.cat-btn{display:flex;align-items:center;justify-content:space-between;gap:6px;width:100%;min-height:40px;padding:7px 12px;border:1px solid var(--line);border-radius:10px;background:var(--sunk);color:var(--fg);font:inherit;font-size:14px;font-weight:500;cursor:pointer;text-align:right;transition:background .15s,border-color .15s,color .15s;user-select:none}
+.cat-btn:hover{border-color:var(--accent)}
+.cat-btn[aria-expanded="true"]{background:var(--surface);border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.cat-btn.has-active{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:600}
+.cat-btn.cat-direct{position:relative;justify-content:flex-start}
+.cat-btn.cat-direct input{position:absolute;opacity:0;pointer-events:none}
+.cat-btn.cat-direct:has(input:checked){background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
+.cat-btn.cat-direct:has(input:checked)::before{content:"✓";font-weight:700;font-size:13px}
+.cat-btn.cat-direct:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+.cat-meta{display:inline-flex;align-items:center;gap:6px;margin-inline-start:auto}
+.cat-cnt{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--accent);color:var(--on-accent);font-size:12px;font-weight:600;font-family:var(--f-mono)}
+.cat-arr{font-size:12px;color:var(--muted);transition:transform .15s}
+.cat-btn[aria-expanded="true"] .cat-arr{transform:rotate(180deg);color:var(--accent)}
+.cat-panels{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.cat-panel{background:var(--sunk);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.cat-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;font-size:12.5px;font-weight:600;color:var(--muted)}
+.cat-close{border:0;background:transparent;color:var(--muted);font-size:12px;padding:2px 6px;cursor:pointer}
+.cat-close:hover{color:var(--fg)}
+
+/* Enhanced Gauge */
+.gauge{margin-top:16px;direction:ltr}
+.gtrack{position:relative;height:14px;border-radius:999px;background:linear-gradient(90deg,var(--crit-soft) 0%,var(--crit-soft) 20%,var(--sunk) 20%,var(--sunk) 60%,var(--warn-soft) 60%,var(--crit-soft) 100%);border:1px solid var(--line);margin-top:28px;overflow:visible}
+.gband{position:absolute;top:0;bottom:0;background:var(--accent);opacity:.42;border-radius:999px}
+.gfloor{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--crit);z-index:2}
+.gm{position:absolute;top:-5px;width:4px;height:22px;background:var(--fg);transform:translateX(-50%);border-radius:3px;z-index:3}
+.gm.home{background:var(--muted)}
+.gm b{position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);font-family:var(--f-mono);font-size:12px;font-weight:600;white-space:nowrap;padding:1px 7px;border-radius:999px;background:var(--fg);color:var(--surface);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.gm.home b{font-family:var(--f-body);background:var(--sunk);color:var(--fg);border:1px solid var(--line);font-weight:500}
+.glab{display:flex;justify-content:space-between;direction:rtl;font-size:12px;color:var(--muted);margin-top:8px}
+
+/* Responsive Drug Cards */
+.dlist{display:flex;flex-direction:column;gap:6px;padding:0 10px 10px}
+.ditem{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 12px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.dmain{min-width:160px;flex:1}
+.dname{font-weight:600;font-size:13.5px;color:var(--fg)}
+.dheb{font-size:12px;color:var(--muted);margin-inline-start:6px}
+.dbrand{font-size:12.5px;color:var(--muted);margin-top:2px}
+.dspecs{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.dtag{font-size:12px;background:var(--sunk);border:1px solid var(--line);border-radius:6px;padding:2px 7px;white-space:nowrap}
+.dtag b{font-family:var(--f-mono);font-weight:600;direction:ltr;display:inline-block}
+.dtag.d-range.lowend{background:var(--warn-soft);border-color:transparent;color:var(--warn)}
+
+/* Rich Empty State */
+.empty-state{text-align:center;padding:20px 12px 10px}
+.empty-ill{width:76px;height:76px;margin:0 auto 10px;color:var(--accent);opacity:.9}
+.empty-title{font-family:var(--f-display);font-weight:700;font-size:17px;margin:0 0 4px;color:var(--fg)}
+.empty-sub{font-size:13.5px;color:var(--muted);margin:0 auto 14px;max-width:360px}
+.empty-samples{border-top:1px dashed var(--line);padding-top:12px;margin-top:8px;text-align:right}
+.empty-samples-lbl{font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:8px}
+.empty-samples .samples{margin-top:0;gap:6px}
+.empty-samples .samples button{font-size:13px;padding:5px 10px;background:var(--sunk)}
+.empty-samples .samples button:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Noscript & Share Menu & Toast */
+.noscript-alert{background:#FBE9E7;color:#B3261E;border:2px solid #B3261E;border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:14.5px;line-height:1.5}
+.noscript-alert b{display:block;font-size:16px;margin-bottom:4px}
+.share-wrap{position:relative;display:inline-block}
+.share-menu{position:absolute;top:calc(100% + 6px);inset-inline-end:0;z-index:50;min-width:260px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.14);padding:6px;display:flex;flex-direction:column;gap:4px}
+.share-item{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;text-align:right;padding:8px 10px;border:0;border-radius:8px;background:transparent;color:var(--fg);cursor:pointer;transition:background .15s}
+.share-item:hover{background:var(--sunk)}
+.share-item b{font-size:13.5px;font-weight:600;color:var(--fg)}
+.share-item small{font-size:12px;color:var(--muted)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:100;background:var(--fg);color:var(--surface);padding:8px 16px;border-radius:999px;font-size:13.5px;font-weight:500;box-shadow:0 4px 12px rgba(0,0,0,.2);transition:opacity .2s}
+</style>
+
+<!-- PWA: added by build_pwa.py -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#F4F6F4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F1412" media="(prefers-color-scheme: dark)">
+<meta name="application-name" content="מנווט יל״ד">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="מנווט יל״ד">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<style id="pwa-style">
+/* PWA layer styles (added by build_pwa.py). Uses the calculator's own color variables, with fallbacks. */
+.pwa-ui[hidden]{display:none!important}
+.pwa-banner{display:flex;align-items:center;gap:10px;margin:0 0 14px;padding:8px 10px;border-radius:10px;background:var(--accent-soft,#DDEFE8);border:1px solid var(--accent,#0B6655);color:var(--fg,#18211E)}
+.pwa-banner-ic{flex:none;display:inline-flex;width:30px;height:30px;border-radius:8px;align-items:center;justify-content:center;background:var(--accent,#0B6655);color:var(--on-accent,#FFFFFF)}
+.pwa-banner-ic svg{width:18px;height:18px}
+.pwa-banner-tx{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}
+.pwa-banner-tx b{font-size:14px}
+.pwa-banner-tx small{font-size:12.5px;color:var(--muted,#56635D)}
+.pwa-banner .pwa-install{flex:none;background:var(--accent,#0B6655);border:1px solid var(--accent,#0B6655);color:var(--on-accent,#FFFFFF);font-weight:600;padding:6px 14px;border-radius:8px}
+.pwa-banner .pwa-x{flex:none;background:transparent;border:0;color:var(--muted,#56635D);padding:4px 6px}
+.pwa-toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(78px + env(safe-area-inset-bottom,0px));z-index:120;display:flex;align-items:center;gap:8px;width:max-content;max-width:calc(100vw - 24px);background:var(--fg,#18211E);color:var(--surface,#FFFFFF);padding-block:7px;padding-inline:14px 6px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.22);font-size:14px;line-height:1.4}
+.pwa-toast span{min-width:0}
+.pwa-toast .pwa-act{background:var(--accent,#0B6655);border:0;color:var(--on-accent,#FFFFFF);border-radius:8px;padding:6px 12px;font-weight:600;white-space:nowrap}
+.pwa-toast .pwa-x{background:transparent;border:0;color:inherit;opacity:.75;padding:4px 8px}
+.pwa-sheet-wrap{position:fixed;inset:0;z-index:130;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;justify-content:center}
+.pwa-sheet{background:var(--surface,#FFFFFF);color:var(--fg,#18211E);width:100%;max-width:520px;border-radius:16px 16px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(0,0,0,.2);text-align:start}
+.pwa-sheet h2{margin:0 0 10px;font-size:18px}
+.pwa-sheet ol{margin:0 0 12px;padding-inline-start:22px;display:flex;flex-direction:column;gap:8px;font-size:15px}
+.pwa-sheet .pwa-note{font-size:13px;color:var(--muted,#56635D);margin:0 0 14px}
+.pwa-sheet .pwa-warn{font-size:14px;font-weight:600;color:var(--warn,#8A5A00);background:var(--warn-soft,#FFF2D6);border-radius:8px;padding:8px 10px;margin:0 0 12px}
+.pwa-sheet .pwa-close{width:100%;padding:10px;background:var(--accent,#0B6655);border:1px solid var(--accent,#0B6655);color:var(--on-accent,#FFFFFF);border-radius:10px;font-weight:600}
+.pwa-ico{display:inline-block;vertical-align:-4px;width:19px;height:19px;color:var(--accent,#0B6655)}
+@media (display-mode: standalone){
+  html{overscroll-behavior-y:contain}
+  *{-webkit-tap-highlight-color:transparent}
+  .tabs{top:env(safe-area-inset-top,0px)}
+}
+</style>
+</head>
+<body>
+<div class="app" dir="rtl" lang="he" data-view="form">
+  <noscript>
+    <div class="noscript-alert">
+      <b>הקובץ נפתח במציג מוגבל (למשל מתוך ווטסאפ) שחוסם את פעולת המחשבון</b>
+      כדי להפעיל את המחשבון: לחצו על תפריט <b>3 הנקודות (⋮)</b> בפינה העליונה (או כפתור השיתוף באייפון) ובחרו <b>"פתח באמצעות Chrome"</b> או <b>"פתח בדפדפן / Safari"</b>.
+    </div>
+  </noscript>
+  <header class="top">
+    <div>
+      <h1>מנווט יתר לחץ דם</h1>
+      <p class="sub">כלי עזר להחלטה למבוגרים, לפי הנחיות יל״ד בישראל, מהדורה שנייה, יוני 2026. בלי פרטים מזהים.</p>
+    </div>
+    <div class="tools">
+      <div class="share-wrap">
+        <button type="button" class="primary" id="share-btn" aria-expanded="false" aria-haspopup="true">שיתוף ▾</button>
+        <div class="share-menu" id="share-menu" hidden>
+          <button type="button" class="share-item" id="sh-case">
+            <b>שיתוף סיכום המקרה (טקסט)</b>
+            <small>העתקה או שליחה בווטסאפ של הנתונים וההמלצה</small>
+          </button>
+          <button type="button" class="share-item" id="sh-file">
+            <b>שליחת קובץ המחשבון (htn-2026.html)</b>
+            <small>שליחת הקובץ לעמיתים (יש לפתוח ב-Chrome/Safari)</small>
+          </button>
+          <button type="button" class="share-item" id="sh-code">
+            <b>העתקת קוד המחשבון (ל-Claude Artifact)</b>
+            <small>העתקת קוד ה-HTML ליצירת קישור אינטרנטי בקלוד</small>
+          </button>
+          <button type="button" class="share-item" id="sh-link" hidden>
+            <b>קישור למקרה הנוכחי</b>
+            <small>קישור עם הנתונים המוזנים (זמין כשמתארח ברשת)</small>
+          </button>
+        </div>
+      </div>
+      <button type="button" id="theme-toggle" aria-label="החלף מצב תצוגה">מצב כהה</button>
+      <button type="button" id="clear">ניקוי טופס</button>
+    </div>
+  </header>
+  <nav class="tabs" role="tablist" aria-label="תצוגה">
+    <button type="button" role="tab" class="t-form" data-view="form"><span class="d">מחשבון</span><span class="m">נתונים</span></button>
+    <button type="button" role="tab" class="t-result" data-view="result">המלצה <span class="chip c-crit" id="twarn" hidden></span></button>
+    <button type="button" role="tab" class="t-rules" data-view="rules">כללים ומקורות</button>
+  </nav>
+
+  <div class="layout">
+    <form id="f" autocomplete="off" novalidate>
+      <fieldset>
+        <legend>מטופל ומדידה</legend>
+        <div class="seg" role="radiogroup" aria-label="מצב המטופל">
+          <label><input type="radio" name="mode" id="mode-new" value="new" checked>אבחנה חדשה / לפני טיפול</label>
+          <label><input type="radio" name="mode" id="mode-tx" value="treated">מקבל טיפול / איזון</label>
+        </div>
+        <div class="grid" style="margin-top:12px">
+          <label class="field"><span>גיל</span><input type="number" id="age" min="18" max="110" inputmode="numeric"></label>
+          <label class="field"><span>מין</span><select id="sex"><option value="m">זכר</option><option value="f">נקבה</option></select></label>
+          <label class="field"><span>ל״ד במרפאה <span class="unit">mmHg</span></span><input type="text" class="bpin" id="bp_office" inputmode="numeric" placeholder="152/94" aria-label="לחץ דם במרפאה, סיסטולי ודיאסטולי"></label>
+          <label class="field" id="w-visits"><span>ביקורים עם ערכים אלה</span>
+            <select id="visits"><option value="1">ביקור אחד</option><option value="2">2 ביקורים נפרדים ומעלה</option></select></label>
+          <label class="field"><span>ל״ד בבית (HBPM) <span class="unit">ממוצע 4-7 ימים</span></span><input type="text" class="bpin" id="bp_home" inputmode="numeric" placeholder="אם יש" aria-label="לחץ דם ביתי, סיסטולי ודיאסטולי"></label>
+          <label class="field"><span>דופק במנוחה</span><input type="number" id="hr" placeholder="bpm" inputmode="numeric"></label>
+          <label class="field" id="w-preg"><span>מצב פוריות</span>
+            <select id="preg">
+              <option value="none">לא רלוונטי</option>
+              <option value="nocontra">גיל פוריות, פעילה מינית, בלי אמצעי מניעה</option>
+              <option value="pregnant">בהריון</option>
+              <option value="postpartum">אחרי לידה (עד 6 שבועות)</option>
+              <option value="breast">מניקה</option>
+            </select></label>
+          <label class="field" id="w-func"><span>תפקוד (גיל 80 ומעלה)</span>
+            <select id="func80">
+              <option value="indep">עצמאי (ADL מעל 5/6, הולך, בלי דמנציה)</option>
+              <option value="partial">אובדן ADL חלקי, נזקק לעזרה יומית</option>
+              <option value="severe">אובדן תפקודי משמעותי והפרעה קוגניטיבית</option>
+            </select></label>
+        </div>
+        <p class="hint" style="margin:8px 0 0">ל״ד מקלידים ברצף, למשל 15294, והקו נוסף לבד. מרפאה: 3 מדידות, ממוצע השנייה והשלישית (עמ׳ 10).</p>
+        <details class="more" data-count="הוזנו" id="d-abpm">
+          <summary>ABPM <span class="cnt"></span></summary>
+          <div class="grid">
+            <label class="field"><span>ממוצע 24 שעות</span><input type="text" class="bpin" id="bp_24" inputmode="numeric" placeholder="128/78" aria-label="ABPM 24 שעות"></label>
+            <label class="field"><span>יום</span><input type="text" class="bpin" id="bp_day" inputmode="numeric" placeholder="132/82" aria-label="ABPM יום"></label>
+            <label class="field"><span>לילה</span><input type="text" class="bpin" id="bp_night" inputmode="numeric" placeholder="116/68" aria-label="ABPM לילה"></label>
+          </div>
+        </details>
+      </fieldset>
+
+      <fieldset id="fs-acute">
+        <legend>תסמינים חריפים</legend>
+        <p class="hint">ל״ד 180/110 ומעלה: יש אחד מאלה? (עמ׳ 183-184)</p>
+        <div class="pills">
+          <label><input type="checkbox" id="s_chest">כאב בחזה</label>
+          <label><input type="checkbox" id="s_dysp">קוצר נשימה</label>
+          <label><input type="checkbox" id="s_head">כאב ראש פתאומי וחמור</label>
+          <label><input type="checkbox" id="s_neuro">חסר נוירולוגי חדש</label>
+          <label><input type="checkbox" id="s_conf">בלבול</label>
+          <label><input type="checkbox" id="s_vis">הפרעת ראייה</label>
+          <label><input type="checkbox" id="s_renal">רמז לפגיעה כלייתית חריפה</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>רקע וסיכון</legend>
+        <p class="hint">בחר מערכת כדי לסמן אבחנות רלוונטיות (CKD מסומן בלחיצה ישירה):</p>
+        <div class="bg-cats" role="group" aria-label="קבוצות רקע וסיכון">
+          <button type="button" class="cat-btn" data-cat="met" aria-expanded="false">
+            <span>סוכרת ומטבולי</span>
+            <span class="cat-meta"><span class="cat-cnt" hidden>0</span><span class="cat-arr" aria-hidden="true">▾</span></span>
+          </button>
+          <label class="cat-btn cat-direct">
+            <input type="checkbox" id="ckd">
+            <span>מחלת כליות (CKD)</span>
+          </label>
+          <button type="button" class="cat-btn" data-cat="cor" aria-expanded="false">
+            <span>לב כלילי</span>
+            <span class="cat-meta"><span class="cat-cnt" hidden>0</span><span class="cat-arr" aria-hidden="true">▾</span></span>
+          </button>
+          <button type="button" class="cat-btn" data-cat="hf" aria-expanded="false">
+            <span>אי-ספיקת לב</span>
+            <span class="cat-meta"><span class="cat-cnt" hidden>0</span><span class="cat-arr" aria-hidden="true">▾</span></span>
+          </button>
+          <button type="button" class="cat-btn" data-cat="vasc" aria-expanded="false">
+            <span>מוח וכלי דם</span>
+            <span class="cat-meta"><span class="cat-cnt" hidden>0</span><span class="cat-arr" aria-hidden="true">▾</span></span>
+          </button>
+          <button type="button" class="cat-btn" data-cat="ger" aria-expanded="false">
+            <span>גריאטריה ושבריריות</span>
+            <span class="cat-meta"><span class="cat-cnt" hidden>0</span><span class="cat-arr" aria-hidden="true">▾</span></span>
+          </button>
+          <button type="button" class="cat-btn" data-cat="flags" aria-expanded="false">
+            <span>רגישויות ודגלים</span>
+            <span class="cat-meta"><span class="cat-cnt" hidden>0</span><span class="cat-arr" aria-hidden="true">▾</span></span>
+          </button>
+        </div>
+        <div class="cat-panels" id="cat-panels">
+          <div class="cat-panel" data-panel="met" hidden>
+            <div class="cat-head"><span>סוכרת ומטבולי</span><button type="button" class="cat-close" data-close-cat="met">סגור ✕</button></div>
+            <div class="pills">
+              <label><input type="checkbox" id="dm">סוכרת</label>
+              <label><input type="checkbox" id="metsyn">תסמונת מטבולית</label>
+              <label><input type="checkbox" id="fh">היפרכולסטרולמיה משפחתית (FH)</label>
+            </div>
+          </div>
+          <div class="cat-panel" data-panel="cor" hidden>
+            <div class="cat-head"><span>לב כלילי</span><button type="button" class="cat-close" data-close-cat="cor">סגור ✕</button></div>
+            <div class="pills">
+              <label><input type="checkbox" id="cad">מחלה כלילית / תעוקה</label>
+              <label><input type="checkbox" id="mi">אוטם בעבר</label>
+              <label><input type="checkbox" id="lvh">LVH</label>
+            </div>
+          </div>
+          <div class="cat-panel" data-panel="hf" hidden>
+            <div class="cat-head"><span>אי-ספיקת לב</span><button type="button" class="cat-close" data-close-cat="hf">סגור ✕</button></div>
+            <div class="pills">
+              <label><input type="checkbox" id="hfref">HFrEF</label>
+              <label><input type="checkbox" id="hfpef">HFpEF</label>
+            </div>
+          </div>
+          <div class="cat-panel" data-panel="vasc" hidden>
+            <div class="cat-head"><span>מוח וכלי דם</span><button type="button" class="cat-close" data-close-cat="vasc">סגור ✕</button></div>
+            <div class="pills">
+              <label><input type="checkbox" id="stroke">אירוע מוחי / TIA</label>
+              <label><input type="checkbox" id="af">פרפור פרוזדורים</label>
+              <label><input type="checkbox" id="pad">מחלת כלי דם היקפית</label>
+              <label><input type="checkbox" id="aorta">הרחבת אאורטה</label>
+            </div>
+          </div>
+          <div class="cat-panel" data-panel="ger" hidden>
+            <div class="cat-head"><span>גריאטריה ושבריריות</span><button type="button" class="cat-close" data-close-cat="ger">סגור ✕</button></div>
+            <div class="pills">
+              <label><input type="checkbox" id="frail">שבריריות</label>
+              <label><input type="checkbox" id="dementia">דמנציה</label>
+              <label><input type="checkbox" id="oh">תת ל״ד תנוחתי תסמיני</label>
+            </div>
+          </div>
+          <div class="cat-panel" data-panel="flags" hidden>
+            <div class="cat-head"><span>רגישויות, מגבלות ודגלים</span><button type="button" class="cat-close" data-close-cat="flags">סגור ✕</button></div>
+            <div class="pills">
+              <label><input type="checkbox" id="asthma">אסתמה</label>
+              <label><input type="checkbox" id="gout">שגדון פעיל בלי טיפול</label>
+              <label><input type="checkbox" id="angio">אנגיואדמה בעבר מ-ACEi</label>
+              <label><input type="checkbox" id="ras">היצרות דו״צ של עורקי הכליה</label>
+              <label><input type="checkbox" id="retino">רטינופתיה היפרטנסיבית</label>
+              <label><input type="checkbox" id="sudden">הופעה פתאומית או החמרה של יל״ד מאוזן</label>
+            </div>
+          </div>
+        </div>
+        <div class="grid" style="margin-top:12px">
+          <label class="field" id="w-risk"><span>סיכון CV (שיקול קליני)</span>
+            <select id="risk"><option value="low">נמוך</option><option value="moderate">בינוני</option><option value="high">גבוה</option></select></label>
+        </div>
+        <p class="hint" id="risk-auto" style="margin-top:8px" hidden></p>
+        <details class="more" data-count="הוזנו" id="d-lab">
+          <summary>מעבדה ו-SCORE2 <span class="cnt"></span></summary>
+          <div class="grid">
+            <label class="field"><span>eGFR <span class="unit">mL/min/1.73m²</span></span><input type="number" id="egfr" inputmode="numeric"></label>
+            <label class="field"><span>ACR <span class="unit">mg/g</span></span><input type="number" id="acr" inputmode="decimal"></label>
+            <label class="field"><span>K <span class="unit">mEq/L</span></span><input type="number" id="k" step="0.1" inputmode="decimal"></label>
+            <label class="field"><span>Na <span class="unit">mEq/L</span></span><input type="number" id="na" inputmode="numeric"></label>
+            <label class="field"><span>SCORE2 / SCORE2-OP <span class="unit">% ל-10 שנים</span></span><input type="number" id="score2" step="0.1" inputmode="decimal"></label>
+          </div>
+          <p class="hint" style="margin-top:8px">SCORE2 לגיל 40-69, SCORE2-OP מגיל 70. בחישוב: אזור סיכון נמוך (ישראל). ההנחיה הישראלית לא ממליצה על כלי מסוים (עמ׳ 17). ב-ESC 2024 סיכון של 10% ומעלה נחשב גבוה.</p>
+        </details>
+      </fieldset>
+
+      <fieldset id="fs-tx">
+        <legend>טיפול נוכחי</legend>
+        <div class="pills">
+          <label><input type="checkbox" id="t_acei">ACEi</label>
+          <label><input type="checkbox" id="t_arb">ARB</label>
+          <label><input type="checkbox" id="t_ccb">CCB (DHP)</label>
+          <label><input type="checkbox" id="t_thz">Thiazide / thiazide-like</label>
+          <label><input type="checkbox" id="t_loop">משתן לולאה</label>
+          <label><input type="checkbox" id="t_mra">MRA</label>
+          <label><input type="checkbox" id="t_bb">BB</label>
+          <label><input type="checkbox" id="t_alpha">חוסם אלפא</label>
+          <label><input type="checkbox" id="t_ndhp">NDHP (ורפמיל / דילטיאזם)</label>
+          <label><input type="checkbox" id="t_other">אחר (קלונידין, מרחיב כלי דם)</label>
+        </div>
+        <div class="grid" style="margin-top:12px">
+          <label class="field"><span>מינונים</span><select id="maxdose"><option value="no">לא במינון מרבי נסבל</option><option value="yes">במינון מרבי נסבל</option></select></label>
+          <label class="field"><span>חודשים על המשלב הנוכחי</span><input type="number" id="months" min="0" inputmode="numeric"></label>
+          <label class="field"><span>היענות</span><select id="adh"><option value="unsure">לא נבדקה</option><option value="ok">נבדקה, טובה</option><option value="poor">חלקית / ירודה</option></select></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="slim">
+        <details class="more flat" data-count id="d-raise">
+          <summary>תרופות וחומרים שמעלים ל״ד <span class="cnt"></span></summary>
+          <div class="pills">
+            <label><input type="checkbox" id="r_nsaid">NSAIDs</label>
+            <label><input type="checkbox" id="r_ocp">גלולות עם אסטרוגן</label>
+            <label><input type="checkbox" id="r_ster">סטרואידים</label>
+            <label><input type="checkbox" id="r_decong">נוגדי גודש / סימפתומימטים</label>
+            <label><input type="checkbox" id="r_adhd">תרופות ל-ADHD</label>
+            <label><input type="checkbox" id="r_snri">SNRI (ונלפקסין, דולוקסטין)</label>
+            <label><input type="checkbox" id="r_cni">ציקלוספורין / טקרולימוס</label>
+            <label><input type="checkbox" id="r_vegf">נוגדי VEGF / TKI</label>
+            <label><input type="checkbox" id="r_epo">אריתרופויאטין</label>
+            <label><input type="checkbox" id="r_lic">ליקוריץ׳</label>
+            <label><input type="checkbox" id="r_stim">קוקאין / אמפטמינים</label>
+            <label><input type="checkbox" id="r_alc">אלכוהול מוגבר</label>
+          </div>
+        </details>
+      </fieldset>
+    </form>
+
+    <aside id="results" aria-label="המלצה"></aside>
+    <div id="live" class="sr-only" aria-live="polite"></div>
+  </div>
+
+  <section class="rules pane-rules" aria-labelledby="rules-h">
+    <h2 id="rules-h">הכללים שהכלי מפעיל</h2>
+    <p class="sub">ההחלטות שאושרו בבניית הכלי. כשההנחיה סותרת את עצמה, כתוב מה נבחר ולמה.</p>
+    <div class="rulegrid" id="rulegrid"></div>
+    <h2 style="margin-top:24px">דוגמאות לבדיקה</h2>
+    <p class="sub">טוענות נתוני דוגמה לטופס ומחליפות את מה שהוזן.</p>
+    <div class="samples">
+      <button type="button" data-sample="dm">אבחנה חדשה, סוכרת ואלבומינוריה</button>
+      <button type="button" data-sample="g1low">דרגה 1 קלה, סיכון נמוך</button>
+      <button type="button" data-sample="tri">מטופל על 3 תרופות, לא מאוזן</button>
+      <button type="button" data-sample="old">גיל 84, אובדן ADL חלקי</button>
+      <button type="button" data-sample="g3">ל״ד חמור בביקור ראשון</button>
+      <button type="button" data-sample="preg">הריון</button>
+    </div>
+  </section>
+
+  <footer class="disc">כלי עזר בלבד, לא תחליף לשיקול דעת קליני. מבוסס על ״יתר לחץ דם בישראל - אבחנה, טיפול ואיזון״, מהדורה שנייה (2026), ההסתדרות הרפואית בישראל. מספרי העמודים מפנים לספר ההנחיות. סימון כחול = מקור שאינו ההנחיה הישראלית. הכלי לא שומר נתונים.</footer>
+</div>
+<div class="mbar"><button type="button" id="mgo"><span class="mtxt" id="mtxt"></span><span class="chip c-crit" id="mwarn" hidden></span><span class="go">להמלצה ‹</span></button></div>
+<div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const P=n=>'עמ׳ '+n;
+
+/* ---------- drug catalog (טבלה 3, עמ׳ 72-76; הריון עמ׳ 251) ---------- */
+const DRUGS={
+ acei:{label:'ACEi',ref:'72',items:[
+  ['Enalapril','אנלפריל','אנלדקס, אנלפרי','5, 10, 20','5-40','1-2'],
+  ['Ramipril','רמיפריל','טריטייס, רמיטנס, רמיפריל אינובמד, רמיפריל טבע','1.25, 2.5, 5','1.25-10','1'],
+  ['Cilazapril','סילזפריל','סילריל','1, 2.5, 5','1-10','1'],
+  ['Captopril','קפטופריל','אסריל','12.5, 25, 50','25-150','2-3']],
+  note:'אין לשלב עם ARB. אסור בהריון. שיעול 10-15%, אנגיואדמה, היפרקלמיה ב-CKD, AKI בהיצרות דו״צ של עורקי הכליה.'},
+ arb:{label:'ARB',ref:'72',items:[
+  ['Losartan','לוסרטן','אוקסאאר, לוסרטה, לוסרדקס, לוטן','12.5, 25, 50, 100','12.5-100','1-2'],
+  ['Valsartan','ולסרטן','דיובן, וקטור, ואלסרטן דקסל, ואלסרטן מדו','40, 80, 160','80-320','1'],
+  ['Candesartan','קנדסרטן','אטקנד, קנדור','8, 16','8-32','1']],
+  note:'אין לשלב עם ACEi. אסור בהריון. סבילות טובה מ-ACEi: פחות שיעול ואנגיואדמה (עמ׳ 61).'},
+ ccb:{label:'CCB (DHP)',ref:'73',items:[
+  ['Amlodipine','אמלודיפין','נורבסק, אמלו, אמלודי, אמלודיפין טבע','5, 10','2.5-10','1'],
+  ['Lercanidipine','לרקנידיפין','וזודיפ, לרקפרס','10, 20','10-20','1'],
+  ['Levamlodipine','לבאמלודיפין','קונג׳ופרי','2.5, 5','1.25-5','1'],
+  ['Nifedipine ER','ניפדיפין','ניפדילונג (שחרור ממושך)','30, 60','30-90','1'],
+  ['Nifedipine MR','ניפדיפין','טנסיפין MR †','10, 20','20-80','2']],
+  note:'בצקות ברגליים תלויות מינון, שכיחות יותר בנשים. לבאמלודיפין ולרקנידיפין: פחות בצקת (עמ׳ 61, 71).'},
+ thz:{label:'Thiazide / thiazide-like',ref:'73, 84',items:[
+  ['Indapamide','אינדפמיד','פמיד','2.5','1.25-2.5','1'],
+  ['Hydrochlorothiazide','הידרוכלורותיאזיד','דיזותיאזיד','25','12.5-50','1']],
+  note:'עדיפות לאינדפמיד (עמ׳ 84). מעקב Na, K, Ca, חומצה אורית, קריאטינין. להימנע בשגדון בלי אלופורינול או פבוקסוסטט.'},
+ loop:{label:'משתן לולאה',ref:'73',items:[['Furosemide','פורוסמיד','פוזיד, פורוסמיד אינובמד','40','20-80','2']],
+  note:'מועדף ב-GFR מתחת ל-30 ובאי-ספיקת לב.'},
+ mra:{label:'MRA',ref:'63, 73, 83',items:[
+  ['Spironolactone','ספירונולקטון','ספירונולקטון, אלדקטון','25, 100','12.5-25 (ב-resistant עד 50)','1'],
+  ['Eplerenone','אפלרנון','אינספרה','25, 50','25-50','1-2']],
+  note:'מעקב K וקריאטינין. זהירות כש-K מעל 4.5, להימנע כשמעל 5 (עמ׳ 63). ספירונולקטון: גינקומסטיה. אסור בהריון.'},
+ bb:{label:'BB',ref:'74',items:[
+  ['Bisoprolol','ביסופרולול','קונקור, קרדילוק, ביסופרולול פומראט אינובמד','1.25, 2.5, 5, 10','1.25-10','1'],
+  ['Metoprolol','מטופרולול','ניאובלוק 100; לופרסור דיויטבס 200 (שחרור איטי)','100; 200','100-200','1-2'],
+  ['Carvedilol','קרבדילול','קרבדקסון, קרוודילול טבע','6.25, 12.5','6.25-50','2'],
+  ['Atenolol','אטנולול','נורמלול, נורמיטן','25, 50, 100','25-100','1'],
+  ['Propranolol','פרופרנולול','פרולול (שחרור מידי)','10, 40','80-160','2'],
+  ['Propranolol ER','פרופרנולול','חצי בטא-פרוגרן †, בטא-פרוגרן † (שחרור ממושך)','80, 160','80-160','1'],
+  ['Labetalol','לבטלול','טרנדייט','100, 200','200-1,200','2-4']],
+  note:'לא קו ראשון בלי התוויה. לא להפסיק בפתאומיות. באסתמה להימנע, ואם חובה: סלקטיבי ללב. קרבדילול מועדף ב-HFrEF, לבטלול בהריון.'},
+ ndhp:{label:'NDHP',ref:'62, 75',items:[
+  ['Verapamil SR','ורפמיל','ורפרס (שחרור ממושך)','240','120-360','1-2'],
+  ['Verapamil','ורפמיל','קורדמיל','40, 80','40-360','1-4'],
+  ['Diltiazem SR','דילטיאזם','דילטאם (שחרור ממושך)','120','120-360','1-2'],
+  ['Diltiazem SR','דילטיאזם','אדיזם (שחרור ממושך)','120, 180, 240','120-240','1']],
+  note:'לא קו ראשון. לא לשלב עם BB. מעכבי CYP3A4 ו-P-gp.'},
+ alpha:{label:'חוסם אלפא',ref:'63, 75',items:[['Doxazosin','דוקסזוסין','קדקס','1, 2, 4','1-16','1']],
+  note:'לא כמונותרפיה. אורתוסטטיזם, בעיקר במבוגרים ובשבריריים.'},
+ central:{label:'פעולה מרכזית',ref:'75',items:[
+  ['Clonidine','קלונידין','נורמופרסאן','0.15','0.15-0.9','2-3'],
+  ['Methyldopa','מתילדופה','אלדומין †, מתיל-דופה †','250','250-1,000','2-3']],
+  note:'קלונידין: הפסקה פתאומית מסוכנת. מתילדופה: מועדפת בהריון, הפרעה בתפקודי כבד.'},
+ vaso:{label:'מרחיבי כלי דם',ref:'75',items:[
+  ['Minoxidil','מינוקסידיל','מינוקסידיל †','5','5-40','1-2'],
+  ['Hydralazine','הידרלזין','הידרלזין †, אלפאפרס †, אפרסולין †','10, 50','30-150','2-3']],
+  note:'רק ביל״ד עמיד לא מאוזן. מינוקסידיל: לשלב עם BB ופורוסמיד.'},
+ preg:{label:'תרופות בהריון ובגיל פוריות בלי מניעה',ref:'203, 251',items:[
+  ['Labetalol','לבטלול','טרנדייט','100, 200','100-2,400','2-3'],
+  ['Nifedipine ER','ניפדיפין','שחרור מושהה','30, 60','30-120','1'],
+  ['Methyldopa','מתילדופה','אלדומין †','250','500-3,000','2-3']],
+  note:'ניפדיפין: אין לתת תת-לשוני. לבטלול: זהירות במחלת לב פעילה, בדופק איטי ובאסתמה. מתילדופה פחות יעילה ביל״ד משמעותי.'}
+};
+const SPC=[
+ ['ACEi + thiazide','Ramipril/HCTZ','רמיפריל פלוס, טריטייס קומפ','2.5/12.5, 5/25'],
+ ['ACEi + thiazide','Cilazapril/HCTZ','סילריל פלוס','5/12.5'],
+ ['ARB + thiazide','Losartan/HCTZ','אוקסאאר פלוס, לוטן פלוס, לוסרטה פלוס, לוסרדקס פלוס','50/12.5'],
+ ['ARB + thiazide','Candesartan/HCTZ','אטקנד פלוס, קנדור פלוס','16/12.5'],
+ ['ARB + thiazide','Valsartan/HCTZ','קו-דיובאן, וקטור פלוס','80/12.5, 160/12.5, 160/25'],
+ ['ACEi + CCB','Enalapril/Lercanidipine','וזודיפ קומבו, לרקאנפריל טבע','10/10, 10/20'],
+ ['ARB + CCB','Valsartan/Amlodipine','אקספורג׳, דופלקס, אמלוואל','80/5, 160/5, 160/10'],
+ ['thiazide + K-sparing','HCTZ/Amiloride','קלוריל','50/5']];
+
+/* ---------- read form ---------- */
+const NUM=['age','hr','egfr','acr','score2','k','na','months'];
+const PAIRS={bp_office:['sbp','dbp'],bp_home:['hs','hd'],bp_24:['a24s','a24d'],bp_day:['ads','add'],bp_night:['ans','and']};
+const BOOL=['frail','oh','dementia','sudden','s_chest','s_dysp','s_head','s_neuro','s_conf','s_vis','s_renal','dm','ckd','cad','mi','stroke','hfref','hfpef','af','pad','aorta','lvh','retino','fh','asthma','metsyn','gout','ras','angio','t_acei','t_arb','t_ccb','t_thz','t_loop','t_mra','t_bb','t_alpha','t_ndhp','t_other','r_nsaid','r_ocp','r_ster','r_decong','r_adhd','r_snri','r_cni','r_vegf','r_epo','r_lic','r_stim','r_alc'];
+const SEL=['sex','preg','func80','visits','risk','maxdose','adh'];
+function parseBP(v){
+  v=String(v||'').trim(); if(!v) return [null,null];
+  const m=v.match(/^(\d{2,3})\D+(\d{2,3})$/); if(m) return [+m[1],+m[2]];
+  if(/^\d+$/.test(v)){
+    if(v.length===4) return [+v.slice(0,2),+v.slice(2)];
+    if(v.length===5||v.length===6) return [+v.slice(0,3),+v.slice(3)];
+  }
+  return [null,null];
+}
+function readForm(){
+  const S={mode:document.querySelector('input[name=mode]:checked').value};
+  NUM.forEach(k=>{const v=parseFloat($(k).value);S[k]=isFinite(v)?v:null});
+  Object.keys(PAIRS).forEach(id=>{const p=parseBP($(id).value);S[PAIRS[id][0]]=p[0];S[PAIRS[id][1]]=p[1];});
+  BOOL.forEach(k=>S[k]=$(k).checked);
+  SEL.forEach(k=>S[k]=$(k).value);
+  return S;
+}
+function writeForm(S){
+  document.querySelectorAll('input[name=mode]').forEach(r=>r.checked=(r.value===(S.mode||'new')));
+  NUM.forEach(k=>$(k).value=(S[k]!=null?S[k]:''));
+  Object.keys(PAIRS).forEach(id=>{const a=S[PAIRS[id][0]],b=S[PAIRS[id][1]];$(id).value=(a!=null&&b!=null)?a+'/'+b:'';});
+  BOOL.forEach(k=>$(k).checked=!!S[k]);
+  const defs={sex:'m',preg:'none',func80:'indep',visits:'1',risk:'low',maxdose:'no',adh:'unsure'};
+  SEL.forEach(k=>$(k).value=S[k]||defs[k]);
+  document.querySelectorAll('details[data-count]').forEach(d=>{d.open=filled(d)>0;});
+  openCats.clear();
+  document.querySelectorAll('.cat-panel[data-panel]').forEach(p=>{
+    if(filled(p)>0) openCats.add(p.dataset.panel);
+  });
+}
+function filled(box){
+  let n=0;
+  box.querySelectorAll('input').forEach(i=>{ if(i.type==='checkbox'?i.checked:String(i.value).trim()!=='') n++; });
+  return n;
+}
+
+/* ---------- engine ---------- */
+const CATS=[{k:'opt',l:'ל״ד מיטבי'},{k:'norm',l:'ל״ד תקין'},{k:'elev',l:'ל״ד מוגבר (Elevated)'},{k:'g1',l:'יל״ד דרגה 1'},{k:'g2',l:'יל״ד דרגה 2'},{k:'g3',l:'יל״ד דרגה 3'}];
+function category(s,d){
+  const rs=s>=180?5:s>=160?4:s>=140?3:s>=130?2:s>=120?1:0;
+  const rd=d>=110?5:d>=100?4:d>=90?3:d>=85?2:d>=80?1:0;
+  return Object.assign({rank:Math.max(rs,rd)},CATS[Math.max(rs,rd)]);
+}
+const has=(a,b)=>a!=null&&b!=null&&a>0&&b>0;
+const TXK=['t_acei','t_arb','t_ccb','t_thz','t_loop','t_mra','t_bb','t_alpha','t_ndhp','t_other'];
+const onRASMRA=S=>[S.t_acei&&'ACEi',S.t_arb&&'ARB',S.t_mra&&'MRA'].filter(Boolean).join(', ');
+
+function validate(S){
+  const bad=[];
+  const pair=(s,d,lab)=>{
+    if(!has(s,d)) return;
+    if(s<60||s>300||d<30||d>200) bad.push(lab+': ערך מחוץ לטווח סביר.');
+    else if(d>=s) bad.push(lab+': הדיאסטולי גבוה מהסיסטולי או שווה לו.');
+  };
+  pair(S.sbp,S.dbp,'ל״ד במרפאה'); pair(S.hs,S.hd,'HBPM'); pair(S.a24s,S.a24d,'ABPM 24 שעות'); pair(S.ads,S.add,'ABPM יום'); pair(S.ans,S.and,'ABPM לילה');
+  if(S.age!=null&&(S.age<0||S.age>120)) bad.push('גיל: ערך לא סביר.');
+  if(S.hr!=null&&(S.hr<25||S.hr>220)) bad.push('דופק: ערך לא סביר.');
+  if(S.k!=null&&(S.k<1.5||S.k>9)) bad.push('K: ערך לא סביר.');
+  if(S.na!=null&&(S.na<100||S.na>180)) bad.push('Na: ערך לא סביר.');
+  if(S.egfr!=null&&(S.egfr<0||S.egfr>200)) bad.push('eGFR: ערך לא סביר.');
+  if(S.acr!=null&&S.acr<0) bad.push('ACR: ערך לא סביר.');
+  if(S.score2!=null&&(S.score2<0||S.score2>100)) bad.push('SCORE2: ערך לא סביר.');
+  return bad;
+}
+
+function evaluate(S0){
+  const S=Object.assign({},S0);
+  if(S.mode!=='treated') TXK.forEach(k=>S[k]=false);
+  const O={chips:[],alerts:[],decision:[],target:[],plan:[],avoid:[],drugs:[],workup:[],follow:[],stop:null,mbar:''};
+  const it=(arr,t,r,l,ext)=>arr.push({t,r,l:l||'',ext:!!ext});
+  if(!has(S.sbp,S.dbp)){O.empty=true;return O;}
+  const sbp=S.sbp,dbp=S.dbp,age=S.age||0,c=category(sbp,dbp);
+  O.cat=c; O.bp=sbp+'/'+dbp;
+  const bad=validate(S);
+  const invalidOut=list=>{
+    O.invalid={h:'ערכים לא סבירים',items:list.map(t=>({t,r:'',l:'warn'})).concat([{t:'לתקן את הקלט. הכלי לא נותן המלצה על ערכים לא סבירים.',r:'',l:''}])};
+    O.mbar='ערך לא סביר: לבדוק את הקלט';
+    return O;
+  };
+  const officeBad=bad.filter(t=>t.indexOf('ל״ד במרפאה')===0);
+  if(officeBad.length) return invalidOut(officeBad);
+  const female=S.sex==='f', preg=female?S.preg:'none';
+  const severe=sbp>=180||dbp>=110;
+  const acute=['s_chest','s_dysp','s_head','s_neuro','s_conf','s_vis','s_renal'].some(k=>S[k]);
+
+  if(severe&&acute){
+    O.stop={h:'חשד ל-hypertensive emergency',items:[
+      {t:'ל״ד 180/110 ומעלה עם תסמינים של נזק חריף לאיבר מטרה: הפניה למיון.',r:P('183-184'),l:'crit'},
+      {t:'הסימפטומים והנזק לאיבר המטרה חשובים יותר מהערך המדויק.',r:P(184)},
+      {t:'אין להוריד ל״ד מהר מדי, למעט דיסקציה של האאורטה.',r:P(188)}]};
+    O.mbar='עצירה: חשד למצב חירום, הפניה למיון';
+    return O;
+  }
+  if(bad.length) return invalidOut(bad);
+  if(S.age!=null&&S.age<18){
+    O.invalid={h:'מחוץ להיקף הכלי',items:[{t:'מתחת לגיל 18: הכלי מיועד למבוגרים. בילדים ובמתבגרים ההגדרות והספים שונים.',r:'פרק 12, '+P(101),l:'key'}]};
+    O.mbar='מחוץ להיקף: מתחת לגיל 18';
+    return O;
+  }
+  if(preg==='pregnant'&&(sbp>=160||dbp>=110)){
+    O.stop={h:'יל״ד חמור בהריון',items:[
+      {t:'160/110 ומעלה בהריון: יל״ד חמור. הפניה דחופה למיילדות.',r:P('245-246'),l:'crit'},
+      {t:'ההגדרה דורשת שתי מדידות בהפרש 4 שעות, אבל מדידה בודדת מעל הסף מטופלת לפי שיקול קליני.',r:P(246)},
+      {t:'אין לתת ניפדיפין תת-לשוני.',r:P(251)}]};
+    O.mbar='עצירה: יל״ד חמור בהריון';
+    return O;
+  }
+
+  const ckd=S.ckd||(S.egfr!=null&&S.egfr<60)||(S.acr!=null&&S.acr>=30);
+  const alb=S.acr!=null&&S.acr>=30;
+  const hf=S.hfref||S.hfpef, cadAny=S.cad||S.mi;
+  const hmod=S.lvh||S.retino||alb;
+  const auto=[];
+  if(S.dm)auto.push('סוכרת'); if(ckd)auto.push('CKD'); if(cadAny)auto.push('מחלה כלילית'); if(S.stroke)auto.push('אירוע מוחי'); if(hf)auto.push('אי-ספיקת לב'); if(S.pad)auto.push('PAD'); if(hmod)auto.push('HMOD'); if(S.fh)auto.push('FH'); if(S.score2!=null&&S.score2>=10)auto.push('SCORE2 ≥10%');
+  const risk=auto.length?'high':S.risk;
+  const old=age>=80, func=old?S.func80:null;
+  const frailish=S.frail||S.dementia||func==='partial'||func==='severe';
+  const demT=!!S.dementia&&!old, relaxed=old||demT;
+  const cvExtra=S.dm||cadAny||S.stroke||hf||S.pad||S.lvh||S.retino||S.fh||(S.score2!=null&&S.score2>=10);
+  const ckdLess=ckd&&!old&&(frailish||S.oh||(S.egfr!=null&&S.egfr<30));
+  const hasHome=has(S.hs,S.hd),has24=has(S.a24s,S.a24d),hasDay=has(S.ads,S.add),hasNight=has(S.ans,S.and);
+  const outAvail=hasHome||has24||hasDay||hasNight;
+  const outHigh=(hasHome&&(S.hs>=135||S.hd>=85))||(has24&&(S.a24s>=130||S.a24d>=80))||(hasDay&&(S.ads>=135||S.add>=85))||(hasNight&&(S.ans>=120||S.and>=70));
+  const outTargetKnown=hasHome||hasDay||hasNight;
+  const outAtTarget=outTargetKnown&&(!hasHome||(S.hs<130&&S.hd<80))&&(!hasDay||(S.ads<130&&S.add<80))&&(!hasNight||(S.ans<120&&S.and<70));
+  const ctx={S,sbp,dbp,age,c,female,preg,severe,ckd,alb,hf,cadAny,hmod,risk,auto,old,func,frailish,demT,relaxed,cvExtra,ckdLess,outAvail,outHigh,outTargetKnown,outAtTarget,hasNight,it,O};
+  O.auto=auto;
+
+  O.chips.push({t:c.l,c:c.rank>=5?'crit':c.rank>=3?'warn':c.rank===2?'acc':'ok'});
+  O.chips.push({t:'סיכון '+({low:'נמוך',moderate:'בינוני',high:'גבוה'}[risk])+(auto.length?' (אוטומטי)':''),c:risk==='high'?'warn':''});
+  if(!S.age) O.chips.push({t:'גיל לא הוזן (מניח מתחת ל-80)',c:'warn'});
+  if(S.na!=null&&S.na<135) O.chips.push({t:'Na '+S.na+': זהירות בתיאזיד',c:'crit'});
+  if(S.k!=null&&S.k<3.5) O.chips.push({t:'K '+S.k+': זהירות במשתנים',c:'crit'});
+  if(S.k!=null&&S.k>5) O.chips.push({t:'K '+S.k+': זהירות ב-ACEi/ARB, לא MRA',c:'crit'});
+
+  if(preg==='pregnant'){pregnancyBranch(ctx);electrolyteAlerts(ctx);bpRaisers(ctx);sanitizeDrugs(ctx);return O;}
+  if(preg==='postpartum'){postpartumBranch(ctx);electrolyteAlerts(ctx);commonAvoid(ctx);bpRaisers(ctx);sanitizeDrugs(ctx);return O;}
+
+  if(severe){
+    it(O.alerts,'ל״ד חמור בלי תסמינים: לא מצב חירום. טיפול אמבולטורי, בלי הפניה למיון.',P(183),'warn');
+    it(O.alerts,'לחפש סיבה הפיכה ולטפל בה: כאב, חרדה, תרופות שהופסקו, NSAIDs או סטרואידים, נוגדי גודש.',P('186-187'));
+    it(O.alerts,'טיפול פומי בלבד. יעד: ירידה הדרגתית של 10-20% ב-24-48 שעות, בלי יעד מספרי.',P(187)+' · נכתב לאשפוז');
+    it(O.alerts,'אין לתת ניפדיפין תת-לשוני. "הורדה מהירה מדי מסוכנת".','פרקטיקה מקובלת; '+P('185, 251'),'',true);
+    it(O.alerts,'ביקור חוזר אצל רופא או אחות תוך שבועיים לכל היותר.',P(64),'key');
+    it(O.alerts,'לשקול לא לטפל: סוף חיים, שברירי מאוד עם OH, דמנציה מתקדמת, עלייה חולפת במתח חריף.',P('187-188'));
+  }
+
+  O.gauge=old?(func==='severe'?null:{lo:(func==='partial'||S.frail||S.dementia)?140:130,hi:150}):demT?{lo:140,hi:150}:ckdLess?{lo:120,hi:139}:{lo:120,hi:130};
+  if(S.mode==='new') newBranch(ctx); else treatedBranch(ctx);
+  electrolyteAlerts(ctx);
+  commonAvoid(ctx);
+  bpRaisers(ctx);
+  sanitizeDrugs(ctx);
+  return O;
+}
+
+function sanitizeDrugs(x){
+  const {S,O,preg}=x; const F=regimenFlags(x);
+  let d=O.drugs||[];
+  if(F.noACE) d=d.filter(k=>k!=='acei');
+  if(F.noRAS) d=d.filter(k=>k!=='acei'&&k!=='arb');
+  if(preg==='pregnant'||preg==='nocontra'||(S.k!=null&&S.k>5)) d=d.filter(k=>k!=='mra');
+  O.drugs=[...new Set(d)];
+}
+
+function kFix(x){
+  const F=regimenFlags(x), p=x.preg;
+  const noRasMra=p==='nocontra'||p==='pregnant';
+  return [!F.noRAS&&!noRasMra&&(F.noACE?'ARB':'ACEi/ARB'), !noRasMra&&'ספירונולקטון','אמילוריד'].filter(Boolean).join(', ');
+}
+
+function electrolyteAlerts(x){
+  const {S,O}=x; const d=O.drugs||[];
+  const thzPlan=d.includes('thz'), diuPlan=thzPlan||d.includes('loop'), rasPlan=d.includes('acei')||d.includes('arb');
+  const top=[], av=[];
+  if(S.na!=null&&S.na<135&&!S.t_thz)
+    (thzPlan?top:av).push({t:'Na '+S.na+' (מתחת ל-135): זהירות בתיאזיד. אם יינתן: Na אחרי 7-14 ימים, ובהיפונתרמיה להפסיק ולבחור חלופה.',r:P('71, 86'),l:'alert',ext:false});
+  if(S.k!=null&&S.k<3.5&&!S.t_thz&&!S.t_loop)
+    (diuPlan?top:av).push({t:'K '+S.k+' (מתחת ל-3.5): זהירות במשתנים. אם יינתן תיאזיד: תזונה עשירה באשלגן, ולשלב '+kFix(x)+'. בהיפוקלמיה חמורה להשהות את המשתן.',r:P(71),l:'alert',ext:false});
+  if(S.k!=null&&S.k>5&&!S.t_acei&&!S.t_arb&&rasPlan)
+    top.push({t:'K '+S.k+' (מעל 5): זהירות בהתחלת ACEi/ARB, בעיקר ב-CKD. משתן בשילוב מאזן נטייה להיפרקלמיה. K וקריאטינין אחרי 2-3 שבועות.',r:'החלטה; '+P('61, 65-66, 71'),l:'alert',ext:false});
+  if(top.length){ let i=0; while(i<O.plan.length&&O.plan[i].l==='crit') i++; O.plan.splice(i,0,...top); }
+  if(av.length) O.avoid.unshift(...av);
+}
+
+function comboAlerts(x){
+  const {S,O,it,preg}=x;
+  const stopAll=preg==='pregnant'||preg==='nocontra';
+  const on=onRASMRA(S);
+  if(preg==='nocontra'&&on) it(O.plan,'גיל פוריות בלי אמצעי מניעה ומקבלת '+on+': להפסיק ולהחליף ללבטלול, מתילדופה או ניפדיפין ארוך טווח.',P(203),'crit');
+  if(S.t_acei&&S.t_arb&&!stopAll) it(O.plan,'ACEi ו-ARB יחד: שילוב אסור. להשאיר '+(S.angio?'ARB בלבד.':'אחד מהם.'),P(65),'crit');
+  if(S.t_acei&&S.angio&&!stopAll) it(O.plan,'אנגיואדמה מ-ACEi בעבר ומקבל ACEi: להפסיק. ARB רק 6 שבועות אחרי.',P(71),'crit');
+  if(S.t_bb&&S.t_ndhp) it(O.plan,'BB עם NDHP: שילוב לא מומלץ (ברדיקרדיה).',P(65),'crit');
+  if((S.t_acei||S.t_arb)&&S.ras&&!stopAll) it(O.plan,'היצרות דו״צ ומקבל ACEi/ARB: מעקב קריאטינין ו-K. עלייה של יותר מ-30%: להפסיק.',P('71-72'),'warn');
+  if(S.t_thz&&S.na!=null&&S.na<135) it(O.plan,'מקבל תיאזיד ו-Na '+S.na+': להפסיק את התיאזיד ולבחור חלופה (משתן לולאה רק באי-ספיקת לב). הגבלת שתייה ומעקב Na ו-K.','החלטה; '+P(71),'crit');
+  if((S.t_thz||S.t_loop)&&S.k!=null&&S.k<3.5) it(O.plan,preg==='pregnant'?'מקבלת משתן בהריון ו-K '+S.k+': לתקן אשלגן, ולשקול מעבר לתרופה מקובלת בהריון (לבטלול, ניפדיפין, מתילדופה).':'מקבל משתן ו-K '+S.k+': תזונה עשירה באשלגן, ולשלב '+kFix(x)+'. בהיפוקלמיה חמורה להשהות את המשתן.',preg==='pregnant'?P('71, 251'):P(71),'alert');
+  if((S.t_acei||S.t_arb)&&S.k!=null&&S.k>5&&!stopAll) it(O.plan,'מקבל ACEi/ARB ו-K '+S.k+': משתן, דיאטה דלת אשלגן, קושרי אשלגן. היפרקלמיה עיקשת או חמורה: להפסיק. ב-CKD לנסות לאזן את K לפני הפסקה.',P('71, 143'),'alert');
+  if(S.t_mra&&S.k!=null&&S.k>5&&!stopAll) it(O.plan,'מקבל MRA ו-K '+S.k+': לטפל בהיפרקלמיה (דיאטה, משתן, קושרי אשלגן). אם לא נשלטת: להפחית או להפסיק MRA.',P('63, 143'),'alert');
+  if(S.t_ndhp&&!S.t_ccb&&!S.af) it(O.plan,'NDHP אינו קו ראשון ליל״ד: להחליף ל-CCB (DHP), אלא אם יש התוויה אחרת.',P(62));
+}
+
+function pregnancyBranch(x){
+  const {S,O,it,sbp,dbp}=x;
+  O.chips.push({t:'הריון',c:'acc'});
+  if(S.mode==='treated'){
+    const on=onRASMRA(S);
+    if(on) it(O.plan,'מקבלת '+on+' בהריון: להפסיק ולהחליף ללבטלול, ניפדיפין ארוך טווח או מתילדופה.',P('203, 247'),'crit');
+    comboAlerts(x);
+  }
+  it(O.decision,'הפניה למעקב מיילדותי. רוב הנשים ההרות עם יל״ד כרוני לא נזקקות לטיפול תרופתי.',P(247),'key');
+  if(sbp>=140||dbp>=90) it(O.decision,'ברעלת ללא מאפיינים חמורים או ביל״ד הריוני מתחת ל-160/110: "ניתן לשקול" טיפול.',P(248));
+  it(O.decision,'אבחנה: שתי מדידות בהפרש 4 שעות לפחות. שיטה אוסקולטורית מועדפת בהריון.',P('245, 11'));
+  it(O.target,'יל״ד כרוני בהריון: מתחת ל-140/90.',P(247),'key');
+  it(O.plan,'תרופות מקובלות: לבטלול, ניפדיפין בשחרור מושהה, מתילדופה.',P(251),'key');
+  it(O.plan,'אספירין 100-150 מ״ג ביל״ד כרוני, להתחיל לקראת סוף השליש הראשון ולפני שבוע 16-20.',P(247));
+  it(O.avoid,'ACEi, ARB ו-MRA: התווית נגד.',P('203, 70, 73'),'crit');
+  it(O.avoid,'ניפדיפין תת-לשוני.',P(251),'crit');
+  O.drugs=['preg'];
+  it(O.follow,'מעקב ל״ד, חלבון בשתן וגדילת עובר. הדרכה לתסמיני רעלת.',P(247));
+  O.mbar='הריון: הפניה למיילדות, יעד מתחת ל-140/90';
+}
+
+function postpartumBranch(x){
+  const {S,O,it,sbp,dbp}=x;
+  const F=regimenFlags(x);
+  const noACEi=F.noACE||S.ras;
+  O.chips.push({t:'אחרי לידה',c:'acc'});
+  if(sbp>=160||dbp>=110) it(O.decision,'160/110 ומעלה במשכב הלידה: יל״ד חמור לפי הגדרת ההנחיה. הפניה דחופה להערכה, כולל שלילת רעלת.',P('245, 249'),'crit');
+  it(O.decision,'אחרי לידה: ב-150/100 ומעלה בשתי מדידות בהפרש 4-6 שעות, לשקול טיפול.',P(249),'key');
+  it(O.decision,'רעלת יכולה להופיע לראשונה עד 6 שבועות אחרי הלידה, לרוב עם כאב ראש ולא בהכרח עם חלבון בשתן.',P(249),'warn');
+  if(S.mode==='treated') comboAlerts(x);
+  if(noACEi) it(O.plan,'הנקה: אמלודיפין, ניפדיפין ומתילדופה נחשבים בטוחים. קפטופריל ואנלפריל לא מתאימים כאן ('+(F.noACE?'אנגיואדמה מ-ACEi':'היצרות דו״צ של עורקי הכליה')+').',P('249, 71-72'),'key');
+  else{
+    it(O.plan,'הנקה: אמלודיפין, ניפדיפין, מתילדופה, קפטופריל ואנלפריל נחשבים בטוחים.',P(249),'key');
+    it(O.plan,'אם ניתן ACEi או ARB: להחליף לפני ההיריון הבא.',P(249));
+  }
+  it(O.follow,'מעקב ל״ד הדוק לפחות 10 ימים אחרי הלידה. ביל״ד כרוני ל״ד עשוי לעלות ביום 3-6.',P(249),'key');
+  it(O.follow,'אחרי רעלת עם מאפיינים חמורים שחייבה לידה לפני שבוע 34: בירור קרישיות יתר נרכשת.',P(249));
+  O.drugs=noACEi?['ccb','central']:['ccb','acei','central'];
+  O.mbar='אחרי לידה: טיפול מ-150/100'+(sbp>=160||dbp>=110?' · יל״ד חמור, הפניה דחופה':'');
+}
+
+function phenotype(x){
+  const {sbp,dbp,outAvail,outHigh}=x;
+  if(!outAvail) return null;
+  const officeHigh=sbp>=140||dbp>=90;
+  if(officeHigh&&outHigh) return {k:'sus',t:'יל״ד מתמשך'};
+  if(officeHigh&&!outHigh) return {k:'wch',t:'WCH (חלוק לבן)'};
+  if(!officeHigh&&outHigh) return {k:'mh',t:'MH (ממוסך)'};
+  return {k:'nor',t:'מחוץ למרפאה תקין'};
+}
+
+function newBranch(x){
+  const {S,O,it,sbp,dbp,age,c,risk,ckd,cadAny,old,func,severe,outAvail}=x;
+  const ph=phenotype(x);
+  const isHTN=sbp>=140||dbp>=90;
+  const elevRange=!isHTN&&(sbp>=130||dbp>=80);
+  const comorb80=ckd||cadAny||x.hf||S.af||S.stroke;
+  const frail80=S.frail||S.dementia;
+  let act='none';
+
+  if(old&&func==='severe'){act='indiv';}
+  else if(old&&func==='partial'){act=sbp>160?'drug':'nodrug';}
+  else if(ph&&ph.k==='wch'){act='wch';}
+  else if(old){
+    if(sbp>=160||severe) act='drug';
+    else if(isHTN||(ph&&ph.k==='mh')) act=(comorb80&&!frail80)?'drug':'consider80';
+    else act=elevRange?'below80':'none';
+  }
+  else if(ph&&ph.k==='mh'){act='drug';}
+  else if(isHTN){
+    const lowEdge=sbp<150&&dbp<95&&c.k==='g1'&&risk==='low';
+    act=lowEdge?'life3':'drug';
+  } else if(elevRange){
+    if(cadAny) act='drug';
+    else if(S.dm||ckd) act='life3dm';
+    else if(risk==='high'){
+      const onlyStroke=x.auto.length===1&&S.stroke;
+      act=onlyStroke?'life':'drug';
+    } else act='life';
+  }
+  const abpmDone=has(S.a24s,S.a24d)||has(S.ads,S.add)||has(S.ans,S.and);
+  const elevNor=!old&&elevRange&&ph&&ph.k==='nor'&&(act==='drug'||act==='life3dm');
+  if(elevNor&&abpmDone) act='elevnor';
+  const abpmFirst=elevNor&&!abpmDone;
+  x.abpmFirst=abpmFirst;
+  const wchHigh=act==='wch'&&(x.risk==='high'||x.hmod);
+
+  const twoVisits=S.visits==='2';
+  const g3first=!outAvail&&!twoVisits&&severe;
+  const hmodFirst=!outAvail&&!twoVisits&&!severe&&(sbp>=160||dbp>=100)&&x.hmod;
+  const confirmed=outAvail||twoVisits||g3first||hmodFirst;
+  const needConfirm=!confirmed&&(isHTN||act==='drug'||act==='life3dm');
+  if(outAvail) O.chips.push({t:'נמדד מחוץ למרפאה',c:'ok'});
+  else if(g3first) O.chips.push({t:'דרגה 3 בביקור ראשון',c:'warn'});
+  else if(hmodFirst) O.chips.push({t:'HMOD: אבחנה בביקור ראשון',c:'warn'});
+  else if(twoVisits&&(isHTN||elevRange)) O.chips.push({t:'2 ביקורים',c:'ok'});
+  else if(needConfirm) O.chips.push({t:'טעון אישור',c:'warn'});
+  if(ph) O.chips.push({t:ph.t,c:ph.k==='wch'||ph.k==='nor'?'':'warn'});
+  if(g3first) it(O.decision,'180/110 ומעלה במדידות חוזרות באותו ביקור: אבחנת דרגה 3 כבר בביקור הראשון.','AFP 2023 · בהנחיה הישראלית רק בסוכרת עם רקע CV, '+P(197),'key',true);
+  if(hmodFirst) it(O.decision,'160/100 ומעלה עם HMOD (LVH, רטינופתיה או אלבומינוריה): אבחנה כבר בביקור הראשון.','AFP 2023 · החלטה','key',true);
+  const pre=abpmFirst?'אם ABPM מעל הסף: ':(needConfirm?'אם האבחנה תאושר: ':'');
+  if(needConfirm) it(O.decision,'לפני החלטה על טיפול: לאשר במדידות ביתיות (4-7 ימים) או ב-ABPM, או בביקור נוסף.',P('6, 11, 50'),'key');
+  if(abpmFirst) it(O.decision,'ל״ד 130-139/80-89 במרפאה ותקין מחוץ למרפאה: לבצע ABPM (הולטר ל״ד 24 שעות) לפני החלטה על טיפול.','החלטה; '+P(12),'key');
+
+  switch(act){
+    case 'indiv':
+      it(O.decision,pre+'גיל 80 ומעלה עם אובדן תפקודי משמעותי והפרעה קוגניטיבית: החלטה פרטנית לפי תסמינים, תחלואה ופוליפרמסיה.',P(93),'key');break;
+    case 'nodrug':
+      it(O.decision,pre+'גיל 80 ומעלה עם אובדן ADL חלקי: מתחילים טיפול רק כש-SBP מעל 160. כרגע בלי תרופה.',P(93),'key');break;
+    case 'wch':
+      it(O.decision,'WCH: אורח חיים ומעקב שנתי ב-HBPM או ABPM. תרופה רק בסיכון גבוה או ב-HMOD.',P(9),'key');
+      if(wchHigh&&!abpmDone) it(O.decision,'סיכון גבוה או HMOD: לבצע ABPM (הולטר ל״ד 24 שעות) לאישור WCH. אם WCH מאושר: לשקול מונותרפיה.','החלטה; '+P('9, 12'),'key');
+      else if(wchHigh) it(O.decision,'סיכון גבוה או HMOD, ו-WCH מאושר ב-ABPM: לשקול מונותרפיה.','החלטה; '+P(9),'key');
+      break;
+    case 'consider80':
+      it(O.decision,pre+'גיל 80 ומעלה, SBP מתחת ל-160: "ניתן לשקול" טיפול תרופתי. הסף בגיל זה 140-160, לפי שבריריות ותחלואה נלווית. בלי מחלת כליה, לב או שבץ קודם, פרק הקשישים קובע 160.',P('51, 92, 96'),'key');
+      if(frail80) it(O.decision,'שבריריות או דמנציה: ההחלטה לפי חומרת השבריריות, ערכי ל״ד ותחלואה.',P('94, 96'));
+      break;
+    case 'below80':
+      it(O.decision,'גיל 80 ומעלה: הסף להתחלת טיפול 140-160, לפי שבריריות ותחלואה. מתחת ל-140: בלי תרופה.',P(96),'key');
+      break;
+    case 'elevnor':
+      it(O.decision,'ל״ד 130-139/80-89 במרפאה ו-ABPM תקין: בלי תרופה כרגע. אורח חיים ומעקב שנתי ב-HBPM או ABPM.','החלטה; '+P('9, 12'),'key');
+      break;
+    case 'life3':
+      it(O.decision,pre+'140-149/90-94 עם סיכון נמוך: אפשר 3 חודשי אורח חיים. אם היעד לא הושג, תרופה מיד.',P(50),'key');break;
+    case 'life3dm':
+      it(O.decision,pre+'סוכרת או CKD עם 130-139/80-89: 3 חודשי אורח חיים, ואז תרופה אם ל״ד עדיין 130/80 ומעלה.','החלטה; '+P('52, 139, 201'),'key');
+      it(O.decision,'בפרק 6 כתוב "מיד" (עמ׳ 52). נבחרה גישת ESC כדי ליישב עם פרקי הסוכרת וה-CKD.','ESC 2024','',true);break;
+    case 'life':
+      if(elevRange&&x.risk==='high'&&S.stroke) it(O.decision,'אחרי אירוע מוחי או TIA: אין הוכחות לטיפול תרופתי ב-130-139/80-89. אורח חיים.',P(52),'key');
+      else it(O.decision,'ל״ד 130-139/80-89 בלי סיכון גבוה: אורח חיים בלבד.',P(50),'key');
+      break;
+    case 'drug':{
+      if(ph&&ph.k==='mh'&&!old){it(O.decision,'MH: הסיכון דומה ליל״ד מתמשך. להתחיל טיפול תרופתי.',P('9, 50'),'key');}
+      else if(old&&func==='partial') it(O.decision,pre+'גיל 80 ומעלה עם אובדן ADL חלקי ו-SBP מעל 160: להתחיל טיפול, מונותרפיה, "start low and go slow".',P(93),'key');
+      else if(old&&sbp>=160) it(O.decision,pre+'גיל 80 ומעלה, SBP 160 ומעלה: להתחיל טיפול תרופתי.',P('51, 92, 96'),'key');
+      else if(old&&severe) it(O.decision,pre+'גיל 80 ומעלה עם ל״ד חמור: להתחיל טיפול תרופתי.',P('96, 183'),'key');
+      else if(old) it(O.decision,pre+'גיל 80 ומעלה עם מחלת כליה, מחלת לב או שבץ קודם: הסף נמוך מ-160. להתחיל טיפול.',P('92-93, 96'),'key');
+      else if(elevRange&&cadAny) it(O.decision,pre+'מחלה כלילית: טיפול תרופתי מ-130/80.',P(51),'key');
+      else if(elevRange) it(O.decision,pre+'ל״ד 130-139/80-89 עם סיכון גבוה: טיפול תרופתי מיד, במקביל לאורח חיים.',P(50),'key');
+      else it(O.decision,pre+'טיפול תרופתי מיד, במקביל לאורח חיים, בלי קשר לרמת הסיכון.',P(50),'key');
+      if(elevRange&&!cadAny&&!(ph&&ph.k==='mh')) it(O.decision,'ב-ESC 2024: באותו מצב קודם 3 חודשי אורח חיים.','ESC 2024','',true);
+      break;}
+    default:
+      it(O.decision,'ל״ד מתחת לסף טיפול. אורח חיים ומדידה שנתית.',P(50),'key');
+  }
+  if(old&&(act==='drug'||act==='consider80')&&func!=='partial') it(O.decision,'גיל 80 ומעלה: להתחיל בזהירות. משנה זהירות כש-SBP מתחת ל-120, OH, ריבוי תרופות, שבריריות ונפילות, גיל 90+, אשפוזים חוזרים.',P(51));
+  if(age&&age<50&&sbp>=140&&sbp<160&&dbp<90) it(O.decision,'ISH בצעיר: אם ל״ד מרכזי תקין, אורח חיים ומעקב. אם גבוה או יש HMOD, לשקול תרופה.',P('7, 17'));
+  if(sbp<140&&dbp>=90&&age&&age<50) it(O.decision,'IDH בצעיר: הערכת סיכון מקיפה לפני טיפול.',P(7));
+
+  targets(x);
+  const willTreat=act==='drug'||act==='life3'||act==='life3dm'||act==='consider80'||wchHigh;
+  if(willTreat) initialRegimen(x,act,elevRange,ph);
+  if((isHTN||act==='drug'||act==='life3dm'||(ph&&ph.k==='mh'))&&!abpmFirst) workupNew(x);
+  followNew(x,act,willTreat);
+  O.mbar=c.l+' · '+({drug:'להתחיל טיפול',life3:'אפשר 3 חודשי אורח חיים',life3dm:'3 חודשי אורח חיים ואז תרופה',life:'אורח חיים',wch:wchHigh?(abpmDone?'WCH: לשקול מונותרפיה':'WCH: ABPM, ואז לשקול מונותרפיה'):'WCH: מעקב',nodrug:'בלי תרופה כרגע',indiv:'החלטה פרטנית',consider80:'גיל 80+: לשקול טיפול',below80:'גיל 80+: בלי תרופה',elevnor:'ABPM תקין: מעקב'}[act]||'מעקב')+(needConfirm?' (טעון אישור)':'');
+  if(abpmFirst) O.mbar=c.l+' · ABPM לפני החלטה';
+}
+
+function targets(x){
+  const {S,O,it,age,old,func,ckd,cadAny,frailish,cvExtra,ckdLess,demT}=x;
+  if(old){
+    if(func==='partial'||S.frail){it(O.target,'מגיל 80, שברירי או עם אובדן ADL חלקי: SBP 140-150.',P(93),'key');}
+    else if(func==='severe'){it(O.target,'אובדן תפקודי משמעותי: יעד פרטני.',P(93),'key');}
+    else{
+      it(O.target,'מגיל 80: בשלב ראשון SBP 140-150. אם נסבל, 130-139, בתנאי ש-DBP לא יורד מתחת ל-70.',P(52),'key');
+      if(age>=85) it(O.target,'מגיל 85 ההנחיה ממליצה על יעד שמרני יותר (בלי מספר).',P(13));
+    }
+    if(S.dementia) it(O.target,'דמנציה: סביב 140-150/70-80, עם מדידה בעמידה.',P(94));
+    it(O.target,'רצפה מגיל 80: מתחת ל-120/70 לשקול הפחתת טיפול. DBP 60-69 מתקבל בזהירות רק כש-SBP עדיין מעל היעד, אחרי שלילת איסכמיה כלילית.',P('93, 96'));
+    if(S.dm||ckd) it(O.target,'סוכרת או CKD מגיל 80: היעד לפי הגיל והתפקוד, לא 130/80.','החלטה; '+P('52, 93, 140'));
+    if(cadAny) it(O.target,'מחלה כלילית: DBP מעל 60, והורדה איטית של ל״ד גבוה.',P(222));
+  } else {
+    if(demT) it(O.target,'דמנציה: כמו בשבריריות, יעד סביב 140-150/70-80, עם מדידה בעמידה. גובר על יעדי מחלות הרקע.','החלטה; '+P(94),'key');
+    it(O.target,(demT?'כללי (לא חל כאן): ':'')+'במרפאה 130/80. בבית ובניטור יום מתחת ל-130/80. בניטור לילה מתחת ל-120/70. אין יעד ל-24 שעות.',P(13),(ckdLess||demT)?'':'key');
+    it(O.target,'רצפה: לא להוריד מתחת ל-120/70, גם בגיל 65-79. בכל ערך: להפחית אם יש תת ל״ד תנוחתי, סינקופה או סימני היפופרפוזיה.',P('52, 222'));
+    if(S.frail) it(O.target,'שבריריות: יעד שמרני יותר. ההנחיה לא נותנת מספר, למעט ב-CKD.',P('13, 93'));
+    if(!demT){
+      if(ckdLess) it(O.target,'CKD עם שבריריות, OH או eGFR מתחת ל-30: לשקול יעד פחות אינטנסיבי, מתחת ל-140/90.',P(140),'key');
+      else if((S.dm||ckd)&&!frailish&&!S.oh) it(O.target,'סוכרת או CKD: מתחת ל-130/80.',P('52, 140, 198'));
+      if(ckd&&!ckdLess&&cvExtra) it(O.target,'CKD עם סיכון CV נוסף: לשקול מתחת ל-120/80, בניטור תפקוד כליות ותסמינים. זה חריג לרצפה הכללית של 120/70 (עמ׳ 52). היעד מבוסס על SPRINT, שבו המדידה הייתה סטנדרטית ולרוב בלי נוכחות הבודק, ולכן נמוכה ממדידה רגילה.',P('140-141'));
+      if(S.stroke) it(O.target,'אחרי אירוע מוחי או TIA: 120-129/70-79 אם נסבל.',P(52));
+    }
+    if(cadAny) it(O.target,demT?'מחלה כלילית: DBP מעל 60, והורדה איטית של ל״ד גבוה.':'מחלה כלילית: 120-129/70-79. DBP מעל 60, והורדה איטית של ל״ד גבוה, כי הזילוח הכלילי דיאסטולי.',P('52, 222'));
+  }
+  if(frailish) it(O.target,(S.dementia&&!S.frail&&!(old&&func!=='indep')?'דמנציה':'שבריריות')+': לשקול הפחתה הדרגתית כש-SBP מתחת ל-130 או יש OH.',P('93-94'));
+  if(S.oh) it(O.target,'OH תסמיני: יעד שמרני יותר וטיטרציה הדרגתית עם מדידה בעמידה.',P('10, 13'));
+}
+
+function regimenFlags(x){
+  const {S,preg,alb,frailish,age}=x;
+  const F={
+    noRAS: preg==='nocontra'||S.ras,
+    noACE: S.angio,
+    breast: preg==='breast',
+    gout: S.gout,
+    loopInstead: S.egfr!=null&&S.egfr<30,
+    loopConsider: S.egfr!=null&&S.egfr>=30&&S.egfr<45,
+    eld85: age>=85||frailish,
+    preferRASCCB: S.dm||S.stroke||x.cadAny||S.pad,
+    albRAS: alb&&preg!=='nocontra'&&!S.ras
+  };
+  F.rasTxt=F.noACE?(F.breast?'ARB (בהנקה ההנחיה לא מתייחסת ל-ARB)':'ARB'):(F.breast?'ACEi (אנלפריל או קפטופריל)':'ACEi או ARB');
+  F.rasList=F.noACE?'ARB':'ACEi, ARB';
+  F.rasKeys=F.noACE?['arb']:['acei','arb'];
+  F.diuKey=F.loopInstead?'loop':'thz';
+  F.diuTxt=F.loopInstead?'משתן לולאה':(F.gout?'thiazide-like רק עם אלופורינול או פבוקסוסטט':'thiazide-like');
+  return F;
+}
+
+function initialRegimen(x,act,elevRange,ph){
+  const {S,O,it,sbp,risk,old,frailish,c,ckd}=x;
+  const F=regimenFlags(x);
+  let mono=false, why='';
+  if(old||frailish){mono=true;why=P(x.demT&&!S.frail?'65, 94':'65, 96');}
+  else if(ph&&ph.k==='wch'){mono=true;why='החלטה; '+P(9);}
+  else if(ph&&ph.k==='mh'){mono=risk==='low';why='הערכה: ההנחיה לא מפרטת ב-MH';}
+  else if(elevRange){mono=true;why='ההנחיה לא מפרטת; ESC 2024: מונותרפיה';}
+  else if(sbp<=150&&c.rank<=3&&risk==='low'){mono=true;why=P(65);}
+  const dmDual=S.dm&&(sbp>=140||S.dbp>=90)&&!old&&!frailish&&!(ph&&ph.k==='wch');
+  if(dmDual){mono=false;why=P(201);}
+  O.drugs=[];
+  if(act==='life3'||act==='life3dm') it(O.plan,'אם יוחל טיפול תרופתי אחרי תקופת אורח החיים:',act==='life3'?P(50):P('52, 201'),'key');
+  else if(act==='consider80'||act==='wch'||x.abpmFirst) it(O.plan,'אם יוחל טיפול תרופתי:',act==='wch'?P(9):(x.abpmFirst?'החלטה; '+P(12):P('51, 96')),'key');
+  if(x.preg==='nocontra'){
+    it(O.plan,'גיל פוריות בלי אמצעי מניעה: לבטלול, מתילדופה או ניפדיפין ארוך טווח, במקום ACEi, ARB ו-MRA.',P(203),'key');
+    O.drugs=['preg'];return;
+  }
+  if(F.noRAS){
+    if(mono) it(O.plan,'מונותרפיה בלי ACEi/ARB (היצרות דו״צ): CCB (DHP)'+(F.gout?'':' או '+F.diuTxt)+'.',(why||P(65))+', 72','key');
+    else it(O.plan,'שילוב בלי ACEi/ARB (היצרות דו״צ): CCB (DHP) + '+F.diuTxt+'. שילוב שלא מופיע ברשימת השילובים המועדפים בהנחיה.',(why||P(65))+', 72','key');
+    if(F.gout) it(O.plan,'שגדון פעיל: להימנע מתיאזיד בלי טיפול מוריד אורט.',P('71, 73'));
+    if(F.loopInstead) it(O.plan,'eGFR מתחת ל-30: משתן לולאה במקום תיאזיד.',P(84));
+    bbIndications(x);
+    O.drugs=['ccb'].concat(F.gout&&mono?[]:[F.diuKey]);
+    return;
+  }
+  if(F.breast){
+    if(F.noACE){
+      it(O.plan,'מניקה עם אנגיואדמה מ-ACEi בעבר: אמלודיפין, ניפדיפין או מתילדופה.',P('249, 71'),'key');
+      O.drugs=['ccb','central'];
+    } else {
+      it(O.plan,'מניקה: בטוחים אמלודיפין, ניפדיפין, מתילדופה, קפטופריל ואנלפריל. על ARB ההנחיה לא מתייחסת.',P(249),'key');
+      O.drugs=['ccb','acei','central'];
+    }
+    return;
+  }
+  const ras=F.noACE?'ARB (לא ACEi, אנגיואדמה בעבר; ARB רק 6 שבועות אחרי)':'ACEi או ARB';
+  const second=F.gout?'CCB (DHP)':(F.loopInstead?'CCB (DHP), או משתן לולאה ב-eGFR מתחת ל-30':'CCB (DHP) או thiazide-like');
+  if(S.hfref){
+    it(O.plan,'HFrEF: BB, '+(F.noACE?'ARB':'ACEi/ARB/ARNI')+', MRA, SGLT2i ומשתנים לפי הנחיות אי-ספיקת לב.',P('70, 222'),'key');
+  }
+  const diuK=F.gout?[]:[F.diuKey];
+  let monoKeys=F.rasKeys.concat(['ccb'],diuK);
+  if(mono){
+    let opts='אחת מ: '+F.rasList+', CCB (DHP)'+(F.gout?'':', thiazide-like')+'.';
+    if(F.eld85) opts='CCB (DHP) ארוך טווח או '+(F.noACE?'ARB':'RAS (ACEi/ARB)')+', ואחר כך משתן במינון נמוך. לא BB ולא אלפא כקו ראשון.';
+    else if(S.dm||x.cadAny||S.pad){ opts=F.rasList+' או CCB (DHP).'; monoKeys=F.rasKeys.concat(['ccb']); }
+    else if(S.stroke) opts=F.rasList+', CCB (DHP)'+(F.gout?'':' או thiazide-like')+'.';
+    if(F.albRAS){ opts=(F.noACE?'ARB':'ACEi או ARB')+' (אלבומינוריה).'; monoKeys=F.rasKeys.slice(); }
+    it(O.plan,'מונותרפיה. '+opts,why+(F.eld85?' · '+P(93):''),'key');
+    if(old&&!frailish&&c.rank>=4) it(O.plan,'קשיש במצב טוב עם ל״ד גבוה: אפשר בכל זאת להתחיל בשילוב במינון נמוך.',P(92));
+  } else {
+    it(O.plan,'שתי תרופות, עדיף בכדור אחד: '+ras+' + '+second+'.',why||P('64-66'),'key');
+    if(F.preferRASCCB&&!F.gout) it(O.plan,'סוכרת, מחלה כלילית, שבץ או PAD: השילוב המועדף הוא '+ras+' + CCB.',P('201-202, 222-223'));
+  }
+  if(F.albRAS) it(O.plan,'אלבומינוריה: '+(F.noACE?'ARB':'ACEi או ARB')+' במינון המרבי הנסבל. לא DHP בלי חוסם RAS.',P('70, 142'));
+  cardioRenalProtection(x);
+  if(F.gout) it(O.plan,'שגדון פעיל: לוסרטן או אמלודיפין, שהם אוריקוזוריים. להימנע מתיאזיד בלי טיפול מוריד אורט.',P('71, 73'));
+  if(F.loopInstead) it(O.plan,'eGFR מתחת ל-30: משתן לולאה במקום תיאזיד.',P(84));
+  else if(F.loopConsider) it(O.plan,'eGFR 30-45: לשקול החלפה למשתן לולאה.',P(84));
+  bbIndications(x);
+  if(old) it(O.plan,'מגיל 80: לא ממליצים על ירידה במשקל או הגבלת מלח, אלא בהשמנה חולנית או צריכת מלח קיצונית.',P(92));
+  O.drugs=mono?monoKeys:F.rasKeys.concat(['ccb'],diuK,['spc']);
+  if(S.hfref||S.af||S.mi||S.cad) O.drugs.push('bb');
+}
+
+function cardioRenalProtection(x){
+  const {S,O,it,ckd,alb,preg}=x;
+  if(preg==='pregnant'||preg==='nocontra') return;
+  if(ckd&&(alb||S.dm)){
+    if(S.egfr!=null&&S.egfr<20) it(O.plan,'CKD עם eGFR מתחת ל-20: לא מתחילים SGLT2i חדש (ניתן להמשיך אם כבר מטופל עד דיאליזה).','KDIGO 2024; '+P(143),'',true);
+    else it(O.plan,'הגנה כלייתית וקרדיווסקולרית: לשקול SGLT2i (ב-CKD עם אלבומינוריה או סוכרת, מותווה להתחלה ב-eGFR 20 ומעלה).','KDIGO 2024; '+P(143),'',true);
+  }
+  if(S.dm&&ckd&&alb){
+    if(S.t_mra) it(O.plan,'סוכרת עם CKD ואלבומינוריה: אין לשלב finerenone (קרנדיה) יחד עם MRA סטרואידלי (ספירונולקטון או אפלרנון).','ADA/KDIGO 2024; '+P(143),'warn',true);
+    else if(S.egfr!=null&&S.egfr<25) it(O.plan,'סוכרת עם CKD ואלבומינוריה (eGFR מתחת ל-25): לא מתחילים finerenone (קרנדיה) מתחת ל-eGFR 25.','ADA/KDIGO 2024; '+P(143),'warn',true);
+    else if(S.k!=null&&S.k>4.8) it(O.plan,'סוכרת עם CKD ואלבומינוריה (K '+S.k+'): יש לאזן אשלגן ל-4.8 ומטה לפני שקילת finerenone (קרנדיה).','ADA/KDIGO 2024; '+P(143),'warn',true);
+    else it(O.plan,'סוכרת עם CKD ואלבומינוריה: לשקול finerenone (קרנדיה) להגנה כלייתית וקרדיווסקולרית על גבי ACEi/ARB במינון מרבי נסבל (ב-eGFR 25 ומעלה ו-K עד 4.8; מינון התחלה 10 מ״ג ב-eGFR 25-59 או 20 מ״ג ב-eGFR 60 ומעלה, עם בדיקת K ו-eGFR אחרי 4 שבועות).','ADA/KDIGO 2024; '+P(143),'',true);
+  }
+}
+
+function bbIndications(x){
+  const {S,O,it}=x; const F=regimenFlags(x); const ind=[];
+  if(S.af)ind.push('פרפור פרוזדורים'); if(S.mi)ind.push('אחרי אוטם'); if(S.cad)ind.push('מחלה כלילית / תעוקה'); if(S.hfref)ind.push('HFrEF'); if(S.hr!=null&&S.hr>80&&x.age&&x.age<50)ind.push('טכיקרדיה בצעיר');
+  if(ind.length&&!S.t_bb&&!S.asthma) it(O.plan,'להוסיף BB בכל שלב בגלל התוויה: '+ind.join(', ')+'.',P('66, 70'));
+  if(ind.length&&!S.t_bb&&S.asthma) it(O.plan,'יש התוויה ל-BB ('+ind.join(', ')+') ויש אסתמה: רק BB סלקטיבי ללב (ביסופרולול, אטנולול, מטופרולול), עם אזהרה.','החלטה; '+P('70, 74'),'warn');
+  if(S.af) it(O.plan,'פרפור פרוזדורים: BB לבקרת קצב. NDHP חלופה רק בלי ירידה בתפקוד הסיסטולי, ולא יחד עם BB.',P('70, 221'));
+  if(S.aorta) it(O.plan,'הרחבת אאורטה: '+(F.noRAS?'BB מועדף':(F.noACE?'ARB ו-BB מועדפים':'ACEi/ARB ו-BB מועדפים'))+'.'+(x.old?'':' יעד מתחת ל-130/80.'),P(224));
+}
+
+function commonAvoid(x){
+  const {S,O,it,preg,old}=x;
+  if(S.asthma) it(O.avoid,'אסתמה: להימנע מ-BB. אם יש התוויה מחייבת, BB סלקטיבי ללב עם אזהרה.','החלטה; '+P('70, 74'),'warn');
+  if(S.hfref) it(O.avoid,'HFrEF: לא NDHP (ורפמיל, דילטיאזם).',P('70, 222'),'warn');
+  if(S.metsyn) it(O.avoid,'תסמונת מטבולית: BB ותיאזידים פחות מומלצים.',P(70));
+  if(S.pad) it(O.avoid,'PAD: זהירות בהורדה מהירה בטרשת חסימתית מתקדמת.',P(223));
+  if(S.angio) it(O.avoid,'אנגיואדמה מ-ACEi: לא ACEi. ARB רק 6 שבועות אחרי, ואנגיואדמה נדירה גם בו.',P(71),'warn');
+  if(S.ras) it(O.avoid,'היצרות דו״צ של עורקי הכליה: לא חוסמי RAS (ACEi, ARB). סכנת AKI.','החלטה; '+P(72),'warn');
+  if(preg==='nocontra') it(O.avoid,'גיל פוריות בלי אמצעי מניעה: ACEi, ARB ו-MRA אסורים.',P(203),'crit');
+  if(old||S.frail||S.dementia) it(O.avoid,'מבוגרים, שבריריים ובדמנציה: חוסמי אלפא (אורתוסטטיזם) ו-BB לא כקו ראשון.',P('63, 93-94'));
+  if(S.k!=null&&S.k>5) it(O.avoid,'K מעל 5: להימנע מ-MRA.',P(63),'alert');
+  it(O.avoid,'לא לשלב ACEi עם ARB, ולא BB עם NDHP.',P(65));
+  if(S.gout) it(O.avoid,'שגדון פעיל בלי אלופורינול/פבוקסוסטט: להימנע מתיאזיד.',P(73));
+}
+
+function bpRaisers(x){
+  const {S,O,it}=x;
+  const map={r_nsaid:['NSAIDs: להפסיק או להחליף לפני הרחבת הטיפול. אם אי אפשר, להעדיף CCB.',P('175-176')],
+   r_ocp:['גלולות עם אסטרוגן: להימנע ביל״ד. עדיף פרוגסטין בלבד.',P(252)],
+   r_ster:['סטרואידים מעלים ל״ד תלוי מינון.',P(83)],
+   r_decong:['נוגדי גודש וסימפתומימטים: מעלים ל״ד.',P(83)],
+   r_adhd:['תרופות ל-ADHD: מעלות ל״ד.',P(83)],
+   r_snri:['ונלפקסין ודולוקסטין: עלייה תלוית מינון.',P(178)],
+   r_cni:['ציקלוספורין / טקרולימוס.',P(83)],
+   r_vegf:['נוגדי VEGF / TKI: לא סיבה להפסיק טיפול מציל חיים. ניטור והתאמת טיפול.',P(175)],
+   r_epo:['אריתרופויאטין.',P(15)],
+   r_lic:['ליקוריץ׳: אפקט דמוי מינרלוקורטיקואיד.',P(179)],
+   r_stim:['קוקאין ואמפטמינים.',P(83)],
+   r_alc:['אלכוהול מוגבר.',P(15)]};
+  Object.keys(map).forEach(k=>{if(S[k]) it(O.workup,map[k][0],map[k][1],'warn');});
+}
+
+function kLowNormal(S){return S.k!=null&&S.k>=3.5&&S.k<=4.6;}
+function workupNew(x){
+  const {S,O,it,age}=x;
+  it(O.workup,'מעבדה בסיסית: תפקודי כליה וכבד, Na, K, חומצה אורית, Ca, P, גלוקוז, CBC, TSH, שתן כללית ומיקרוסקופיה, ACR, ליפידים, HbA1c.',P(17),'key');
+  it(O.workup,'אק״ג.',P(17));
+  it(O.workup,'סקר PA לכל יל״ד מוכח: רנין, אלדוסטרון ו-K באותו יום, בלי להפסיק תרופות.'+(kLowNormal(S)?' K בגבול התחתון (3.5-4.6) בכל הבדיקות מחשיד להיפראלדוסטרוניזם.':''),P(kLowNormal(S)?'17-19':'17, 19'),'key');
+  it(O.workup,'ביקור ראשון: ל״ד בשתי הזרועות, בשכיבה ובעמידה (אחרי דקה ואחרי 3 דקות).',P('10, 16'));
+  if(age&&age<50) it(O.workup,'מתחת לגיל 50 עם יל״ד לא מוסבר: ל״ד ברגל לשלילת קוארקטציה.',P(16));
+  if(age>=65&&age<80) it(O.workup,'גיל 65-79: האם צריך הערכת ADL? מגבלה תפקודית או קוגניטיבית קובעת את מטרת הטיפול בלי קשר לגיל.',P('91, 95-96'));
+  secondaryFlags(x);
+}
+function secondaryFlags(x){
+  const {S,O,it,age,hasNight}=x; const f=[];
+  if(age&&age<30)f.push('גיל מתחת ל-30');
+  if(S.sudden)f.push('הופעה פתאומית או החמרה של יל״ד שהיה מאוזן');
+  if(S.k!=null&&S.k<3.5)f.push('היפוקלמיה');
+  if(hasNight&&(S.ans>=120||S.and>=70))f.push('יל״ד לילי');
+  if(f.length) it(O.workup,'דגל ל-secondary HTN: '+f.join(', ')+'.',P('18-19'),'warn');
+}
+
+function followNew(x,act,willTreat){
+  const {S,O,it,severe,female,age}=x;
+  if(severe) it(O.follow,'ביקור חוזר תוך שבועיים לכל היותר.',P(64),'key');
+  if(willTreat){
+    const life=act==='life3'||act==='life3dm';
+    if(life) it(O.follow,'הערכה חוזרת אחרי 3 חודשי אורח חיים. אם עדיין מעל הסף: להתחיל תרופה.',act==='life3'?P(50):'החלטה; '+P('52, 201'),'key');
+    const cond=life||act==='consider80'||act==='wch'||x.abpmFirst;
+    const pre=cond?'אם יוחל טיפול: ':'';
+    it(O.follow,pre+'אחרי התחלה או שינוי של ACEi/ARB/משתן: קריאטינין ואלקטרוליטים אחרי 2-3 שבועות.',P(66),cond?'':'key');
+    it(O.follow,'ירידה ב-GFR עד 30% צפויה, ממשיכים. מעל 30%: הפסקה ושלילת RAS דו״צ.',P('66, 71'));
+    if(O.drugs.includes('thz')) it(O.follow,'אחרי תיאזיד: Na תוך 7-14 ימים'+(female&&age>65?', במיוחד אצלה (אישה מעל 65).':', בייחוד בנשים מעל 65.'),P('66, 86'));
+    it(O.follow,'ביקור אחרי 2-4 שבועות, ואחר כך חודשי עד איזון.',P('66, 86'));
+    it(O.follow,'אחרי איזון: 2-4 ביקורים בשנה הראשונה, אחר כך 1-2 בשנה. מעבדה שנתית: כליות, אלקטרוליטים, גלוקוז/HbA1c, ליפידים, ACR.',P('86-87'));
+  }
+  if(x.old||S.frail||S.dementia) it(O.follow,'מגיל 80, בשבריריות או בדמנציה: בכל ביקור לחפש ירידת ל״ד תנוחתית.',P('10, 94'));
+}
+
+function treatedBranch(x){
+  const {S,O,it,sbp,dbp,old,outTargetKnown,outAtTarget,frailish,ckdLess,demT,cadAny}=x;
+  O.chips.push({t:'מקבל טיפול',c:'acc'});
+  comboAlerts(x);
+  let offOK;
+  if(old||demT) offOK=sbp<=150;
+  else if(ckdLess) offOK=sbp<140&&dbp<90;
+  else offOK=sbp<=130&&dbp<=80;
+  const homeBased=!old&&!demT&&!ckdLess&&outTargetKnown;
+  let status;
+  if(homeBased){
+    if(offOK&&outAtTarget)status='ctrl';
+    else if(!offOK&&outAtTarget)status='uwch';
+    else if(offOK&&!outAtTarget)status='muh';
+    else status='unc';
+  } else status=offOK?'ctrl':'unc_off';
+  const st={ctrl:['מאוזן','ok'],uwch:['uncontrolled WCH','acc'],muh:['masked uncontrolled','warn'],unc:['לא מאוזן','warn'],unc_off:['לא מאוזן (מרפאה בלבד)','warn']}[status];
+  O.chips.push({t:st[0],c:st[1]});
+
+  targets(x);
+  const floor=(sbp<120||dbp<70);
+  if(old&&outTargetKnown) it(O.decision,'מגיל 80 ההערכה לפי המרפאה. ההנחיה לא מגדירה יעד ביתי נפרד לגיל זה.',P('52, 92'));
+  if(demT&&outTargetKnown) it(O.decision,'דמנציה: ההערכה לפי המרפאה, ביעד סביב 140-150/70-80.','החלטה; '+P(94));
+  else if(ckdLess&&outTargetKnown) it(O.decision,'CKD ביעד המקל: ההערכה לפי המרפאה. ההנחיה לא מגדירה יעד ביתי למסלול הזה.','החלטה; '+P(140));
+  if(status==='ctrl'){
+    const mustChange=O.plan.some(i=>i.l==='crit');
+    it(O.decision,mustChange?'ביעד, אבל צריך לשנות את המשלב (ראו "טיפול מוצע").':'ביעד. להמשיך את הטיפול.',P(13),'key');
+    if(cadAny&&dbp<60) it(O.decision,'מחלה כלילית ו-DBP מתחת ל-60: לשקול הפחתת טיפול, בגלל הזילוח הכלילי.',P(222),'warn');
+    if(floor&&(old||frailish)) it(O.decision,'מתחת ל-120/70 במבוגר, בשבריריות או בדמנציה: לשקול הפחתת טיפול.',P('93, 96'),'warn');
+    else if(floor) it(O.decision,'מתחת לרצפה של 120/70: לשקול הפחתה.',P('52, 222'),'warn');
+    if(frailish&&(sbp<130||S.oh)) it(O.decision,'שבריריות או דמנציה עם SBP מתחת ל-130 או OH: לשקול הפחתה הדרגתית.',P('93-94'));
+    if(old&&!frailish&&sbp>139) it(O.decision,'מגיל 80, בשלב ראשון ביעד (140-150). אם נסבל, אפשר לרדת ל-130-139.',P(52));
+    it(O.decision,'להפחית טיפול אפשר רק בהדרגה. לא בסיכון גבוה, ב-HMOD או ביל״ד שהתפתח מהר.',P(87));
+    cardioRenalProtection(x);
+    followTreated(x,O.plan.length>0); finishTreated(x,mustChange?'מאוזן, לשנות משלב':'מאוזן'); return;
+  }
+  if(status==='uwch'){
+    it(O.decision,'uncontrolled WCH: גבוה במרפאה וביעד בבית. לא להעלות טיפול לפי מדידות המרפאה.',P(9),'key');
+    cardioRenalProtection(x);
+    followTreated(x,O.plan.length>0); finishTreated(x,'לא מעלים טיפול (WCH)'); return;
+  }
+  if(status==='muh') it(O.decision,'masked uncontrolled: ביעד במרפאה וגבוה בבית. להגביר טיפול ולשקול מתן בערב.',P(9),'key');
+  const needHome=status==='unc_off'&&!old&&!demT&&!outTargetKnown&&!x.severe;
+  if(needHome) it(O.decision,'לא מאוזן במרפאה. לפני הגברת טיפול: לאשר במדידות ביתיות.',P('9, 88'),'warn');
+  if(status==='unc_off'&&old) it(O.decision,'מעל היעד של 140-150 במרפאה.',P(52),'key');
+  else if(status==='unc_off'&&demT) it(O.decision,'מעל היעד של 140-150 במרפאה (דמנציה).','החלטה; '+P(94),'key');
+  else if(status==='unc_off'&&outTargetKnown) it(O.decision,'מעל היעד המקל של 140/90 במרפאה.',P(140),'key');
+  else if(status==='unc_off'&&x.severe) it(O.decision,'לא מאוזן, ול״ד חמור: להתאים טיפול עכשיו, בלי לחכות לאישור ביתי (ראו התראה למעלה).',P('183, 187'),'key');
+  if(status==='unc') it(O.decision,'לא מאוזן במרפאה ומחוץ לה.',P(13),'key');
+
+  if(S.adh!=='ok') it(O.decision,'קודם לבדוק היענות: נתוני ניפוק, ספירת טבליות, שיחה לא שיפוטית. אי-היענות היא הסיבה השכיחה לעמידות מדומה.',P('82, 88'),S.adh==='poor'?'warn':'');
+  it(O.decision,'לוודא טכניקת מדידה, צריכת מלח ותרופות מעלות ל״ד.',P('82-83'));
+
+  const k0=O.plan.length;
+  escalate(x,status);
+  cardioRenalProtection(x);
+  if(needHome) O.plan.splice(k0,0,{t:'אם חוסר האיזון יאושר במדידות ביתיות:',r:P('9, 88'),l:'key',ext:false});
+  followTreated(x,true);
+  finishTreated(x,needHome?'לאשר בבית, ואז להגביר טיפול':'להגביר טיפול');
+}
+
+function escalate(x,status){
+  const {S,O,it,old}=x;
+  const F=regimenFlags(x);
+  O.drugs=[];
+  if(x.preg==='nocontra'){
+    it(O.plan,'להגביר טיפול רק מתוך התרופות המאושרות בהריון: לבטלול, מתילדופה, ניפדיפין ארוך טווח.',P(203),'key');
+    O.drugs=['preg']; bbIndications(x); return;
+  }
+  const ndhpSwap=S.t_ndhp&&!S.t_ccb&&!S.af;
+  const ras=S.t_acei||S.t_arb, ccb=S.t_ccb||S.t_ndhp, diu=S.t_thz||S.t_loop;
+  const n=[ras,ccb,diu].filter(Boolean).length;
+  const tail=()=>{ if(ndhpSwap&&!O.drugs.includes('ccb')) O.drugs.unshift('ccb'); bbIndications(x); };
+  if(n===0){
+    it(O.plan,'אין תרופת קו ראשון במשלב. להתחיל כמו באבחנה חדשה.',P(66),'key');
+    initialRegimen(x,'drug',false); return;
+  }
+  if(n===1){
+    let add, drugs;
+    if(ras){ add=F.gout?'CCB (DHP)':'CCB (DHP) או '+F.diuTxt; drugs=['ccb'].concat(F.gout?[]:[F.diuKey]).concat(['spc']); }
+    else if(F.noRAS){ add=ccb?F.diuTxt:'CCB (DHP)'; drugs=ccb?[F.diuKey]:['ccb']; add+=' (לא ACEi/ARB: היצרות דו״צ)'; }
+    else { add=F.rasTxt; drugs=F.rasKeys.concat(['spc']); }
+    const lead=(S.t_acei&&S.t_arb)?'להשאיר '+(F.noACE?'ARB':'ACEi או ARB')+' בלבד, ולהוסיף ':'מונותרפיה לא מספיקה: מעבר מהיר לשתי תרופות. להוסיף ';
+    it(O.plan,lead+add+', ואחר כך להעלות מינון.',P(66),'key');
+    O.drugs=drugs; tail(); return;
+  }
+  if(n===2){
+    if(!ras&&F.noRAS){
+      it(O.plan,'CCB + משתן, ו-ACEi/ARB לא אפשריים (היצרות דו״צ). ההנחיה לא מפרטת תרופה שלישית במצב זה. אפשרויות: ספירונולקטון לפי K ו-eGFR, BB או חוסם אלפא.','הערכה; '+P(84),'key');
+      it(O.plan,'היצרות דו״צ עם יל״ד עמיד או בצקת ריאות חוזרת: הפניה לשקילת רה-וסקולריזציה.',P(157));
+      O.drugs=['mra','bb','alpha']; tail(); return;
+    }
+    let miss, drugs;
+    if(!ras){ miss=F.rasTxt; drugs=F.rasKeys.slice(); }
+    else if(!ccb){ miss='CCB (DHP)'; drugs=['ccb']; }
+    else { miss=F.loopInstead?'משתן לולאה':(F.gout?'thiazide-like (עדיף אינדפמיד), רק עם אלופורינול או פבוקסוסטט':'thiazide-like (עדיף אינדפמיד)'); drugs=[F.diuKey]; }
+    it(O.plan,'להוסיף '+miss+' לטיפול משולש: RAS + CCB + משתן, עדיף בכדור אחד. להוסיף תוך חודש.',P('66, 77'),'key');
+    O.drugs=drugs; tail(); return;
+  }
+  if(ndhpSwap){
+    it(O.plan,'קודם להחליף את ה-NDHP ל-CCB (DHP) ולהעריך מחדש, לפני הגדרת יל״ד עמיד ולפני תרופה רביעית.',P('62, 66'),'key');
+    O.drugs=['ccb']; bbIndications(x); return;
+  }
+  if(S.maxdose!=='yes'){
+    it(O.plan,'שלוש תרופות לא במינון מרבי: קודם להעלות למינון המרבי הנסבל.',P(8),'key');
+    O.drugs=[].concat(S.t_acei?['acei']:[],S.t_arb?['arb']:[],['ccb'],S.t_thz?['thz']:[],S.t_loop?['loop']:[]);
+    tail(); return;
+  }
+  const oobConfirmed=(x.relaxed||x.ckdLess)?(x.outAvail&&x.outHigh):((x.outTargetKnown&&!x.outAtTarget)||(x.outAvail&&x.outHigh));
+  const enough=S.months!=null&&S.months>=3;
+  if(enough&&oobConfirmed){
+    it(O.plan,'יל״ד עמיד: לא ביעד'+(x.relaxed?'':' 130/80')+' על RAS + CCB + משתן במינון מרבי, 3-6 חודשים, באישור מחוץ למרפאה.',P('8, 82'),'key');
+    it(O.plan,'להפנות למומחה ליל״ד ולשקול בירור יל״ד שניוני.',P('66, 82'));
+  } else {
+    const miss=[]; if(!enough) miss.push('3-6 חודשים על המשלב במינון מרבי'); if(!oobConfirmed) miss.push('אישור ב-ABPM או HBPM');
+    it(O.plan,'עדיין לא עונה להגדרת יל״ד עמיד. חסר: '+miss.join(', ')+'. בינתיים לבדוק היענות ולאופטם משתן.',P('8, 82'),'key');
+  }
+  if(S.t_thz&&!S.t_loop) it(O.plan,'משתן: עדיפות לאינדפמיד 1.25-2.5 על פני דיזותיאזיד. eGFR 30-45: לשקול משתן לולאה. מתחת ל-30: להחליף.',P(84));
+  const k=S.k, hr=S.hr, egfr=S.egfr;
+  if(!S.t_mra){
+    if(k==null) it(O.plan,'כדי לבחור תרופה רביעית צריך K ו-eGFR.',P(84),'warn');
+    else if(k<=4.5&&(egfr==null||egfr>45)){
+      it(O.plan,'K עד 4.5: להוסיף ספירונולקטון. להתחיל ב-12.5-25 מ״ג, ועד 50 מ״ג.','החלטה; '+P('73, 83-84'),'key');
+      if(egfr==null) it(O.plan,'ודא eGFR מעל 45 לפני ספירונולקטון.',P(83),'warn');
+      it(O.plan,'אי-סבילות: אפלרנון 25-50 מ״ג פעמיים ביום, או אמילוריד.',P(83));
+      O.drugs.push('mra');
+    } else if(k<=4.5&&egfr!=null&&egfr<30){
+      it(O.plan,'eGFR מתחת ל-30 (CKD דרגה 4-5): להימנע מהתחלת ספירונולקטון בשגרה בשל סכנת היפרקלמיה. לשקול תרופה רביעית חלופית (BB, חוסם אלפא או אופטימיזציית משתן לולאה).','ESC 2024; '+P('83, 143'),'warn',true);
+    } else if(k<=4.5&&egfr<=45){
+      it(O.plan,'eGFR 30-45: זהירות בספירונולקטון, להתחיל במינון נמוך עם ניטור קפדני של K וקריאטינין.',P('83, 143'),'warn');
+      O.drugs.push('mra');
+    } else if(k>5){
+      it(O.plan,'K מעל 5: לא MRA.',P(63),'warn');
+    } else {
+      it(O.plan,'K בין 4.5 ל-5: MRA בזהירות בלבד.',P(63),'warn');
+    }
+  }
+  if(hr!=null&&hr>80&&!S.t_bb){
+    if(!S.asthma){it(O.plan,'דופק מעל 80: להוסיף BB, למשל ביסופרולול 2.5-10 מ״ג.',P(84),'key');O.drugs.push('bb');}
+    else it(O.plan,'דופק מעל 80, אבל יש אסתמה: לא BB (סלקטיבי ללב רק עם התוויה מחייבת). לבחור תרופה רביעית אחרת.','החלטה; '+P('70, 74, 84'),'warn');
+  }
+  if(hr!=null&&hr<60&&k!=null&&k>4.5&&!S.t_alpha){it(O.plan,'דופק מתחת ל-60 ו-K מעל 4.5: להוסיף חוסם אלפא, דוקסזוסין 4-8 מ״ג.',P(84),'key');O.drugs.push('alpha');}
+  it(O.plan,'אפשר לשלב בין האפשרויות. אם עדיין מעל '+(x.relaxed?'היעד':'130/80')+': להוסיף תרופה נוספת. מרחיבי כלי דם רק אחרי BB ומשתן לולאה. קלונידין 100-300 מק״ג ליממה.',P(84));
+  const total=[S.t_acei||S.t_arb,S.t_ccb,S.t_thz||S.t_loop,S.t_mra,S.t_bb,S.t_alpha,S.t_ndhp,S.t_other].filter(Boolean).length;
+  if(total>=5&&S.t_mra&&(S.months||0)>=6){
+    it(O.plan,'יל״ד עיקש (refractory): 5 תרופות ומעלה כולל MRA, 6 חודשים. מרכז מומחה: קלונידין, חוסמי אלפא-בטא, לשקול דנרבציה כלייתית.',P(8),'warn');
+  }
+  bbIndications(x);
+  O.drugs.push('central','vaso');
+  if(ndhpSwap) O.drugs.unshift('ccb');
+}
+
+function followTreated(x,changed){
+  const {S,O,it,female,age}=x;
+  if(changed){
+    it(O.follow,'אחרי שינוי: קריאטינין ואלקטרוליטים אחרי 2-3 שבועות. ביקור אחרי 2-4 שבועות, ואחר כך חודשי עד איזון.',P('66, 86'),'key');
+    if(O.drugs.includes('thz')) it(O.follow,'אחרי תיאזיד: Na תוך 7-14 ימים'+(female&&age>65?', במיוחד אצלה.':'.'),P(86));
+    if(O.drugs.includes('mra')) it(O.follow,'אחרי MRA: K וקריאטינין.',P('63, 73'));
+  }
+  it(O.follow,'אחרי איזון: 2-4 ביקורים בשנה הראשונה, אחר כך 1-2 בשנה.',P('86-87'));
+  it(O.follow,'שנתי: תפקודי כליה, אלקטרוליטים, גלוקוז/HbA1c, ליפידים, ACR. לשקול ABPM אחת לשנה.',P(87));
+  it(O.workup,'אם לא בוצע מעולם: סקר PA (רנין, אלדוסטרון, K).'+(kLowNormal(S)?' K בגבול התחתון (3.5-4.6) בכל הבדיקות מחשיד להיפראלדוסטרוניזם.':''),P(kLowNormal(S)?'17-18':17));
+  it(O.workup,'אק״ג בתסמינים, דופק לא סדיר או התוויה חדשה. שנתי סביר אך לא מחייב.',P(88));
+  if(x.age>=65&&x.age<80) it(O.workup,'גיל 65-79: האם צריך הערכת ADL? מגבלה תפקודית או קוגניטיבית קובעת את מטרת הטיפול בלי קשר לגיל.',P('91, 95-96'));
+  secondaryFlags(x);
+}
+function finishTreated(x,label){ x.O.mbar=x.c.l+' · '+label; }
+
+/* ---------- render ---------- */
+let showRefs=false, settled=null, settleT=null;
+const openCards=new Set(['alerts']), openCats=new Set();
+function li(i){
+  const chg=settled&&!settled.has(i.t);
+  const cls=[i.l?'l-'+i.l:'',chg?'chg':''].filter(Boolean).join(' ');
+  return '<li'+(cls?' class="'+cls+'"':'')+'><span class="mk" aria-hidden="true"></span><span class="tx">'+esc(i.t)+(i.r?' <span class="ref'+(i.ext?' ext':'')+'">'+esc(i.r)+'</span>':'')+'</span></li>';
+}
+function esc(s){return String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
+function card(key,title,items,extra){
+  if(!items.length&&!extra) return '';
+  const chg=settled&&items.some(i=>!settled.has(i.t));
+  return '<details class="card fold" data-k="'+key+'"'+(openCards.has(key)?' open':'')+'><summary><h2><span class="dot" aria-hidden="true"></span>'+title+' <span class="n">'+items.length+'</span>'+(chg?'<span class="chgdot" title="השתנה"></span>':'')+'</h2></summary><ul class="items">'+items.map(li).join('')+'</ul>'+(extra||'')+'</details>';
+}
+function drugHTML(keys,lowEnd){
+  if(!keys||!keys.length) return '';
+  const seen=new Set(); let h='<div class="drugs">';
+  keys.forEach(k=>{
+    if(seen.has(k))return; seen.add(k);
+    if(k==='spc'){
+      h+='<details class="dg"><summary>תכשירים משולבים בכדור אחד (עמ׳ 76)</summary><div class="dlist">'+SPC.map(r=>'<div class="ditem"><div class="dmain"><span class="dname">'+esc(r[1])+'</span><span class="dheb">'+esc(r[0])+'</span><div class="dbrand">'+esc(r[2])+'</div></div><div class="dspecs"><span class="dtag">חוזק: <b>'+esc(r[3])+'</b></span></div></div>').join('')+'</div></details>';
+      return;
+    }
+    const D=DRUGS[k]; if(!D) return;
+    h+='<details class="dg"><summary>'+esc(D.label)+' <span class="ref">'+P(D.ref)+'</span></summary><div class="dlist">'+
+      D.items.map(r=>'<div class="ditem"><div class="dmain"><span class="dname">'+esc(r[0])+'</span><span class="dheb">'+esc(r[1])+'</span><div class="dbrand">'+esc(r[2])+'</div></div><div class="dspecs"><span class="dtag">טבליות: <b>'+esc(r[3])+'</b> מ״ג</span><span class="dtag d-range'+(lowEnd?' lowend':'')+'">טווח: <b>'+esc(r[4])+'</b> מ״ג/יום</span><span class="dtag"><b>'+esc(r[5])+'</b>/יום</span></div></div>').join('')+
+      '</div><div class="dnote">'+esc(D.note)+(lowEnd?' <b class="lowend">להתחיל בקצה התחתון של הטווח.</b>':'')+'</div></details>';
+  });
+  return h+'<p class="dnote" style="padding:0">† לא רשום במאגר התרופות, יבוא בתקנה 29ג. טווחים מטבלה 3; ההנחיה לא נותנת מינון התחלה.</p></div>';
+}
+let liveT=null;
+function announce(t){clearTimeout(liveT);liveT=setTimeout(()=>{$('live').textContent=t||'';},800);}
+function readingHTML(O,S){
+  const extra=[];
+  if(has(S.hs,S.hd)) extra.push(['בית',S.hs+'/'+S.hd]);
+  if(has(S.a24s,S.a24d)) extra.push(['24 שעות',S.a24s+'/'+S.a24d]);
+  return '<div class="reading"><span class="bp">'+esc(O.bp)+'<small>mmHg</small></span>'+extra.map(e=>'<span class="bp2">'+esc(e[0])+' <bdi>'+esc(e[1])+'</bdi></span>').join('')+'</div>';
+}
+function gaugeHTML(O,S){
+  const g=O.gauge; if(!g) return '';
+  const lo=100,hi=200,pos=v=>Math.max(0,Math.min(100,(v-lo)/(hi-lo)*100));
+  const mk=(v,cls,lab)=>'<span class="gm '+cls+'" style="left:'+pos(v)+'%"><b>'+lab+'</b></span>';
+  let h='<div class="gauge" role="img" aria-label="SBP '+S.sbp+' מול יעד '+g.lo+' עד '+g.hi+' ורצפה 120"><div class="gtrack"><span class="gband" style="left:'+pos(g.lo)+'%;width:'+(pos(g.hi)-pos(g.lo))+'%"></span><span class="gfloor" style="left:'+pos(120)+'%"></span>'+mk(S.sbp,'office',S.sbp);
+  if(has(S.hs,S.hd)&&Math.abs(S.hs-S.sbp)>=6) h+=mk(S.hs,'home','בית');
+  return h+'</div><div class="glab"><span>יעד SBP <bdi>'+g.lo+'-'+g.hi+'</bdi></span><span>רצפה <bdi>120</bdi></span></div></div>';
+}
+function bottomLine(O){
+  const order={crit:0,alert:1,warn:2}, seen=new Set(), warn=[];
+  ['alerts','decision','plan','avoid','target','workup','follow'].forEach(k=>O[k].forEach(i=>{
+    const lift=i.l==='crit'||i.l==='alert'||(i.l==='warn'&&(k==='alerts'||k==='decision'||k==='plan'||k==='avoid'));
+    if(lift&&!seen.has(i.t)){seen.add(i.t);warn.push(i);}
+  }));
+  warn.sort((a,b)=>order[a.l]-order[b.l]);
+  const keys=(arr,n)=>{const k=arr.filter(i=>i.l==='key').slice(0,n);return k.length?k:arr.filter(i=>!seen.has(i.t)).slice(0,1);};
+  const rows=[['מה עכשיו',keys(O.decision,2)],['טיפול',O.plan.filter(i=>i.l==='key').slice(0,2)],['יעד',keys(O.target,1)],['מעקב',keys(O.follow,1)]].filter(r=>r[1].length);
+  return {warn,rows};
+}
+function plain(i){const chg=settled&&!settled.has(i.t);return '<p'+(chg?' class="chg"':'')+'>'+esc(i.t)+(i.r?' <span class="ref'+(i.ext?' ext':'')+'">'+esc(i.r)+'</span>':'')+'</p>';}
+function render(){
+  const S=readForm();
+  const [os,od]=[S.sbp,S.dbp];
+  const pregShown=S.sex==='f'&&!(S.age>55);
+  if(!pregShown) S.preg='none';
+  $('fs-tx').hidden=S.mode!=='treated';
+  $('w-preg').hidden=!pregShown;
+  $('w-func').hidden=!(S.age>=80);
+  $('w-visits').hidden=S.mode!=='new';
+  $('fs-acute').hidden=!(has(os,od)&&(os>=180||od>=110));
+  document.querySelectorAll('.bpin').forEach(el=>{const p=parseBP(el.value);el.classList.toggle('bad',el.value.trim()!==''&&p[0]==null&&document.activeElement!==el);});
+  document.querySelectorAll('details[data-count]').forEach(d=>{const n=filled(d);d.querySelector('.cnt').textContent=n?n+' '+(d.dataset.count||'מסומנים'):'';});
+  document.querySelectorAll('.cat-btn[data-cat]').forEach(btn=>{
+    const cat=btn.dataset.cat, panel=document.querySelector('.cat-panel[data-panel="'+cat+'"]');
+    if(!panel) return;
+    const n=filled(panel);
+    const cnt=btn.querySelector('.cat-cnt');
+    if(cnt){cnt.hidden=!n;cnt.textContent=n;}
+    btn.classList.toggle('has-active',n>0);
+    const isOpen=openCats.has(cat);
+    btn.setAttribute('aria-expanded',String(isOpen));
+    panel.hidden=!isOpen;
+  });
+  const O=evaluate(S);
+  const autoOn=!!(O.auto&&O.auto.length);
+  $('risk').disabled=autoOn;
+  $('risk-auto').hidden=!autoOn;
+  $('risk-auto').textContent=autoOn?'הסיכון נקבע אוטומטית כגבוה: '+O.auto.join(', ')+'. הבחירה הידנית לא בשימוש.':'';
+  const R=$('results');
+  R.classList.toggle('norefs',!showRefs);
+  const setBar=(t,n)=>{$('mtxt').textContent=t||'';['mwarn','twarn'].forEach(id=>{$(id).hidden=!n;$(id).textContent=n||'';});};
+  if(O.empty){
+    R.innerHTML='<div class="verdict"><div class="empty-state">'+
+      '<svg class="empty-ill" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+
+      '<circle cx="40" cy="36" r="24" stroke-opacity="0.25"/>'+
+      '<path d="M24 36a16 16 0 0 1 32 0"/>'+
+      '<line x1="40" y1="36" x2="49" y2="25"/>'+
+      '<circle cx="40" cy="36" r="3" fill="currentColor"/>'+
+      '<path d="M14 62h16l5-9 6 16 6-13 4 6h15"/>'+
+      '</svg>'+
+      '<p class="empty-title">מוכן לחישוב קליני</p>'+
+      '<p class="empty-sub">הזן לחץ דם במרפאה וגיל כדי לקבל סיווג, יעד טיפולי ומתווה תרופתי מותאם בזמן אמת.</p>'+
+      '<div class="empty-samples"><div class="empty-samples-lbl">או טען מקרה לדוגמה לבדיקה מהירה:</div>'+
+      '<div class="samples">'+
+      '<button type="button" data-sample="dm">סוכרת ואלבומינוריה</button>'+
+      '<button type="button" data-sample="g1low">דרגה 1, סיכון נמוך</button>'+
+      '<button type="button" data-sample="tri">3 תרופות, לא מאוזן</button>'+
+      '<button type="button" data-sample="old">גיל 84, אובדן ADL</button>'+
+      '<button type="button" data-sample="g3">ל״ד חמור 188/112</button>'+
+      '<button type="button" data-sample="preg">הריון</button>'+
+      '</div></div></div></div>';
+    setBar('הזן ל״ד במרפאה',0);announce('');settled=null;return;
+  }
+  if(O.invalid){
+    R.innerHTML='<div class="verdict">'+readingHTML(O,S)+'</div><section class="card inval"><h2><span class="dot" aria-hidden="true"></span>'+esc(O.invalid.h)+'</h2><ul class="items">'+O.invalid.items.map(li).join('')+'</ul></section>';
+    setBar(O.mbar,0); announce(O.mbar); return;
+  }
+  const tog='<label class="reftog"><input type="checkbox" id="showrefs"'+(showRefs?' checked':'')+'>מקורות</label>';
+  let h='<div class="verdict"><div class="vtop">'+readingHTML(O,S)+tog+'</div><div class="chips">'+O.chips.map(c=>'<span class="chip'+(c.c?' c-'+c.c:'')+'">'+esc(c.t)+'</span>').join('')+'</div>'+(O.stop?'':gaugeHTML(O,S))+'</div>';
+  let nWarn=0;
+  if(O.stop){
+    h+='<section class="card stop"><h2><span class="dot" aria-hidden="true"></span>'+esc(O.stop.h)+'</h2><ul class="items">'+O.stop.items.map(li).join('')+'</ul></section>';
+    nWarn=1;
+  } else {
+    const B=bottomLine(O); nWarn=B.warn.length;
+    h+='<section class="card bl"><h2><span class="dot" aria-hidden="true"></span>שורה תחתונה</h2>'+
+      (B.warn.length?'<ul class="items warns">'+B.warn.map(li).join('')+'</ul>':'')+
+      '<dl>'+B.rows.map(r=>'<div><dt>'+r[0]+'</dt><dd>'+r[1].map(plain).join('')+'</dd></div>').join('')+'</dl></section>';
+    const lowEnd=S.age>=80||S.frail||S.dementia||(S.egfr!=null&&S.egfr<60)||S.ckd||(O.plan.some(i=>/שתי תרופות/.test(i.t)));
+    h+='<p class="foldhint">פירוט מלא, לחיצה פותחת:</p>';
+    h+=card('alerts','ל״ד חמור בלי תסמינים',O.alerts);
+    h+=card('decision','החלטה',O.decision);
+    h+=card('target','יעד',O.target);
+    h+=card('plan','טיפול מוצע ותרופות',O.plan,drugHTML(O.drugs,lowEnd));
+    h+=card('avoid','להימנע',O.avoid);
+    h+=card('workup','בירור',O.workup);
+    h+=card('follow','מעקב',O.follow);
+  }
+  R.innerHTML=h;
+  setBar(O.mbar,nWarn);
+  announce(O.mbar);
+  const now=new Set(); ['alerts','decision','plan','avoid','target','workup','follow'].forEach(k=>O[k].forEach(i=>now.add(i.t)));
+  clearTimeout(settleT); settleT=setTimeout(()=>{settled=now;},1500);
+}
+
+/* ---------- rules list ---------- */
+const RULES=[
+ ['סיווג','מיטבי מתחת ל-120/80, תקין 120-129/80-84, מוגבר 130-139/85-89, דרגה 1 140-159/90-99, דרגה 2 160-179/100-109, דרגה 3 180/110 ומעלה.',P(5)],
+ ['אישור אבחנה','מדידות ביתיות חוזרות (כולל ABPM) או שני ביקורים נפרדים.','החלטה; '+P('6, 8, 11, 50')],
+ ['אבחנה בביקור ראשון','180/110 ומעלה במדידות חוזרות באותו ביקור, או 160/100 ומעלה עם HMOD. בהנחיה הישראלית: רק 180/110 בסוכרת עם רקע CV.','AFP 2023; החלטה; '+P(197)],
+ ['ל״ד חמור לא תסמיני','לא למיון. סיבה הפיכה, טיפול פומי, ירידה של 10-20% ב-24-48 שעות, בלי ניפדיפין תת-לשוני, ביקור תוך שבועיים.',P('64, 183-188')],
+ ['התחלת טיפול, כללי','מדרגה 1 מיד, בלי קשר לסיכון. חריג: 140-149/90-94 עם סיכון נמוך, 3 חודשי אורח חיים.','פרק 6, '+P(50)],
+ ['ל״ד 130-139/80-89 עם סיכון גבוה','טיפול מיד. מחלה כלילית: מ-130/80. אחרי שבץ בלבד: לא בטווח הזה.',P('50-52')],
+ ['סוכרת או CKD','140/90 ומעלה: מיד (בסוכרת שתי תרופות). 130-139/80-89: 3 חודשי אורח חיים ואז תרופה.','החלטה; '+P('52, 139, 201')],
+ ['גיל 80 ומעלה, סף','140-160 לפי שבריריות ותחלואה. SBP 160 ומעלה: לטפל. 140-159: עם מחלת כליה, לב או שבץ לטפל, אחרת לשקול. אובדן ADL חלקי: מעל 160. אובדן קשה: פרטני. מתחת ל-140: בלי תרופה.',P('51, 92-93, 96')],
+ ['יעד','במרפאה 130/80, בבית ובניטור יום מתחת ל-130/80, בלילה מתחת ל-120/70.',P(13)],
+ ['רצפה','120/70 בכל גיל עד 80, כולל 65-79. מגיל 80: מתחת ל-120/70 לשקול הפחתה, DBP 60-69 בזהירות. שבריריות או דמנציה: הפחתה הדרגתית מתחת ל-130 או ב-OH. מחלה כלילית: DBP מעל 60 והורדה איטית. CKD עם סיכון CV: מתחת ל-120/80 כחריג. בכל ערך: להפחית בתסמיני תת-זילוח.',P('52, 92-94, 96, 140, 222')],
+ ['דמנציה','כמו שבריריות בכל גיל: יעד סביב 140-150/70-80, מונותרפיה, מדידה בעמידה.','החלטה; '+P(94)],
+ ['יעד מגיל 80','לפי שבריריות ותפקוד: עצמאי 140-150, ואם נסבל 130-139 עם DBP 70 לפחות. שברירי או אובדן ADL חלקי 140-150. דמנציה 140-150/70-80. אובדן קשה: פרטני. גובר על יעדי סוכרת ו-CKD.','החלטה; '+P('52, 93-94, 96')],
+ ['יעד ב-CKD','מתחת ל-130/80. עם סיכון CV נוסף: לשקול מתחת ל-120/80, כחריג לרצפה 120/70. שבריריות, OH או eGFR מתחת ל-30: מתחת ל-140/90.',P('52, 140-141')],
+ ['WCH עם סיכון גבוה או HMOD','ABPM לאישור, ואז לשקול מונותרפיה.','החלטה; '+P('9, 12')],
+ ['היצרות דו״צ של עורקי הכליה','בלי חוסמי RAS (ACEi, ARB), אותו מנגנון. CCB ומשתן, ובעמידות: הפניה לשקילת רה-וסקולריזציה.','החלטה; '+P('71-72, 156-157')],
+ ['אלקטרוליטים','Na מתחת ל-135 או K מתחת ל-3.5: אזהרה בולטת על משתנים. היפונתרמיה מתיאזיד: להפסיק ולבחור חלופה; משתן לולאה רק באי-ספיקת לב. K מעל 5: אזהרה על ACEi/ARB, ולא MRA.','החלטה; '+P('63, 71, 73')],
+ ['ל״ד 130-139/80-89 במרפאה, תקין מחוץ למרפאה','ABPM לפני החלטה על טיפול. ABPM תקין: בלי תרופה, מעקב שנתי.','החלטה; '+P('9, 12')],
+ ['הערכת תפקוד','גיל 65-79: שאלה אם צריך הערכת ADL. מגיל 80: שדה תפקוד שקובע סף ויעד.',P('91, 93, 95-96')],
+ ['מונו מול שילוב','מונותרפיה: SBP 140-150 עם סיכון נמוך, גיל 80 ומעלה, או שבריריות. אחרים: שתי תרופות, עדיף בכדור אחד.',P(65)],
+ ['תרופה ראשונה מגיל 85 או בשבריריות','CCB או RAS, אחר כך משתן במינון נמוך. לא BB ולא אלפא כקו ראשון.','החלטה; '+P(93)+'; ESC 2024'],
+ ['יל״ד עמיד','לא ביעד 130/80 על RAS + CCB + משתן במינון מרבי, 3-6 חודשים, באישור ABPM/HBPM.',P('8, 82')],
+ ['תרופה רביעית','K עד 4.5 ו-eGFR מעל 45: ספירונולקטון 12.5-25 עד 50 (ב-eGFR 30-45 בזהירות; מתחת ל-30 להימנע בשגרה). דופק מעל 80: BB. דופק מתחת ל-60 ו-K מעל 4.5: אלפא.','החלטה; ESC 2024; '+P('63, 73, 83-84')],
+ ['הגנה כלייתית: קרנדיה ו-SGLT2i','ב-CKD עם אלבומינוריה או סוכרת (eGFR 20 ומעלה): לשקול SGLT2i. בסוכרת עם CKD ואלבומינוריה על RAS מרבי (eGFR 25 ומעלה ו-K עד 4.8, ללא MRA סטרואידלי): לשקול finerenone (קרנדיה).','ADA/KDIGO 2024; '+P(143)],
+ ['BB באסתמה','להימנע. עם התוויה מחייבת: סלקטיבי ללב, עם אזהרה.','החלטה; '+P('70, 74')],
+ ['מעקב אחרי שינוי','מעבדה אחרי 2-3 שבועות, ביקור אחרי 2-4 שבועות, חודשי עד איזון.',P('66, 86')],
+ ['מעקב אחרי איזון','2-4 ביקורים בשנה הראשונה, אחר כך 1-2 בשנה. מעבדה שנתית.',P('86-87')],
+ ['הערכת סיכון','גבוה אוטומטית: סוכרת, CKD, CVD, HMOD, FH, SCORE2 10% ומעלה. בשאר המקרים: שיקול קליני. SCORE2/SCORE2-OP ככלי עזר.',P(17)+'; ESC 2024'],
+ ['מינונים','טווחים מטבלה 3. קצה תחתון מגיל 80, בשבריריות, ב-CKD ובשילוב ראשוני.','החלטה; '+P('72-76')],
+ ['מחוץ להיקף','ילדים, דיאליזה והשתלה, טיפול באשפוז.','פרקים 12, 14, 19']
+];
+$('rulegrid').innerHTML=RULES.map(r=>'<div class="rule"><b>'+esc(r[0])+'</b><p>'+esc(r[1])+'</p><div class="src">'+esc(r[2])+'</div></div>').join('');
+
+/* ---------- samples, tabs, events ---------- */
+const SAMPLES={
+ dm:{mode:'new',age:58,sex:'m',sbp:152,dbp:94,visits:'2',hr:76,hs:146,hd:90,dm:true,egfr:78,acr:45,k:4.3,na:139},
+ g1low:{mode:'new',age:44,sex:'f',preg:'none',sbp:144,dbp:91,visits:'2',hr:70,hs:139,hd:87,k:4.2,na:140,risk:'low'},
+ tri:{mode:'treated',age:67,sex:'m',sbp:148,dbp:86,visits:'2',hr:74,hs:141,hd:86,egfr:64,k:4.1,na:138,t_acei:true,t_ccb:true,t_thz:true,maxdose:'yes',months:5,adh:'ok',risk:'moderate'},
+ old:{mode:'new',age:84,sex:'f',sbp:156,dbp:78,visits:'2',hr:68,func80:'partial',frail:true,egfr:52,k:4.4,na:137},
+ g3:{mode:'new',age:52,sex:'m',sbp:188,dbp:112,visits:'1',hr:82,k:3.9,na:140,risk:'moderate'},
+ preg:{mode:'new',age:31,sex:'f',preg:'pregnant',sbp:148,dbp:96,visits:'2',hr:84}
+};
+const APP=document.querySelector('.app');
+function setView(v){
+  APP.dataset.view=v;
+  document.querySelectorAll('.tabs [role=tab]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.view===v)));
+  window.scrollTo(0,0);
+}
+function load(k){settled=null;writeForm(Object.assign({},SAMPLES[k]));render();}
+document.querySelector('.tabs').addEventListener('click',e=>{const b=e.target.closest('[role=tab]');if(b)setView(b.dataset.view);});
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.share-wrap')&&!$('share-menu').hidden){
+    $('share-menu').hidden=true;
+    $('share-btn').setAttribute('aria-expanded','false');
+  }
+  const s=e.target.closest('[data-sample]');
+  if(s){load(s.dataset.sample);setView('form');return;}
+  const cb=e.target.closest('.cat-btn[data-cat]');
+  if(cb){
+    const cat=cb.dataset.cat;
+    if(openCats.has(cat)) openCats.delete(cat); else openCats.add(cat);
+    render();
+    return;
+  }
+  const cl=e.target.closest('[data-close-cat]');
+  if(cl){openCats.delete(cl.dataset.closeCat);render();return;}
+});
+$('theme-toggle').addEventListener('click',()=>{
+  const root=document.documentElement;
+  const isDark=root.dataset.theme==='dark'||(!root.dataset.theme&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+  root.dataset.theme=isDark?'light':'dark';
+  $('theme-toggle').textContent=isDark?'מצב כהה':'מצב בהיר';
+});
+$('clear').addEventListener('click',()=>{settled=null;writeForm({mode:'new'});render();setView('form');});
+$('mgo').addEventListener('click',()=>setView('result'));
+$('f').addEventListener('input',e=>{
+  const el=e.target;
+  if(el.classList&&el.classList.contains('bpin')&&e.inputType&&e.inputType.indexOf('insert')===0&&/^\d+$/.test(el.value)){
+    const v=el.value;
+    if((v.length===3&&/^[12]/.test(v))||(v.length===2&&/^[3-9]/.test(v))) el.value=v+'/';
+  }
+  render();
+});
+$('f').addEventListener('change',e=>{const t=e.target.type;if(t!=='text'&&t!=='number')render();});
+$('f').addEventListener('focusout',e=>{const el=e.target;if(el.classList&&el.classList.contains('bpin'))el.classList.toggle('bad',el.value.trim()!==''&&parseBP(el.value)[0]==null);});
+$('f').addEventListener('submit',e=>e.preventDefault());
+$('results').addEventListener('change',e=>{if(e.target.id==='showrefs'){showRefs=e.target.checked;$('results').classList.toggle('norefs',!showRefs);}});
+$('results').addEventListener('toggle',e=>{const d=e.target;if(d.dataset&&d.dataset.k){if(d.open)openCards.add(d.dataset.k);else openCards.delete(d.dataset.k);}},true);
+
+/* ---------- sharing & URL state ---------- */
+let toastT=null;
+function showToast(msg){
+  const t=$('toast'); t.textContent=msg; t.hidden=false;
+  clearTimeout(toastT); toastT=setTimeout(()=>{t.hidden=true;},2800);
+}
+function encodeStateToHash(){
+  const S=readForm(), p=new URLSearchParams();
+  if(S.mode&&S.mode!=='new') p.set('mode',S.mode);
+  NUM.forEach(k=>{if(S[k]!=null) p.set(k,S[k]);});
+  Object.keys(PAIRS).forEach(id=>{const v=$(id).value.trim();if(v) p.set(id,v);});
+  BOOL.forEach(k=>{if(S[k]) p.set(k,'1');});
+  const defs={sex:'m',preg:'none',func80:'indep',visits:'1',risk:'low',maxdose:'no',adh:'unsure'};
+  SEL.forEach(k=>{if(S[k]&&S[k]!==defs[k]) p.set(k,S[k]);});
+  return p.toString();
+}
+function loadStateFromHash(){
+  const h=location.hash.replace(/^#/,'');
+  if(!h) return false;
+  const p=new URLSearchParams(h);
+  if(![...p.keys()].length) return false;
+  const S={mode:p.get('mode')||'new'};
+  NUM.forEach(k=>{if(p.has(k)){const v=parseFloat(p.get(k));if(isFinite(v))S[k]=v;}});
+  Object.keys(PAIRS).forEach(id=>{if(p.has(id)){const pr=parseBP(p.get(id));S[PAIRS[id][0]]=pr[0];S[PAIRS[id][1]]=pr[1];}});
+  BOOL.forEach(k=>{if(p.get(k)==='1') S[k]=true;});
+  SEL.forEach(k=>{if(p.has(k)) S[k]=p.get(k);});
+  writeForm(S);
+  return true;
+}
+function buildCaseSummary(){
+  const S=readForm(), O=evaluate(S);
+  if(O.empty) return 'מנווט יתר לחץ דם (הנחיות יל״ד בישראל 2026) – טרם הוזן לחץ דם במרפאה.';
+  const lines=['*סיכום מנווט יתר לחץ דם (הנחיות ישראל 2026)*'];
+  const demo=[];
+  if(S.age!=null) demo.push('גיל '+S.age);
+  demo.push(S.sex==='f'?'נקבה':'זכר');
+  demo.push(S.mode==='treated'?'מקבל טיפול':'אבחנה חדשה');
+  lines.push('מטופל: '+demo.join(', ')+' | ל״ד מרפאה: '+O.bp+' mmHg'+(has(S.hs,S.hd)?' | בית: '+S.hs+'/'+S.hd:''));
+  if(O.chips&&O.chips.length) lines.push('סיווג: '+O.chips.map(c=>c.t).join(' · '));
+  if(O.stop){
+    lines.push('⚠️ '+O.stop.h+':');
+    O.stop.items.forEach(i=>lines.push('- '+i.t));
+  } else if(O.invalid){
+    lines.push('⚠️ '+O.invalid.h);
+  } else {
+    const B=bottomLine(O);
+    if(B.warn.length){
+      lines.push('דגשים ואזהרות:');
+      B.warn.forEach(w=>lines.push('! '+w.t));
+    }
+    B.rows.forEach(r=>{
+      lines.push(r[0]+': '+r[1].map(x=>x.t).join(' | '));
+    });
+  }
+  return lines.join('\n');
+}
+async function copyOrShareText(text,title,copiedMsg){
+  if(navigator.share && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)){
+    try{ await navigator.share({title,text}); return; }catch(e){ if(e&&e.name==='AbortError') return; }
+  }
+  try{
+    await navigator.clipboard.writeText(text);
+    showToast(copiedMsg);
+  }catch(e){
+    const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    showToast(copiedMsg);
+  }
+}
+$('share-btn').addEventListener('click',e=>{
+  e.stopPropagation();
+  const m=$('share-menu'), open=m.hidden;
+  m.hidden=!open;
+  $('share-btn').setAttribute('aria-expanded',String(open));
+});
+function getCleanHTML(){
+  const clone=document.documentElement.cloneNode(true);
+  const res=clone.querySelector('#results'); if(res) res.innerHTML='';
+  const rg=clone.querySelector('#rulegrid'); if(rg) rg.innerHTML='';
+  const sm=clone.querySelector('#share-menu'); if(sm) sm.setAttribute('hidden','');
+  const tst=clone.querySelector('#toast'); if(tst) tst.setAttribute('hidden','');
+  return '<!doctype html>\n'+clone.outerHTML;
+}
+if(location.protocol==='http:'||location.protocol==='https:') $('sh-link').hidden=false;
+$('sh-case').addEventListener('click',async()=>{
+  $('share-menu').hidden=true; $('share-btn').setAttribute('aria-expanded','false');
+  const txt=buildCaseSummary();
+  await copyOrShareText(txt,'סיכום מנווט יתר לחץ דם','סיכום המקרה הועתק ללוח');
+});
+$('sh-link').addEventListener('click',async()=>{
+  $('share-menu').hidden=true; $('share-btn').setAttribute('aria-expanded','false');
+  const q=encodeStateToHash();
+  const base=location.href.split('#')[0];
+  const url=q?(base+'#'+q):base;
+  history.replaceState(null,'',q?('#'+q):location.pathname+location.search);
+  await copyOrShareText(url,'מנווט יתר לחץ דם','הקישור למקרה הועתק ללוח');
+});
+$('sh-code').addEventListener('click',async()=>{
+  $('share-menu').hidden=true; $('share-btn').setAttribute('aria-expanded','false');
+  const code=getCleanHTML();
+  try{
+    await navigator.clipboard.writeText(code);
+    showToast('קוד ה-HTML הועתק! הדבק אותו בקלוד ליצירת קישור Artifact');
+  }catch(e){
+    const ta=document.createElement('textarea'); ta.value=code; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    showToast('קוד ה-HTML הועתק! הדבק אותו בקלוד ליצירת קישור Artifact');
+  }
+});
+$('sh-file').addEventListener('click',async()=>{
+  $('share-menu').hidden=true; $('share-btn').setAttribute('aria-expanded','false');
+  const htmlContent=getCleanHTML();
+  const blob=new Blob([htmlContent],{type:'text/html'});
+  const file=new File([blob],'htn-2026.html',{type:'text/html'});
+  if(navigator.canShare && navigator.canShare({files:[file]})){
+    try{ await navigator.share({files:[file]}); return; }
+    catch(e){ if(e&&e.name==='AbortError') return; }
+  }
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='htn-2026.html';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  showToast('הקובץ htn-2026.html ירד למכשיר');
+});
+
+window.__htn={evaluate,category,parseBP};
+setView('form');
+if(!loadStateFromHash()) writeForm({mode:'new'});
+render();
+window.addEventListener('hashchange',()=>{if(loadStateFromHash())render();});
+})();
+</script>
+
+<script id="pwa-script">
+/* PWA layer: offline support, install button, update notice. Added by build_pwa.py; the calculator code is untouched. */
+(function () {
+  'use strict';
+  var d = document, w = window, nav = navigator;
+
+  // Remove PWA controls left over in a copy of this page that was saved or shared as a file.
+  function stripLeftovers() {
+    var old = d.querySelectorAll('.pwa-ui');
+    for (var i = 0; i < old.length; i++) old[i].parentNode.removeChild(old[i]);
+  }
+  stripLeftovers();
+
+  // Keep the phone's status bar the same color as the page, including after the light/dark toggle.
+  var metas = d.querySelectorAll('meta[name="theme-color"]');
+  function syncThemeColor() {
+    if (!d.body) return;
+    var bg = getComputedStyle(d.body).backgroundColor;
+    if (!bg || bg === 'transparent' || bg === 'rgba(0, 0, 0, 0)') return;
+    for (var i = 0; i < metas.length; i++) metas[i].setAttribute('content', bg);
+  }
+  syncThemeColor();
+  if (w.MutationObserver) {
+    var mo = new MutationObserver(function () { w.requestAnimationFrame(syncThemeColor); });
+    mo.observe(d.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class', 'style'] });
+    if (d.body) mo.observe(d.body, { attributes: true, attributeFilter: ['data-theme', 'class', 'style'] });
+  }
+  if (w.matchMedia) {
+    var mq = w.matchMedia('(prefers-color-scheme: dark)');
+    if (mq.addEventListener) mq.addEventListener('change', syncThemeColor);
+  }
+
+  // Only a real hosted copy (https, top-level window) becomes an app.
+  // A file opened from WhatsApp, or a copy pasted into a Claude artifact, stays a plain page.
+  var hosted = location.protocol === 'https:' || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+  var framed = true;
+  try { framed = w.self !== w.top; } catch (e) { framed = true; }
+  if (!hosted || framed || !('serviceWorker' in nav)) return;
+
+  var ua = nav.userAgent || '';
+  var isIOS = /iPad|iPhone|iPod/.test(ua) || (nav.platform === 'MacIntel' && nav.maxTouchPoints > 1);
+  var inAppBrowser = /FBAN|FBAV|Instagram|Line\/|WhatsApp|GSA\/|Snapchat|TikTok/i.test(ua);
+  function isStandalone() {
+    return (w.matchMedia && (w.matchMedia('(display-mode: standalone)').matches || w.matchMedia('(display-mode: fullscreen)').matches)) || nav.standalone === true;
+  }
+
+  // ---------- service worker ----------
+  var hadController = !!nav.serviceWorker.controller;
+  var announced = false;
+  function announceUpdate() {
+    if (announced) return;
+    announced = true;
+    toast('יש גרסה חדשה של המחשבון.', 'רענון', function () { location.reload(); });
+  }
+  nav.serviceWorker.addEventListener('controllerchange', function () {
+    if (!hadController) { hadController = true; return; }   // first install, nothing to announce
+    announceUpdate();
+  });
+  nav.serviceWorker.addEventListener('message', function (e) {
+    if (e.data && e.data.type === 'app-updated') announceUpdate();
+  });
+  function checkForUpdate(reg) {
+    if (nav.onLine === false) return;
+    if (reg) reg.update().catch(function () {});
+    if (nav.serviceWorker.controller) nav.serviceWorker.controller.postMessage({ type: 'check-update' });
+  }
+  function register() {
+    nav.serviceWorker.register('sw.js', { scope: './' }).then(function (reg) {
+      var last = Date.now();
+      checkForUpdate(null);   // the browser checks sw.js on launch by itself; this asks about index.html
+      d.addEventListener('visibilitychange', function () {
+        if (d.visibilityState === 'visible' && Date.now() - last > 30 * 60 * 1000) {
+          last = Date.now();
+          checkForUpdate(reg);
+        }
+      });
+    }).catch(function () {});
+  }
+  if (d.readyState === 'complete') register(); else w.addEventListener('load', register);
+
+  // ---------- install: a dismissible banner, plus a permanent item in the share menu ----------
+  var ICON_INSTALL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/></svg>';
+  var ICON_SHARE = '<svg class="pwa-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="M8 7l4-4 4 4"/><path d="M7 10H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-1"/></svg>';
+  var DISMISS_KEY = 'htn-pwa-banner-dismissed';
+  var DISMISS_DAYS = 30;
+  var deferredPrompt = null;
+
+  function dismissedRecently() {
+    try {
+      var t = +w.localStorage.getItem(DISMISS_KEY);
+      return t > 0 && Date.now() - t < DISMISS_DAYS * 864e5;
+    } catch (e) { return false; }
+  }
+
+  var banner = d.createElement('div');
+  banner.className = 'pwa-ui pwa-banner';
+  banner.dir = 'rtl';
+  banner.hidden = true;
+  banner.setAttribute('role', 'region');
+  banner.setAttribute('aria-label', 'התקנת המחשבון כאפליקציה');
+  banner.innerHTML =
+    '<span class="pwa-banner-ic" aria-hidden="true">' + ICON_INSTALL + '</span>' +
+    '<span class="pwa-banner-tx"><b>אפשר להתקין כאפליקציה</b><small>אייקון במסך הבית, ועובד גם בלי אינטרנט</small></span>' +
+    '<button type="button" class="pwa-install">התקנה</button>' +
+    '<button type="button" class="pwa-x" aria-label="לא עכשיו">✕</button>';
+  var anchor = d.querySelector('nav.tabs');
+  var header = d.querySelector('header');
+  if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(banner, anchor);
+  else if (header && header.parentNode) header.parentNode.insertBefore(banner, header.nextSibling);
+  else d.body.insertBefore(banner, d.body.firstChild);
+
+  var menu = d.getElementById('share-menu');
+  var menuItem = null;
+  if (menu) {
+    menuItem = d.createElement('button');
+    menuItem.type = 'button';
+    menuItem.className = 'pwa-ui share-item pwa-menu-install';
+    menuItem.hidden = true;
+    menuItem.innerHTML = '<b>התקנה כאפליקציה בטלפון</b><small>אייקון במסך הבית, עובד גם בלי אינטרנט</small>';
+    menu.insertBefore(menuItem, menu.firstChild);
+  }
+
+  function refreshInstallUI() {
+    var can = !isStandalone() && !!(deferredPrompt || isIOS);
+    banner.hidden = !can || dismissedRecently();
+    if (menuItem) menuItem.hidden = !can;
+  }
+  function doInstall() {
+    if (deferredPrompt) {
+      var p = deferredPrompt;
+      deferredPrompt = null;
+      p.prompt();
+      (p.userChoice || Promise.resolve()).then(refreshInstallUI, refreshInstallUI);
+    } else {
+      openIOSSheet();
+    }
+  }
+  w.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    refreshInstallUI();
+  });
+  w.addEventListener('appinstalled', function () {
+    deferredPrompt = null;
+    refreshInstallUI();
+    toast('המחשבון הותקן. אפשר לפתוח אותו ממסך הבית.');
+  });
+  banner.querySelector('.pwa-install').addEventListener('click', doInstall);
+  banner.querySelector('.pwa-x').addEventListener('click', function () {
+    try { w.localStorage.setItem(DISMISS_KEY, String(Date.now())); } catch (e) {}
+    banner.hidden = true;
+  });
+  if (menuItem) menuItem.addEventListener('click', function () {
+    menu.hidden = true;   // close the calculator's share menu the same way it closes itself
+    var sb = d.getElementById('share-btn');
+    if (sb) sb.setAttribute('aria-expanded', 'false');
+    doInstall();
+  });
+  refreshInstallUI();
+
+  // ---------- iPhone / iPad instructions ----------
+  var sheet = null, lastFocus = null;
+  function openIOSSheet() {
+    if (sheet) return;
+    lastFocus = d.activeElement;
+    sheet = d.createElement('div');
+    sheet.className = 'pwa-ui pwa-sheet-wrap';
+    sheet.dir = 'rtl';
+    sheet.lang = 'he';
+    sheet.innerHTML =
+      '<div class="pwa-sheet" role="dialog" aria-modal="true" aria-labelledby="pwa-sheet-t">' +
+        '<h2 id="pwa-sheet-t">התקנה באייפון או אייפד</h2>' +
+        (inAppBrowser ? '<p class="pwa-warn">הדף פתוח עכשיו בתוך אפליקציה אחרת. פתחו אותו קודם בדפדפן <bdi>Safari</bdi>.</p>' : '') +
+        '<ol>' +
+          '<li>לחצו על כפתור השיתוף ' + ICON_SHARE + '. במערכת <bdi>iOS 26</bdi> הוא נמצא בתפריט ⋯ שליד שורת הכתובת.</li>' +
+          '<li>בחרו <b>הוספה למסך הבית</b> (<bdi>Add to Home Screen</bdi>).</li>' +
+          '<li>השאירו את המתג <b><bdi>Open as Web App</bdi></b> דלוק, ולחצו <b>הוסף</b>.</li>' +
+        '</ol>' +
+        '<p class="pwa-note">אחרי פתיחה אחת עם אינטרנט, המחשבון עובד גם בלי חיבור.</p>' +
+        '<button type="button" class="pwa-close">הבנתי</button>' +
+      '</div>';
+    sheet.addEventListener('click', function (e) { if (e.target === sheet) closeIOSSheet(); });
+    sheet.querySelector('.pwa-close').addEventListener('click', closeIOSSheet);
+    d.addEventListener('keydown', onKey);
+    d.body.appendChild(sheet);
+    sheet.querySelector('.pwa-close').focus();
+  }
+  function closeIOSSheet() {
+    if (!sheet) return;
+    d.removeEventListener('keydown', onKey);
+    sheet.parentNode.removeChild(sheet);
+    sheet = null;
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  function onKey(e) { if (e.key === 'Escape') closeIOSSheet(); }
+
+  // ---------- small notice at the bottom ----------
+  var toastEl = null, toastTimer = 0;
+  function toast(msg, actionLabel, action) {
+    if (toastEl && toastEl.parentNode) toastEl.parentNode.removeChild(toastEl);
+    clearTimeout(toastTimer);
+    toastEl = d.createElement('div');
+    toastEl.className = 'pwa-ui pwa-toast';
+    toastEl.dir = 'rtl';
+    toastEl.lang = 'he';
+    toastEl.setAttribute('role', 'status');
+    var span = d.createElement('span');
+    span.textContent = msg;
+    toastEl.appendChild(span);
+    if (actionLabel) {
+      var a = d.createElement('button');
+      a.type = 'button';
+      a.className = 'pwa-act';
+      a.textContent = actionLabel;
+      a.addEventListener('click', action);
+      toastEl.appendChild(a);
+    }
+    var x = d.createElement('button');
+    x.type = 'button';
+    x.className = 'pwa-x';
+    x.setAttribute('aria-label', 'סגירה');
+    x.textContent = '✕';
+    x.addEventListener('click', function () { if (toastEl && toastEl.parentNode) toastEl.parentNode.removeChild(toastEl); toastEl = null; });
+    toastEl.appendChild(x);
+    d.body.appendChild(toastEl);
+    if (!actionLabel) toastTimer = setTimeout(function () { if (toastEl && toastEl.parentNode) toastEl.parentNode.removeChild(toastEl); toastEl = null; }, 6000);
+  }
+})();
+</script>
+</body>
+</html>
