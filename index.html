@@ -248,7 +248,7 @@ ul.items li.chg,.card.bl dd p.chg{box-shadow:inset 3px 0 0 var(--info);padding-i
 .noscript-alert{background:#FBE9E7;color:#B3261E;border:2px solid #B3261E;border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:14.5px;line-height:1.5}
 .noscript-alert b{display:block;font-size:16px;margin-bottom:4px}
 .share-wrap{position:relative;display:inline-block}
-.share-menu{position:absolute;top:calc(100% + 6px);inset-inline-end:0;z-index:50;min-width:260px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.14);padding:6px;display:flex;flex-direction:column;gap:4px}
+.share-menu{position:absolute;top:calc(100% + 6px);inset-inline-end:0;z-index:50;min-width:260px;max-width:calc(100vw - 16px);background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.14);padding:6px;display:flex;flex-direction:column;gap:4px}
 .share-item{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;text-align:right;padding:8px 10px;border:0;border-radius:8px;background:transparent;color:var(--fg);cursor:pointer;transition:background .15s}
 .share-item:hover{background:var(--sunk)}
 .share-item b{font-size:13.5px;font-weight:600;color:var(--fg)}
@@ -268,6 +268,8 @@ input.bpin.bad{border-color:var(--crit)}
   .cat-close{min-height:44px;min-width:44px}
   details.more>summary{padding-block:11px}
 }
+/* v6: when the share button sits at the right edge (phones, narrow windows) the menu opens leftward */
+.share-menu.flip{inset-inline-end:auto;inset-inline-start:0}
 /* v5: segmented buttons for short choice lists */
 .segsel{display:flex;width:100%;border-color:var(--field-line)}
 .segsel label{flex:1;justify-content:center;text-align:center;padding-inline:6px;line-height:1.25}
@@ -753,7 +755,7 @@ function evaluate(S0){
   };
   const officeBad=bad.filter(t=>t.indexOf('ל״ד במרפאה')===0);
   if(officeBad.length) return invalidOut(officeBad);
-  const female=S.sex==='f', preg=female?S.preg:'none';
+  const female=S.sex==='f', preg=(female&&!(S.age>55))?S.preg:'none';   // v6: same rule as the form, which hides the field above 55
   const severe=sbp>=180||dbp>=110;
   const acute=['s_chest','s_dysp','s_head','s_neuro','s_conf','s_vis','s_renal'].some(k=>S[k]);
 
@@ -1675,7 +1677,12 @@ $('theme-toggle').addEventListener('click',()=>{
   root.dataset.theme=isDark?'light':'dark';
   $('theme-toggle').textContent=isDark?'מצב כהה':'מצב בהיר';
 });
-$('clear').addEventListener('click',()=>{settled=null;writeForm({mode:'new'});render();setView('form');});
+$('clear').addEventListener('click',()=>{
+  settled=null;writeForm({mode:'new'});render();setView('form');
+  if(location.hash){   // v6: drop a case that came from a link, so a reload does not bring it back
+    try{history.replaceState(null,'',location.pathname+location.search);}catch(e){location.hash='';}
+  }
+});
 $('mgo').addEventListener('click',()=>setView('result'));
 $('f').addEventListener('input',e=>{
   const el=e.target;
@@ -1704,6 +1711,7 @@ function encodeStateToHash(){
   Object.keys(PAIRS).forEach(id=>{const v=$(id).value.trim();if(v) p.set(id,v);});
   BOOL.forEach(k=>{if(S[k]) p.set(k,'1');});
   const defs={sex:'m',preg:'none',func80:'indep',visits:'1',risk:'low',maxdose:'no',adh:'unsure'};
+  if(!(S.sex==='f'&&!(S.age>55))) S.preg='none';   // v6: a hidden pregnancy field does not travel in the link
   SEL.forEach(k=>{if(S[k]&&S[k]!==defs[k]) p.set(k,S[k]);});
   return p.toString();
 }
@@ -1764,8 +1772,14 @@ $('share-btn').addEventListener('click',e=>{
   e.stopPropagation();
   const m=$('share-menu'), open=m.hidden;
   m.hidden=!open;
+  if(open) fitShareMenu();
   $('share-btn').setAttribute('aria-expanded',String(open));
 });
+function fitShareMenu(){   // v6: keep the whole menu on screen
+  const m=$('share-menu'); m.classList.remove('flip');
+  const vw=document.documentElement.clientWidth, r=m.getBoundingClientRect();
+  if(r.right>vw-8||r.left<8) m.classList.add('flip');
+}
 function getCleanHTML(){
   const clone=document.documentElement.cloneNode(true);
   const res=clone.querySelector('#results'); if(res) res.innerHTML='';
