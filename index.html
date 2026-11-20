@@ -254,6 +254,29 @@ ul.items li.chg,.card.bl dd p.chg{box-shadow:inset 3px 0 0 var(--info);padding-i
 .share-item b{font-size:13.5px;font-weight:600;color:var(--fg)}
 .share-item small{font-size:12px;color:var(--muted)}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:100;background:var(--fg);color:var(--surface);padding:8px 16px;border-radius:999px;font-size:13.5px;font-weight:500;box-shadow:0 4px 12px rgba(0,0,0,.2);transition:opacity .2s}
+
+/* v4 (Nov 2026): field borders at 3:1 contrast, home label under the gauge, 44 px touch targets */
+:root{--field-line:#83938C}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--field-line:#62716A}}
+:root[data-theme="dark"]{--field-line:#62716A}
+select,input[type=number],input[type=text].bpin{border-color:var(--field-line)}
+input.bpin.bad{border-color:var(--crit)}
+.gm.home b{bottom:auto;top:calc(100% + 4px)}
+.gtrack:has(.gm.home){margin-bottom:26px}
+@media (pointer:coarse){
+  .tools button,.tabs button,select,input[type=number],input[type=text].bpin,.seg label,.pills label,.cat-btn,.reftog{min-height:44px}
+  .cat-close{min-height:44px;min-width:44px}
+  details.more>summary{padding-block:11px}
+}
+/* v5: segmented buttons for short choice lists */
+.segsel{display:flex;width:100%;border-color:var(--field-line)}
+.segsel label{flex:1;justify-content:center;text-align:center;padding-inline:6px;line-height:1.25}
+.segsel.auto label{flex:1 1 auto}
+.segsel.col{flex-direction:column}
+.segsel.col label{justify-content:flex-start;text-align:start;border-inline-start:0;border-top:1px solid var(--line)}
+.segsel.col label:first-child{border-top:0}
+.segsel.is-disabled{opacity:.6;pointer-events:none}
+.field.wide{grid-column:1/-1}
 </style>
 
 <!-- PWA: added by build_pwa.py -->
@@ -347,16 +370,15 @@ ul.items li.chg,.card.bl dd p.chg{box-shadow:inset 3px 0 0 var(--info);padding-i
     <form id="f" autocomplete="off" novalidate>
       <fieldset>
         <legend>מטופל ומדידה</legend>
-        <div class="seg" role="radiogroup" aria-label="מצב המטופל">
+        <div class="seg segsel auto" role="radiogroup" aria-label="מצב המטופל">
           <label><input type="radio" name="mode" id="mode-new" value="new" checked>אבחנה חדשה / לפני טיפול</label>
           <label><input type="radio" name="mode" id="mode-tx" value="treated">מקבל טיפול / איזון</label>
         </div>
         <div class="grid" style="margin-top:12px">
           <label class="field"><span>גיל</span><input type="number" id="age" min="18" max="110" inputmode="numeric"></label>
-          <label class="field"><span>מין</span><select id="sex"><option value="m">זכר</option><option value="f">נקבה</option></select></label>
+          <div class="field"><span id="lbl-sex">מין</span><select id="sex" hidden><option value="m">זכר</option><option value="f">נקבה</option></select><div class="seg segsel" data-for="sex" role="radiogroup" aria-labelledby="lbl-sex"><label><input type="radio" name="seg-sex" value="m">זכר</label><label><input type="radio" name="seg-sex" value="f">נקבה</label></div></div>
           <label class="field"><span>ל״ד במרפאה <span class="unit">mmHg</span></span><input type="text" class="bpin" id="bp_office" inputmode="numeric" placeholder="152/94" aria-label="לחץ דם במרפאה, סיסטולי ודיאסטולי"></label>
-          <label class="field" id="w-visits"><span>ביקורים עם ערכים אלה</span>
-            <select id="visits"><option value="1">ביקור אחד</option><option value="2">2 ביקורים נפרדים ומעלה</option></select></label>
+          <div class="field" id="w-visits"><span id="lbl-visits">ביקורים עם ערכים אלה</span><select id="visits" hidden><option value="1">ביקור אחד</option><option value="2">2 ביקורים נפרדים ומעלה</option></select><div class="seg segsel" data-for="visits" role="radiogroup" aria-labelledby="lbl-visits"><label><input type="radio" name="seg-visits" value="1">ביקור אחד</label><label><input type="radio" name="seg-visits" value="2">2 ומעלה</label></div></div>
           <label class="field"><span>ל״ד בבית (HBPM) <span class="unit">ממוצע 4-7 ימים</span></span><input type="text" class="bpin" id="bp_home" inputmode="numeric" placeholder="אם יש" aria-label="לחץ דם ביתי, סיסטולי ודיאסטולי"></label>
           <label class="field"><span>דופק במנוחה</span><input type="number" id="hr" placeholder="bpm" inputmode="numeric"></label>
           <label class="field" id="w-preg"><span>מצב פוריות</span>
@@ -367,12 +389,11 @@ ul.items li.chg,.card.bl dd p.chg{box-shadow:inset 3px 0 0 var(--info);padding-i
               <option value="postpartum">אחרי לידה (עד 6 שבועות)</option>
               <option value="breast">מניקה</option>
             </select></label>
-          <label class="field" id="w-func"><span>תפקוד (גיל 80 ומעלה)</span>
-            <select id="func80">
+          <div class="field wide" id="w-func"><span id="lbl-func80">תפקוד (גיל 80 ומעלה)</span><select id="func80" hidden>
               <option value="indep">עצמאי (ADL מעל 5/6, הולך, בלי דמנציה)</option>
               <option value="partial">אובדן ADL חלקי, נזקק לעזרה יומית</option>
               <option value="severe">אובדן תפקודי משמעותי והפרעה קוגניטיבית</option>
-            </select></label>
+            </select><div class="seg segsel col" data-for="func80" role="radiogroup" aria-labelledby="lbl-func80"><label><input type="radio" name="seg-func80" value="indep">עצמאי (ADL מעל 5/6, הולך, בלי דמנציה)</label><label><input type="radio" name="seg-func80" value="partial">אובדן ADL חלקי, נזקק לעזרה יומית</label><label><input type="radio" name="seg-func80" value="severe">אובדן תפקודי משמעותי והפרעה קוגניטיבית</label></div></div>
         </div>
         <p class="hint" style="margin:8px 0 0">ל״ד מקלידים ברצף, למשל 15294, והקו נוסף לבד. מרפאה: 3 מדידות, ממוצע השנייה והשלישית (עמ׳ 10).</p>
         <details class="more" data-count="הוזנו" id="d-abpm">
@@ -486,8 +507,7 @@ ul.items li.chg,.card.bl dd p.chg{box-shadow:inset 3px 0 0 var(--info);padding-i
           </div>
         </div>
         <div class="grid" style="margin-top:12px">
-          <label class="field" id="w-risk"><span>סיכון CV (שיקול קליני)</span>
-            <select id="risk"><option value="low">נמוך</option><option value="moderate">בינוני</option><option value="high">גבוה</option></select></label>
+          <div class="field" id="w-risk"><span id="lbl-risk">סיכון CV (שיקול קליני)</span><select id="risk" hidden><option value="low">נמוך</option><option value="moderate">בינוני</option><option value="high">גבוה</option></select><div class="seg segsel" data-for="risk" role="radiogroup" aria-labelledby="lbl-risk"><label><input type="radio" name="seg-risk" value="low">נמוך</label><label><input type="radio" name="seg-risk" value="moderate">בינוני</label><label><input type="radio" name="seg-risk" value="high">גבוה</label></div></div>
         </div>
         <p class="hint" id="risk-auto" style="margin-top:8px" hidden></p>
         <details class="more" data-count="הוזנו" id="d-lab">
@@ -518,9 +538,9 @@ ul.items li.chg,.card.bl dd p.chg{box-shadow:inset 3px 0 0 var(--info);padding-i
           <label><input type="checkbox" id="t_other">אחר (קלונידין, מרחיב כלי דם)</label>
         </div>
         <div class="grid" style="margin-top:12px">
-          <label class="field"><span>מינונים</span><select id="maxdose"><option value="no">לא במינון מרבי נסבל</option><option value="yes">במינון מרבי נסבל</option></select></label>
+          <div class="field"><span id="lbl-maxdose">מינונים</span><select id="maxdose" hidden><option value="no">לא במינון מרבי נסבל</option><option value="yes">במינון מרבי נסבל</option></select><div class="seg segsel" data-for="maxdose" role="radiogroup" aria-labelledby="lbl-maxdose"><label><input type="radio" name="seg-maxdose" value="no">לא מרבי</label><label><input type="radio" name="seg-maxdose" value="yes">מרבי נסבל</label></div></div>
           <label class="field"><span>חודשים על המשלב הנוכחי</span><input type="number" id="months" min="0" inputmode="numeric"></label>
-          <label class="field"><span>היענות</span><select id="adh"><option value="unsure">לא נבדקה</option><option value="ok">נבדקה, טובה</option><option value="poor">חלקית / ירודה</option></select></label>
+          <div class="field wide"><span id="lbl-adh">היענות</span><select id="adh" hidden><option value="unsure">לא נבדקה</option><option value="ok">נבדקה, טובה</option><option value="poor">חלקית / ירודה</option></select><div class="seg segsel" data-for="adh" role="radiogroup" aria-labelledby="lbl-adh"><label><input type="radio" name="seg-adh" value="unsure">לא נבדקה</label><label><input type="radio" name="seg-adh" value="ok">נבדקה, טובה</label><label><input type="radio" name="seg-adh" value="poor">חלקית / ירודה</label></div></div>
         </div>
       </fieldset>
 
@@ -908,9 +928,10 @@ function newBranch(x){
   const {S,O,it,sbp,dbp,age,c,risk,ckd,cadAny,old,func,severe,outAvail}=x;
   const ph=phenotype(x);
   const isHTN=sbp>=140||dbp>=90;
-  const elevRange=!isHTN&&(sbp>=130||dbp>=80);
+  const elevRange=!isHTN&&(sbp>=130||dbp>=85);   // v4: DBP 80-84 with SBP < 130 does not open this pathway (clinical decision, Nov 2026)
   const comorb80=ckd||cadAny||x.hf||S.af||S.stroke;
   const frail80=S.frail||S.dementia;
+  const lowEdgeOut=!old&&isHTN&&sbp<150&&dbp<95&&c.k==='g1'&&risk==='low'&&x.outHigh;   // v4
   let act='none';
 
   if(old&&func==='severe'){act='indiv';}
@@ -924,7 +945,7 @@ function newBranch(x){
   else if(ph&&ph.k==='mh'){act='drug';}
   else if(isHTN){
     const lowEdge=sbp<150&&dbp<95&&c.k==='g1'&&risk==='low';
-    act=lowEdge?'life3':'drug';
+    act=lowEdge&&!x.outHigh?'life3':'drug';   // v4: high out-of-office BP cancels the lifestyle-only exception
   } else if(elevRange){
     if(cadAny) act='drug';
     else if(S.dm||ckd) act='life3dm';
@@ -934,6 +955,16 @@ function newBranch(x){
     } else act='life';
   }
   const abpmDone=has(S.a24s,S.a24d)||has(S.ads,S.add)||has(S.ans,S.and);
+  // v5 (Nov 2026 decisions): high out-of-office BP where the office reading alone would not start a drug:
+  // low-risk grade 1 (140-149/90-94), or MH at low or moderate risk (DM, CKD, CAD and stroke always count as high risk here).
+  // No ABPM yet: home SBP up to 150, ABPM before deciding; above 150, consider monotherapy and/or ABPM.
+  // ABPM entered: it decides. High, start; normal, follow-up. Treatment started on this basis is monotherapy.
+  const abpmHigh=(has(S.a24s,S.a24d)&&(S.a24s>=130||S.a24d>=80))||(has(S.ads,S.add)&&(S.ads>=135||S.add>=85))||(has(S.ans,S.and)&&(S.ans>=120||S.and>=70));
+  x.homePath=!old&&!!x.outHigh&&((!!ph&&ph.k==='mh'&&risk!=='high')||lowEdgeOut);
+  if(x.homePath){
+    if(!abpmDone) act=S.hs<=150?'homeAbpm':'homeConsider';
+    else if(!abpmHigh) act='homeAbpmOk';
+  }
   const elevNor=!old&&elevRange&&ph&&ph.k==='nor'&&(act==='drug'||act==='life3dm');
   if(elevNor&&abpmDone) act='elevnor';
   const abpmFirst=elevNor&&!abpmDone;
@@ -987,7 +1018,8 @@ function newBranch(x){
       else it(O.decision,'ל״ד 130-139/80-89 בלי סיכון גבוה: אורח חיים בלבד.',P(50),'key');
       break;
     case 'drug':{
-      if(ph&&ph.k==='mh'&&!old){it(O.decision,'MH: הסיכון דומה ליל״ד מתמשך. להתחיל טיפול תרופתי.',P('9, 50'),'key');}
+      if(ph&&ph.k==='mh'&&!old){it(O.decision,'MH: הסיכון דומה ליל״ד מתמשך. להתחיל טיפול תרופתי'+(abpmDone?'.':', או לאשר ב-ABPM (הולטר ל״ד 24 שעות).'),abpmDone?P('9, 50'):'החלטה; '+P('9, 50'),'key');}
+      else if(lowEdgeOut){it(O.decision,'140-149/90-94 עם סיכון נמוך, אבל ל״ד מחוץ למרפאה גבוה: החריג של 3 חודשי אורח חיים לא חל. להתחיל טיפול תרופתי'+(abpmDone?'.':', או לאשר ב-ABPM (הולטר ל״ד 24 שעות).'),'החלטה; '+P('9, 50'),'key');}
       else if(old&&func==='partial') it(O.decision,pre+'גיל 80 ומעלה עם אובדן ADL חלקי ו-SBP מעל 160: להתחיל טיפול, מונותרפיה, "start low and go slow".',P(93),'key');
       else if(old&&sbp>=160) it(O.decision,pre+'גיל 80 ומעלה, SBP 160 ומעלה: להתחיל טיפול תרופתי.',P('51, 92, 96'),'key');
       else if(old&&severe) it(O.decision,pre+'גיל 80 ומעלה עם ל״ד חמור: להתחיל טיפול תרופתי.',P('96, 183'),'key');
@@ -997,6 +1029,16 @@ function newBranch(x){
       else it(O.decision,pre+'טיפול תרופתי מיד, במקביל לאורח חיים, בלי קשר לרמת הסיכון.',P(50),'key');
       if(elevRange&&!cadAny&&!(ph&&ph.k==='mh')) it(O.decision,'ב-ESC 2024: באותו מצב קודם 3 חודשי אורח חיים.','ESC 2024','',true);
       break;}
+    case 'homeAbpm':
+      it(O.decision,(ph&&ph.k==='mh'?'MH':'140-149/90-94 עם סיכון נמוך')+', ול״ד בבית גבוה עם סיסטולי עד 150: לבצע ABPM (הולטר ל״ד 24 שעות) לפני החלטה על טיפול. בינתיים אורח חיים ומעקב.','החלטה; '+P('9, 12'),'key');
+      break;
+    case 'homeAbpmOk':
+      O.chips.push({t:'ABPM תקין',c:'ok'});
+      it(O.decision,(ph&&ph.k==='mh'?'':'140-149/90-94 עם סיכון נמוך, ')+'ל״ד בבית גבוה אבל ABPM תקין: בלי תרופה כרגע. אורח חיים ומעקב שנתי ב-HBPM או ABPM.','החלטה; '+P('9, 12'),'key');
+      break;
+    case 'homeConsider':
+      it(O.decision,(ph&&ph.k==='mh'?'MH':'140-149/90-94 עם סיכון נמוך')+', ול״ד בבית עם סיסטולי מעל 150: לשקול מונותרפיה ו/או ABPM (הולטר ל״ד 24 שעות).','החלטה; '+P('9, 12, 65'),'key');
+      break;
     default:
       it(O.decision,'ל״ד מתחת לסף טיפול. אורח חיים ומדידה שנתית.',P(50),'key');
   }
@@ -1005,12 +1047,13 @@ function newBranch(x){
   if(sbp<140&&dbp>=90&&age&&age<50) it(O.decision,'IDH בצעיר: הערכת סיכון מקיפה לפני טיפול.',P(7));
 
   targets(x);
-  const willTreat=act==='drug'||act==='life3'||act==='life3dm'||act==='consider80'||wchHigh;
+  const willTreat=act==='drug'||act==='life3'||act==='life3dm'||act==='consider80'||act==='homeAbpm'||act==='homeConsider'||wchHigh;
   if(willTreat) initialRegimen(x,act,elevRange,ph);
   if((isHTN||act==='drug'||act==='life3dm'||(ph&&ph.k==='mh'))&&!abpmFirst) workupNew(x);
   followNew(x,act,willTreat);
-  O.mbar=c.l+' · '+({drug:'להתחיל טיפול',life3:'אפשר 3 חודשי אורח חיים',life3dm:'3 חודשי אורח חיים ואז תרופה',life:'אורח חיים',wch:wchHigh?(abpmDone?'WCH: לשקול מונותרפיה':'WCH: ABPM, ואז לשקול מונותרפיה'):'WCH: מעקב',nodrug:'בלי תרופה כרגע',indiv:'החלטה פרטנית',consider80:'גיל 80+: לשקול טיפול',below80:'גיל 80+: בלי תרופה',elevnor:'ABPM תקין: מעקב'}[act]||'מעקב')+(needConfirm?' (טעון אישור)':'');
+  O.mbar=c.l+' · '+({drug:'להתחיל טיפול',life3:'אפשר 3 חודשי אורח חיים',life3dm:'3 חודשי אורח חיים ואז תרופה',life:'אורח חיים',wch:wchHigh?(abpmDone?'WCH: לשקול מונותרפיה':'WCH: ABPM, ואז לשקול מונותרפיה'):'WCH: מעקב',nodrug:'בלי תרופה כרגע',indiv:'החלטה פרטנית',consider80:'גיל 80+: לשקול טיפול',below80:'גיל 80+: בלי תרופה',elevnor:'ABPM תקין: מעקב',homeAbpm:'מעקב, ABPM לפני החלטה',homeConsider:'לשקול מונותרפיה ו/או ABPM',homeAbpmOk:'ABPM תקין: מעקב'}[act]||'מעקב')+(needConfirm?' (טעון אישור)':'');
   if(abpmFirst) O.mbar=c.l+' · ABPM לפני החלטה';
+  if(act==='drug'&&!abpmDone&&((ph&&ph.k==='mh'&&!old)||lowEdgeOut)) O.mbar=c.l+' · להתחיל טיפול או לאשר ב-ABPM';   // v4
 }
 
 function targets(x){
@@ -1075,9 +1118,10 @@ function initialRegimen(x,act,elevRange,ph){
   else if(sbp<=150&&c.rank<=3&&risk==='low'){mono=true;why=P(65);}
   const dmDual=S.dm&&(sbp>=140||S.dbp>=90)&&!old&&!frailish&&!(ph&&ph.k==='wch');
   if(dmDual){mono=false;why=P(201);}
+  if(x.homePath){mono=true;why='החלטה; '+P(65);}   // v5: monotherapy when treatment starts on the strength of home BP
   O.drugs=[];
   if(act==='life3'||act==='life3dm') it(O.plan,'אם יוחל טיפול תרופתי אחרי תקופת אורח החיים:',act==='life3'?P(50):P('52, 201'),'key');
-  else if(act==='consider80'||act==='wch'||x.abpmFirst) it(O.plan,'אם יוחל טיפול תרופתי:',act==='wch'?P(9):(x.abpmFirst?'החלטה; '+P(12):P('51, 96')),'key');
+  else if(act==='consider80'||act==='wch'||x.abpmFirst||act==='homeAbpm'||act==='homeConsider') it(O.plan,'אם יוחל טיפול תרופתי:',act==='wch'?P(9):((x.abpmFirst||act==='homeAbpm'||act==='homeConsider')?'החלטה; '+P(12):P('51, 96')),'key');
   if(x.preg==='nocontra'){
     it(O.plan,'גיל פוריות בלי אמצעי מניעה: לבטלול, מתילדופה או ניפדיפין ארוך טווח, במקום ACEi, ARB ו-MRA.',P(203),'key');
     O.drugs=['preg'];return;
@@ -1210,10 +1254,11 @@ function secondaryFlags(x){
 function followNew(x,act,willTreat){
   const {S,O,it,severe,female,age}=x;
   if(severe) it(O.follow,'ביקור חוזר תוך שבועיים לכל היותר.',P(64),'key');
+  if(act==='homeAbpm') it(O.follow,'אחרי ABPM: אם גבוה, להתחיל מונותרפיה. אם תקין, מעקב.','החלטה; '+P('9, 12'),'key');
   if(willTreat){
     const life=act==='life3'||act==='life3dm';
     if(life) it(O.follow,'הערכה חוזרת אחרי 3 חודשי אורח חיים. אם עדיין מעל הסף: להתחיל תרופה.',act==='life3'?P(50):'החלטה; '+P('52, 201'),'key');
-    const cond=life||act==='consider80'||act==='wch'||x.abpmFirst;
+    const cond=life||act==='consider80'||act==='wch'||x.abpmFirst||act==='homeAbpm'||act==='homeConsider';
     const pre=cond?'אם יוחל טיפול: ':'';
     it(O.follow,pre+'אחרי התחלה או שינוי של ACEi/ARB/משתן: קריאטינין ואלקטרוליטים אחרי 2-3 שבועות.',P(66),cond?'':'key');
     it(O.follow,'ירידה ב-GFR עד 30% צפויה, ממשיכים. מעל 30%: הפסקה ושלילת RAS דו״צ.',P('66, 71'));
@@ -1312,9 +1357,24 @@ function escalate(x,status){
   }
   if(n===2){
     if(!ras&&F.noRAS){
-      it(O.plan,'CCB + משתן, ו-ACEi/ARB לא אפשריים (היצרות דו״צ). ההנחיה לא מפרטת תרופה שלישית במצב זה. אפשרויות: ספירונולקטון לפי K ו-eGFR, BB או חוסם אלפא.','הערכה; '+P(84),'key');
+      // v4: offer only the third-drug options that the tool's own rules allow for this patient
+      const opt=[], cards=[], no=[], K=S.k, eGFR=S.egfr;
+      if(S.t_mra) no.push('ספירונולקטון (כבר מקבל MRA)');
+      else if(K==null) no.push('ספירונולקטון (צריך קודם K ו-eGFR)');
+      else if(K>5) no.push('ספירונולקטון (K מעל 5)');
+      else if(eGFR!=null&&eGFR<30) no.push('ספירונולקטון (eGFR מתחת ל-30)');
+      else if(K>4.5) opt.push('ספירונולקטון בזהירות בלבד (K בין 4.5 ל-5)');
+      else { opt.push(eGFR!=null&&eGFR<=45?'ספירונולקטון במינון נמוך, בניטור K וקריאטינין (eGFR 30-45)':'ספירונולקטון'+(eGFR==null?' (לוודא eGFR מעל 45)':'')); cards.push('mra'); }
+      if(S.t_bb) no.push('BB (כבר מקבל)');
+      else if(S.asthma) no.push('BB (אסתמה)');
+      else if(S.t_ndhp) no.push('BB (מקבל NDHP)');
+      else { opt.push('BB'); cards.push('bb'); }
+      if(S.t_alpha) no.push('חוסם אלפא (כבר מקבל)');
+      else { opt.push('חוסם אלפא'); cards.push('alpha'); }
+      it(O.plan,'CCB + משתן, ו-ACEi/ARB לא אפשריים (היצרות דו״צ). ההנחיה לא מפרטת תרופה שלישית במצב זה. '+(opt.length?'אפשרויות: '+opt.join(', ')+'.':'אין אפשרות מתאימה מהרשימה.'),'הערכה; '+P(84),'key');
+      if(no.length) it(O.plan,'לא מוצע כאן: '+no.join(', ')+'.','החלטה; '+P('63, 70, 74, 83'));
       it(O.plan,'היצרות דו״צ עם יל״ד עמיד או בצקת ריאות חוזרת: הפניה לשקילת רה-וסקולריזציה.',P(157));
-      O.drugs=['mra','bb','alpha']; tail(); return;
+      O.drugs=cards; tail(); return;
     }
     let miss, drugs;
     if(!ras){ miss=F.rasTxt; drugs=F.rasKeys.slice(); }
@@ -1329,7 +1389,12 @@ function escalate(x,status){
   }
   if(S.maxdose!=='yes'){
     it(O.plan,'שלוש תרופות לא במינון מרבי: קודם להעלות למינון המרבי הנסבל.',P(8),'key');
-    O.drugs=[].concat(S.t_acei?['acei']:[],S.t_arb?['arb']:[],['ccb'],S.t_thz?['thz']:[],S.t_loop?['loop']:[]);
+    // v4: at low eGFR the diuretic step follows the tool's own rule (p. 84) instead of up-titrating a thiazide
+    const thzLow=S.t_thz&&F.loopInstead;
+    if(thzLow&&!S.t_loop) it(O.plan,'eGFR מתחת ל-30: להחליף את התיאזיד במשתן לולאה, במקום להעלות את מינונו.',P(84),'key');
+    else if(thzLow) it(O.plan,'eGFR מתחת ל-30: להעלות את משתן הלולאה, ולא את התיאזיד.',P(84),'key');
+    else if(S.t_thz&&!S.t_loop&&F.loopConsider) it(O.plan,'eGFR 30-45: לשקול החלפה למשתן לולאה.',P(84));
+    O.drugs=[].concat(S.t_acei?['acei']:[],S.t_arb?['arb']:[],['ccb'],(S.t_thz&&!thzLow)?['thz']:[],(S.t_loop||thzLow)?['loop']:[]);
     tail(); return;
   }
   const oobConfirmed=(x.relaxed||x.ckdLess)?(x.outAvail&&x.outHigh):((x.outTargetKnown&&!x.outAtTarget)||(x.outAvail&&x.outHigh));
@@ -1450,7 +1515,8 @@ function bottomLine(O){
   return {warn,rows};
 }
 function plain(i){const chg=settled&&!settled.has(i.t);return '<p'+(chg?' class="chg"':'')+'>'+esc(i.t)+(i.r?' <span class="ref'+(i.ext?' ext':'')+'">'+esc(i.r)+'</span>':'')+'</p>';}
-function render(){
+function render(){ renderCore(); syncSegs(); }   // v5: keep the segmented buttons in step with the selects
+function renderCore(){
   const S=readForm();
   const [os,od]=[S.sbp,S.dbp];
   const pregShown=S.sex==='f'&&!(S.age>55);
@@ -1541,9 +1607,9 @@ const RULES=[
  ['אישור אבחנה','מדידות ביתיות חוזרות (כולל ABPM) או שני ביקורים נפרדים.','החלטה; '+P('6, 8, 11, 50')],
  ['אבחנה בביקור ראשון','180/110 ומעלה במדידות חוזרות באותו ביקור, או 160/100 ומעלה עם HMOD. בהנחיה הישראלית: רק 180/110 בסוכרת עם רקע CV.','AFP 2023; החלטה; '+P(197)],
  ['ל״ד חמור לא תסמיני','לא למיון. סיבה הפיכה, טיפול פומי, ירידה של 10-20% ב-24-48 שעות, בלי ניפדיפין תת-לשוני, ביקור תוך שבועיים.',P('64, 183-188')],
- ['התחלת טיפול, כללי','מדרגה 1 מיד, בלי קשר לסיכון. חריג: 140-149/90-94 עם סיכון נמוך, 3 חודשי אורח חיים.','פרק 6, '+P(50)],
- ['ל״ד 130-139/80-89 עם סיכון גבוה','טיפול מיד. מחלה כלילית: מ-130/80. אחרי שבץ בלבד: לא בטווח הזה.',P('50-52')],
- ['סוכרת או CKD','140/90 ומעלה: מיד (בסוכרת שתי תרופות). 130-139/80-89: 3 חודשי אורח חיים ואז תרופה.','החלטה; '+P('52, 139, 201')],
+ ['התחלת טיפול, כללי','מדרגה 1 מיד, בלי קשר לסיכון. חריג: 140-149/90-94 עם סיכון נמוך, 3 חודשי אורח חיים. ל״ד גבוה מחוץ למרפאה בחריג הזה, או MH בסיכון נמוך-בינוני: בלי ABPM, סיסטולי בבית עד 150, ABPM לפני החלטה; מעל 150, לשקול מונותרפיה ו/או ABPM. עם ABPM: גבוה, מונותרפיה; תקין, מעקב. MH בסיכון גבוה: להתחיל טיפול או לאשר ב-ABPM.','פרק 6, '+P(50)+'; החלטה'],
+ ['ל״ד 130-139/80-89 עם סיכון גבוה','טיפול מיד. מחלה כלילית: מ-130/80. אחרי שבץ בלבד: לא בטווח הזה. DBP 80-84 עם SBP מתחת ל-130 לא מפעיל את המסלול (בסיווג זה ל״ד תקין).',P('50-52')+'; החלטה'],
+ ['סוכרת או CKD','140/90 ומעלה: מיד (בסוכרת שתי תרופות). 130-139/80-89: 3 חודשי אורח חיים ואז תרופה. DBP 80-84 עם SBP מתחת ל-130: לא מפעיל.','החלטה; '+P('52, 139, 201')],
  ['גיל 80 ומעלה, סף','140-160 לפי שבריריות ותחלואה. SBP 160 ומעלה: לטפל. 140-159: עם מחלת כליה, לב או שבץ לטפל, אחרת לשקול. אובדן ADL חלקי: מעל 160. אובדן קשה: פרטני. מתחת ל-140: בלי תרופה.',P('51, 92-93, 96')],
  ['יעד','במרפאה 130/80, בבית ובניטור יום מתחת ל-130/80, בלילה מתחת ל-120/70.',P(13)],
  ['רצפה','120/70 בכל גיל עד 80, כולל 65-79. מגיל 80: מתחת ל-120/70 לשקול הפחתה, DBP 60-69 בזהירות. שבריריות או דמנציה: הפחתה הדרגתית מתחת ל-130 או ב-OH. מחלה כלילית: DBP מעל 60 והורדה איטית. CKD עם סיכון CV: מתחת ל-120/80 כחריג. בכל ערך: להפחית בתסמיני תת-זילוח.',P('52, 92-94, 96, 140, 222')],
@@ -1551,7 +1617,7 @@ const RULES=[
  ['יעד מגיל 80','לפי שבריריות ותפקוד: עצמאי 140-150, ואם נסבל 130-139 עם DBP 70 לפחות. שברירי או אובדן ADL חלקי 140-150. דמנציה 140-150/70-80. אובדן קשה: פרטני. גובר על יעדי סוכרת ו-CKD.','החלטה; '+P('52, 93-94, 96')],
  ['יעד ב-CKD','מתחת ל-130/80. עם סיכון CV נוסף: לשקול מתחת ל-120/80, כחריג לרצפה 120/70. שבריריות, OH או eGFR מתחת ל-30: מתחת ל-140/90.',P('52, 140-141')],
  ['WCH עם סיכון גבוה או HMOD','ABPM לאישור, ואז לשקול מונותרפיה.','החלטה; '+P('9, 12')],
- ['היצרות דו״צ של עורקי הכליה','בלי חוסמי RAS (ACEi, ARB), אותו מנגנון. CCB ומשתן, ובעמידות: הפניה לשקילת רה-וסקולריזציה.','החלטה; '+P('71-72, 156-157')],
+ ['היצרות דו״צ של עורקי הכליה','בלי חוסמי RAS (ACEi, ARB), אותו מנגנון. CCB ומשתן, ובעמידות: הפניה לשקילת רה-וסקולריזציה. תרופה שלישית (ספירונולקטון, BB, אלפא) מוצעת רק כשהכללים שלה מתקיימים: K, eGFR, אסתמה, NDHP ותרופות קיימות.','החלטה; '+P('71-72, 156-157')],
  ['אלקטרוליטים','Na מתחת ל-135 או K מתחת ל-3.5: אזהרה בולטת על משתנים. היפונתרמיה מתיאזיד: להפסיק ולבחור חלופה; משתן לולאה רק באי-ספיקת לב. K מעל 5: אזהרה על ACEi/ARB, ולא MRA.','החלטה; '+P('63, 71, 73')],
  ['ל״ד 130-139/80-89 במרפאה, תקין מחוץ למרפאה','ABPM לפני החלטה על טיפול. ABPM תקין: בלי תרופה, מעקב שנתי.','החלטה; '+P('9, 12')],
  ['הערכת תפקוד','גיל 65-79: שאלה אם צריך הערכת ADL. מגיל 80: שדה תפקוד שקובע סף ויעד.',P('91, 93, 95-96')],
@@ -1748,6 +1814,27 @@ $('sh-file').addEventListener('click',async()=>{
   a.download='htn-2026.html';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   showToast('הקובץ htn-2026.html ירד למכשיר');
+});
+
+/* ---------- v5: segmented buttons (each mirrors a hidden select, which the engine reads) ---------- */
+function syncSegs(){
+  document.querySelectorAll('.segsel[data-for]').forEach(g=>{
+    const sel=$(g.dataset.for); if(!sel) return;
+    g.querySelectorAll('input[type=radio]').forEach(r=>{r.checked=(r.value===sel.value); r.disabled=sel.disabled;});
+    g.classList.toggle('is-disabled',sel.disabled);
+  });
+}
+document.querySelectorAll('.segsel[data-for]').forEach(g=>{
+  // A radio fires 'input' and then 'change'. Both stop here, so the form re-renders once, from the select.
+  const pickSeg=e=>{
+    const r=e.target; if(!r||r.type!=='radio') return;
+    e.stopPropagation();
+    const sel=$(g.dataset.for); if(!sel||sel.disabled||!r.checked||sel.value===r.value) return;
+    sel.value=r.value;
+    sel.dispatchEvent(new Event('change',{bubbles:true}));
+  };
+  g.addEventListener('input',pickSeg);
+  g.addEventListener('change',pickSeg);
 });
 
 window.__htn={evaluate,category,parseBP};
