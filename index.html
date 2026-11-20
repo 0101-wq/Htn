@@ -410,7 +410,7 @@ input.bpin.bad{border-color:var(--crit)}
 
       <fieldset id="fs-acute">
         <legend>תסמינים חריפים</legend>
-        <p class="hint">ל״ד 180/110 ומעלה: יש אחד מאלה? (עמ׳ 183-184)</p>
+        <p class="hint" id="acute-hint">ל״ד 180/110 ומעלה: יש אחד מאלה? (עמ׳ 183-184)</p>
         <div class="pills">
           <label><input type="checkbox" id="s_chest">כאב בחזה</label>
           <label><input type="checkbox" id="s_dysp">קוצר נשימה</label>
@@ -718,6 +718,12 @@ function category(s,d){
   return Object.assign({rank:Math.max(rs,rd)},CATS[Math.max(rs,rd)]);
 }
 const has=(a,b)=>a!=null&&b!=null&&a>0&&b>0;
+// v7: acute symptoms are asked from 160/100, from 140/90 in pregnancy or after birth (and always from 180/110). Form and engine share this rule.
+function acuteShown(sbp,dbp,preg){
+  if(!(sbp>0&&dbp>0)) return false;
+  if(sbp>=160||dbp>=100) return true;
+  return (preg==='pregnant'||preg==='postpartum')&&(sbp>=140||dbp>=90);
+}
 const TXK=['t_acei','t_arb','t_ccb','t_thz','t_loop','t_mra','t_bb','t_alpha','t_ndhp','t_other'];
 const onRASMRA=S=>[S.t_acei&&'ACEi',S.t_arb&&'ARB',S.t_mra&&'MRA'].filter(Boolean).join(', ');
 
@@ -757,7 +763,7 @@ function evaluate(S0){
   if(officeBad.length) return invalidOut(officeBad);
   const female=S.sex==='f', preg=(female&&!(S.age>55))?S.preg:'none';   // v6: same rule as the form, which hides the field above 55
   const severe=sbp>=180||dbp>=110;
-  const acute=['s_chest','s_dysp','s_head','s_neuro','s_conf','s_vis','s_renal'].some(k=>S[k]);
+  const acute=acuteShown(sbp,dbp,preg)&&['s_chest','s_dysp','s_head','s_neuro','s_conf','s_vis','s_renal'].some(k=>S[k]);   // v7: counted wherever the form asks
 
   if(severe&&acute){
     O.stop={h:'חשד ל-hypertensive emergency',items:[
@@ -765,6 +771,21 @@ function evaluate(S0){
       {t:'הסימפטומים והנזק לאיבר המטרה חשובים יותר מהערך המדויק.',r:P(184)},
       {t:'אין להוריד ל״ד מהר מדי, למעט דיסקציה של האאורטה.',r:P(188)}]};
     O.mbar='עצירה: חשד למצב חירום, הפניה למיון';
+    return O;
+  }
+  if(acute&&(preg==='pregnant'||preg==='postpartum')){   // v7 (Nov 2026 decision): symptoms in pregnancy or after birth, below 180/110
+    O.stop={h:'חשד לרעלת עם מאפיינים חמורים',items:[
+      {t:(preg==='pregnant'?'הריון':'אחרי לידה')+' עם ל״ד 140/90 ומעלה ותסמינים: חשד לרעלת עם מאפיינים חמורים. הפניה דחופה לחדר לידה.',r:'החלטה; '+P('245, 249'),l:'crit'}]
+      .concat(preg==='postpartum'?[{t:'רעלת יכולה להופיע לראשונה עד 6 שבועות אחרי הלידה, לרוב עם כאב ראש ולא בהכרח עם חלבון בשתן.',r:P(249)}]:[])
+      .concat([{t:'אין לתת ניפדיפין תת-לשוני.',r:P(251)}])};
+    O.mbar='עצירה: חשד לרעלת, הפניה דחופה';
+    return O;
+  }
+  if(acute){   // v7 (Nov 2026 decision): an acute symptom at 160/100 or more, below 180/110
+    O.stop={h:'תסמין חריף',items:[
+      {t:'תסמין חריף עם ל״ד 160/100 ומעלה: הערכה דחופה של התסמין עצמו (למשל כאב בחזה: ACS או דיסקציה), בלי קשר לרמת הל״ד.',r:'החלטה',l:'crit'},
+      {t:'מתחת ל-180/110 זה לא hypertensive emergency לפי ההגדרה. אין להוריד ל״ד מהר.',r:'החלטה; '+P('183-184, 188')}]};
+    O.mbar='עצירה: תסמין חריף, הערכה דחופה';
     return O;
   }
   if(bad.length) return invalidOut(bad);
@@ -805,9 +826,9 @@ function evaluate(S0){
   O.chips.push({t:c.l,c:c.rank>=5?'crit':c.rank>=3?'warn':c.rank===2?'acc':'ok'});
   O.chips.push({t:'סיכון '+({low:'נמוך',moderate:'בינוני',high:'גבוה'}[risk])+(auto.length?' (אוטומטי)':''),c:risk==='high'?'warn':''});
   if(!S.age) O.chips.push({t:'גיל לא הוזן (מניח מתחת ל-80)',c:'warn'});
-  if(S.na!=null&&S.na<135) O.chips.push({t:'Na '+S.na+': זהירות בתיאזיד',c:'crit'});
+  if(S.na!=null&&S.na<135) O.chips.push({t:'Na '+S.na+(S.na<130&&!S.t_thz?': לא להתחיל תיאזיד':': זהירות בתיאזיד'),c:'crit'});   // v7
   if(S.k!=null&&S.k<3.5) O.chips.push({t:'K '+S.k+': זהירות במשתנים',c:'crit'});
-  if(S.k!=null&&S.k>5) O.chips.push({t:'K '+S.k+': זהירות ב-ACEi/ARB, לא MRA',c:'crit'});
+  if(S.k!=null&&S.k>5) O.chips.push({t:'K '+S.k+((S.t_acei||S.t_arb)?': זהירות ב-ACEi/ARB, לא MRA':': לא להתחיל ACEi/ARB, לא MRA'),c:'crit'});   // v7
 
   if(preg==='pregnant'){pregnancyBranch(ctx);electrolyteAlerts(ctx);bpRaisers(ctx);sanitizeDrugs(ctx);return O;}
   if(preg==='postpartum'){postpartumBranch(ctx);electrolyteAlerts(ctx);commonAvoid(ctx);bpRaisers(ctx);sanitizeDrugs(ctx);return O;}
@@ -849,12 +870,14 @@ function electrolyteAlerts(x){
   const {S,O}=x; const d=O.drugs||[];
   const thzPlan=d.includes('thz'), diuPlan=thzPlan||d.includes('loop'), rasPlan=d.includes('acei')||d.includes('arb');
   const top=[], av=[];
-  if(S.na!=null&&S.na<135&&!S.t_thz)
+  if(S.na!=null&&S.na<130&&!S.t_thz)   // v7 (Nov 2026 decision)
+    top.push({t:'Na '+S.na+' (מתחת ל-130): לא להתחיל תיאזיד. לברר את ההיפונתרמיה ולבחור חלופה.',r:'החלטה; '+P('71, 86'),l:'alert',ext:false});
+  else if(S.na!=null&&S.na<135&&!S.t_thz)
     (thzPlan?top:av).push({t:'Na '+S.na+' (מתחת ל-135): זהירות בתיאזיד. אם יינתן: Na אחרי 7-14 ימים, ובהיפונתרמיה להפסיק ולבחור חלופה.',r:P('71, 86'),l:'alert',ext:false});
   if(S.k!=null&&S.k<3.5&&!S.t_thz&&!S.t_loop)
     (diuPlan?top:av).push({t:'K '+S.k+' (מתחת ל-3.5): זהירות במשתנים. אם יינתן תיאזיד: תזונה עשירה באשלגן, ולשלב '+kFix(x)+'. בהיפוקלמיה חמורה להשהות את המשתן.',r:P(71),l:'alert',ext:false});
-  if(S.k!=null&&S.k>5&&!S.t_acei&&!S.t_arb&&rasPlan)
-    top.push({t:'K '+S.k+' (מעל 5): זהירות בהתחלת ACEi/ARB, בעיקר ב-CKD. משתן בשילוב מאזן נטייה להיפרקלמיה. K וקריאטינין אחרי 2-3 שבועות.',r:'החלטה; '+P('61, 65-66, 71'),l:'alert',ext:false});
+  if(S.k!=null&&S.k>5&&!S.t_acei&&!S.t_arb&&x.preg!=='pregnant'&&x.preg!=='nocontra')   // v7 (Nov 2026 decision): no new ACEi/ARB above 5.0
+    top.push({t:'K '+S.k+' (מעל 5.0): לא להתחיל ACEi/ARB עד בדיקה חוזרת ובירור הסיבה (המוליזה בדגימה, תרופות ותוספי אשלגן, CKD, היפואלדוסטרוניזם). אם K תקין בבדיקה חוזרת: לשקול להוסיף RAS.',r:'החלטה; '+P('61, 65-66, 71'),l:'alert',ext:false});
   if(top.length){ let i=0; while(i<O.plan.length&&O.plan[i].l==='crit') i++; O.plan.splice(i,0,...top); }
   if(av.length) O.avoid.unshift(...av);
 }
@@ -873,6 +896,7 @@ function comboAlerts(x){
   if((S.t_acei||S.t_arb)&&S.k!=null&&S.k>5&&!stopAll) it(O.plan,'מקבל ACEi/ARB ו-K '+S.k+': משתן, דיאטה דלת אשלגן, קושרי אשלגן. היפרקלמיה עיקשת או חמורה: להפסיק. ב-CKD לנסות לאזן את K לפני הפסקה.',P('71, 143'),'alert');
   if(S.t_mra&&S.k!=null&&S.k>5&&!stopAll) it(O.plan,'מקבל MRA ו-K '+S.k+': לטפל בהיפרקלמיה (דיאטה, משתן, קושרי אשלגן). אם לא נשלטת: להפחית או להפסיק MRA.',P('63, 143'),'alert');
   if(S.t_ndhp&&!S.t_ccb&&!S.af) it(O.plan,'NDHP אינו קו ראשון ליל״ד: להחליף ל-CCB (DHP), אלא אם יש התוויה אחרת.',P(62));
+  if(preg==='breast'&&S.t_arb) it(O.plan,'מניקה ומקבלת ARB: ההנחיה לא מתייחסת ל-ARB בהנקה. לשקול מעבר '+((S.angio||S.ras||(S.k!=null&&S.k>5))?'לאמלודיפין, ניפדיפין או מתילדופה':'לאנלפריל או קפטופריל')+'.','החלטה; '+P(249),'warn');   // v7
 }
 
 function pregnancyBranch(x){
@@ -899,13 +923,13 @@ function pregnancyBranch(x){
 function postpartumBranch(x){
   const {S,O,it,sbp,dbp}=x;
   const F=regimenFlags(x);
-  const noACEi=F.noACE||S.ras;
+  const noACEi=F.noACE||S.ras||F.kHigh;   // v7: K above 5.0 too
   O.chips.push({t:'אחרי לידה',c:'acc'});
   if(sbp>=160||dbp>=110) it(O.decision,'160/110 ומעלה במשכב הלידה: יל״ד חמור לפי הגדרת ההנחיה. הפניה דחופה להערכה, כולל שלילת רעלת.',P('245, 249'),'crit');
   it(O.decision,'אחרי לידה: ב-150/100 ומעלה בשתי מדידות בהפרש 4-6 שעות, לשקול טיפול.',P(249),'key');
   it(O.decision,'רעלת יכולה להופיע לראשונה עד 6 שבועות אחרי הלידה, לרוב עם כאב ראש ולא בהכרח עם חלבון בשתן.',P(249),'warn');
   if(S.mode==='treated') comboAlerts(x);
-  if(noACEi) it(O.plan,'הנקה: אמלודיפין, ניפדיפין ומתילדופה נחשבים בטוחים. קפטופריל ואנלפריל לא מתאימים כאן ('+(F.noACE?'אנגיואדמה מ-ACEi':'היצרות דו״צ של עורקי הכליה')+').',P('249, 71-72'),'key');
+  if(noACEi) it(O.plan,'הנקה: אמלודיפין, ניפדיפין ומתילדופה נחשבים בטוחים. קפטופריל ואנלפריל לא מתאימים כאן ('+(F.noACE?'אנגיואדמה מ-ACEi':(S.ras?'היצרות דו״צ של עורקי הכליה':'K מעל 5.0'))+').',P('249, 71-72'),'key');
   else{
     it(O.plan,'הנקה: אמלודיפין, ניפדיפין, מתילדופה, קפטופריל ואנלפריל נחשבים בטוחים.',P(249),'key');
     it(O.plan,'אם ניתן ACEi או ARB: להחליף לפני ההיריון הבא.',P(249));
@@ -937,7 +961,7 @@ function newBranch(x){
   let act='none';
 
   if(old&&func==='severe'){act='indiv';}
-  else if(old&&func==='partial'){act=sbp>160?'drug':'nodrug';}
+  else if(old&&func==='partial'){act=(sbp>160||severe)?'drug':'nodrug';}   // v7: severe BP is treated here too
   else if(ph&&ph.k==='wch'){act='wch';}
   else if(old){
     if(sbp>=160||severe) act='drug';
@@ -1022,7 +1046,7 @@ function newBranch(x){
     case 'drug':{
       if(ph&&ph.k==='mh'&&!old){it(O.decision,'MH: הסיכון דומה ליל״ד מתמשך. להתחיל טיפול תרופתי'+(abpmDone?'.':', או לאשר ב-ABPM (הולטר ל״ד 24 שעות).'),abpmDone?P('9, 50'):'החלטה; '+P('9, 50'),'key');}
       else if(lowEdgeOut){it(O.decision,'140-149/90-94 עם סיכון נמוך, אבל ל״ד מחוץ למרפאה גבוה: החריג של 3 חודשי אורח חיים לא חל. להתחיל טיפול תרופתי'+(abpmDone?'.':', או לאשר ב-ABPM (הולטר ל״ד 24 שעות).'),'החלטה; '+P('9, 50'),'key');}
-      else if(old&&func==='partial') it(O.decision,pre+'גיל 80 ומעלה עם אובדן ADL חלקי ו-SBP מעל 160: להתחיל טיפול, מונותרפיה, "start low and go slow".',P(93),'key');
+      else if(old&&func==='partial') it(O.decision,pre+'גיל 80 ומעלה עם אובדן ADL חלקי ו'+(sbp>160?'-SBP מעל 160':'ל״ד חמור')+': להתחיל טיפול, מונותרפיה, "start low and go slow".',sbp>160?P(93):'החלטה; '+P('93, 183'),'key');
       else if(old&&sbp>=160) it(O.decision,pre+'גיל 80 ומעלה, SBP 160 ומעלה: להתחיל טיפול תרופתי.',P('51, 92, 96'),'key');
       else if(old&&severe) it(O.decision,pre+'גיל 80 ומעלה עם ל״ד חמור: להתחיל טיפול תרופתי.',P('96, 183'),'key');
       else if(old) it(O.decision,pre+'גיל 80 ומעלה עם מחלת כליה, מחלת לב או שבץ קודם: הסף נמוך מ-160. להתחיל טיפול.',P('92-93, 96'),'key');
@@ -1099,8 +1123,13 @@ function regimenFlags(x){
     loopConsider: S.egfr!=null&&S.egfr>=30&&S.egfr<45,
     eld85: age>=85||frailish,
     preferRASCCB: S.dm||S.stroke||x.cadAny||S.pad,
-    albRAS: alb&&preg!=='nocontra'&&!S.ras
+    albRAS: alb&&preg!=='nocontra'&&!S.ras,
+    kHigh: S.k!=null&&S.k>5&&!S.t_acei&&!S.t_arb,   // v7: no new ACEi/ARB while K is above 5.0
+    naLow: S.na!=null&&S.na<130&&!S.t_thz            // v7: no new thiazide while Na is below 130
   };
+  F.noRAS=F.noRAS||F.kHigh;
+  F.noRASwhy=S.ras?'היצרות דו״צ':(F.kHigh?'K מעל 5.0':'');
+  F.naThz=F.naLow&&!F.loopInstead;   // the planned diuretic would be a thiazide
   F.rasTxt=F.noACE?(F.breast?'ARB (בהנקה ההנחיה לא מתייחסת ל-ARB)':'ARB'):(F.breast?'ACEi (אנלפריל או קפטופריל)':'ACEi או ARB');
   F.rasList=F.noACE?'ARB':'ACEi, ARB';
   F.rasKeys=F.noACE?['arb']:['acei','arb'];
@@ -1128,18 +1157,12 @@ function initialRegimen(x,act,elevRange,ph){
     it(O.plan,'גיל פוריות בלי אמצעי מניעה: לבטלול, מתילדופה או ניפדיפין ארוך טווח, במקום ACEi, ARB ו-MRA.',P(203),'key');
     O.drugs=['preg'];return;
   }
-  if(F.noRAS){
-    if(mono) it(O.plan,'מונותרפיה בלי ACEi/ARB (היצרות דו״צ): CCB (DHP)'+(F.gout?'':' או '+F.diuTxt)+'.',(why||P(65))+', 72','key');
-    else it(O.plan,'שילוב בלי ACEi/ARB (היצרות דו״צ): CCB (DHP) + '+F.diuTxt+'. שילוב שלא מופיע ברשימת השילובים המועדפים בהנחיה.',(why||P(65))+', 72','key');
-    if(F.gout) it(O.plan,'שגדון פעיל: להימנע מתיאזיד בלי טיפול מוריד אורט.',P('71, 73'));
-    if(F.loopInstead) it(O.plan,'eGFR מתחת ל-30: משתן לולאה במקום תיאזיד.',P(84));
-    bbIndications(x);
-    O.drugs=['ccb'].concat(F.gout&&mono?[]:[F.diuKey]);
-    return;
-  }
   if(F.breast){
     if(F.noACE){
       it(O.plan,'מניקה עם אנגיואדמה מ-ACEi בעבר: אמלודיפין, ניפדיפין או מתילדופה.',P('249, 71'),'key');
+      O.drugs=['ccb','central'];
+    } else if(F.noRAS){   // v7: bilateral RAS or K above 5.0
+      it(O.plan,'מניקה ('+F.noRASwhy+'): אמלודיפין, ניפדיפין או מתילדופה.','החלטה; '+P(249),'key');
       O.drugs=['ccb','central'];
     } else {
       it(O.plan,'מניקה: בטוחים אמלודיפין, ניפדיפין, מתילדופה, קפטופריל ואנלפריל. על ARB ההנחיה לא מתייחסת.',P(249),'key');
@@ -1147,18 +1170,29 @@ function initialRegimen(x,act,elevRange,ph){
     }
     return;
   }
+  if(F.noRAS){
+    const rr=S.ras?(why||P(65))+', 72':'החלטה; '+P('65, 71');
+    if(mono) it(O.plan,'מונותרפיה בלי ACEi/ARB ('+F.noRASwhy+'): CCB (DHP)'+((F.gout||F.naThz)?'':' או '+F.diuTxt)+'.',rr,'key');
+    else if(F.naThz) it(O.plan,'בלי ACEi/ARB ('+F.noRASwhy+') ובלי תיאזיד (Na מתחת ל-130): CCB (DHP) לבד עד בירור, ואחר כך להחליט על תרופה שנייה לפי התוצאה. ההנחיה לא מפרטת מצב זה.','הערכה; '+P(65),'key');
+    else it(O.plan,'שילוב בלי ACEi/ARB ('+F.noRASwhy+'): CCB (DHP) + '+F.diuTxt+'. שילוב שלא מופיע ברשימת השילובים המועדפים בהנחיה.',rr,'key');
+    if(F.gout) it(O.plan,'שגדון פעיל: להימנע מתיאזיד בלי טיפול מוריד אורט.',P('71, 73'));
+    if(F.loopInstead) it(O.plan,'eGFR מתחת ל-30: משתן לולאה במקום תיאזיד.',P(84));
+    bbIndications(x);
+    O.drugs=['ccb'].concat(F.naThz?[]:(F.gout&&mono?[]:[F.diuKey]));
+    return;
+  }
   const ras=F.noACE?'ARB (לא ACEi, אנגיואדמה בעבר; ARB רק 6 שבועות אחרי)':'ACEi או ARB';
-  const second=F.gout?'CCB (DHP)':(F.loopInstead?'CCB (DHP), או משתן לולאה ב-eGFR מתחת ל-30':'CCB (DHP) או thiazide-like');
+  const second=(F.gout||F.naThz)?'CCB (DHP)':(F.loopInstead?'CCB (DHP), או משתן לולאה ב-eGFR מתחת ל-30':'CCB (DHP) או thiazide-like');   // v7: Na below 130 drops the thiazide
   if(S.hfref){
     it(O.plan,'HFrEF: BB, '+(F.noACE?'ARB':'ACEi/ARB/ARNI')+', MRA, SGLT2i ומשתנים לפי הנחיות אי-ספיקת לב.',P('70, 222'),'key');
   }
-  const diuK=F.gout?[]:[F.diuKey];
+  const diuK=(F.gout||F.naThz)?[]:[F.diuKey];
   let monoKeys=F.rasKeys.concat(['ccb'],diuK);
   if(mono){
-    let opts='אחת מ: '+F.rasList+', CCB (DHP)'+(F.gout?'':', thiazide-like')+'.';
-    if(F.eld85) opts='CCB (DHP) ארוך טווח או '+(F.noACE?'ARB':'RAS (ACEi/ARB)')+', ואחר כך משתן במינון נמוך. לא BB ולא אלפא כקו ראשון.';
+    let opts='אחת מ: '+F.rasList+', CCB (DHP)'+((F.gout||F.naThz)?'':', thiazide-like')+'.';
+    if(F.eld85) opts='CCB (DHP) ארוך טווח או '+(F.noACE?'ARB':'RAS (ACEi/ARB)')+(F.naThz?'':', ואחר כך משתן במינון נמוך')+'. לא BB ולא אלפא כקו ראשון.';
     else if(S.dm||x.cadAny||S.pad){ opts=F.rasList+' או CCB (DHP).'; monoKeys=F.rasKeys.concat(['ccb']); }
-    else if(S.stroke) opts=F.rasList+', CCB (DHP)'+(F.gout?'':' או thiazide-like')+'.';
+    else if(S.stroke) opts=F.rasList+', CCB (DHP)'+((F.gout||F.naThz)?'':' או thiazide-like')+'.';
     if(F.albRAS){ opts=(F.noACE?'ARB':'ACEi או ARB')+' (אלבומינוריה).'; monoKeys=F.rasKeys.slice(); }
     it(O.plan,'מונותרפיה. '+opts,why+(F.eld85?' · '+P(93):''),'key');
     if(old&&!frailish&&c.rank>=4) it(O.plan,'קשיש במצב טוב עם ל״ד גבוה: אפשר בכל זאת להתחיל בשילוב במינון נמוך.',P(92));
@@ -1332,6 +1366,25 @@ function treatedBranch(x){
   finishTreated(x,needHome?'לאשר בבית, ואז להגביר טיפול':'להגביר טיפול');
 }
 
+// v4/v7: third-drug options the tool's own rules allow, when one first-line class is not possible
+function thirdOptions(x,naNote){
+  const {S}=x; const opt=[], cards=[], no=[], K=S.k, eGFR=S.egfr;
+  if(S.t_mra) no.push('ספירונולקטון (כבר מקבל MRA)');
+  else if(K==null) no.push('ספירונולקטון (צריך קודם K ו-eGFR)');
+  else if(K>5) no.push('ספירונולקטון (K מעל 5)');
+  else if(eGFR!=null&&eGFR<30) no.push('ספירונולקטון (eGFR מתחת ל-30)');
+  else if(K>4.5) opt.push('ספירונולקטון בזהירות בלבד (K בין 4.5 ל-5)');
+  else { opt.push(eGFR!=null&&eGFR<=45?'ספירונולקטון במינון נמוך, בניטור K וקריאטינין (eGFR 30-45)':'ספירונולקטון'+(eGFR==null?' (לוודא eGFR מעל 45)':'')); cards.push('mra'); }
+  if(naNote) for(let i=0;i<opt.length;i++) if(opt[i].indexOf('ספירונולקטון')===0) opt[i]+=' (גם הוא עלול להוריד Na: בניטור)';
+  if(S.t_bb) no.push('BB (כבר מקבל)');
+  else if(S.asthma) no.push('BB (אסתמה)');
+  else if(S.t_ndhp) no.push('BB (מקבל NDHP)');
+  else { opt.push('BB'); cards.push('bb'); }
+  if(S.t_alpha) no.push('חוסם אלפא (כבר מקבל)');
+  else { opt.push('חוסם אלפא'); cards.push('alpha'); }
+  return {opt,cards,no};
+}
+
 function escalate(x,status){
   const {S,O,it,old}=x;
   const F=regimenFlags(x);
@@ -1341,17 +1394,35 @@ function escalate(x,status){
     O.drugs=['preg']; bbIndications(x); return;
   }
   const ndhpSwap=S.t_ndhp&&!S.t_ccb&&!S.af;
-  const ras=S.t_acei||S.t_arb, ccb=S.t_ccb||S.t_ndhp, diu=S.t_thz||S.t_loop;
+  // v7: a loop diuretic counts as the hypertension diuretic only at eGFR below 45 (p. 84); above that it is not part of the resistant-HTN definition
+  const loopCounts=S.t_loop&&S.egfr!=null&&S.egfr<45, loopOnly=S.t_loop&&!S.t_thz&&!loopCounts;
+  const ras=S.t_acei||S.t_arb, ccb=S.t_ccb||S.t_ndhp, diu=S.t_thz||loopCounts;
+  if(loopOnly) it(O.plan,'משתן לולאה'+(S.egfr==null?' (eGFR לא ידוע)':' עם eGFR '+S.egfr)+': לא נחשב כמשתן ליל״ד ולא נספר בהגדרת יל״ד עמיד. '+(F.naLow?'Na מתחת ל-130: לא להחליף לתיאזיד כרגע.':'להחליף ל-thiazide-like (עדיף אינדפמיד), אלא אם הלולאה ניתנת בגלל HF או בצקות.')+(S.egfr==null?' צריך eGFR.':''),'החלטה; '+P(84)+'; ESC 2024','warn');
   const n=[ras,ccb,diu].filter(Boolean).length;
   const tail=()=>{ if(ndhpSwap&&!O.drugs.includes('ccb')) O.drugs.unshift('ccb'); bbIndications(x); };
   if(n===0){
     it(O.plan,'אין תרופת קו ראשון במשלב. להתחיל כמו באבחנה חדשה.',P(66),'key');
     initialRegimen(x,'drug',false); return;
   }
+  if(F.breast){   // v7: breastfeeding: escalate only within the drugs the guideline lists as safe (p. 249)
+    const okACE=!F.noACE&&!F.noRAS;
+    it(O.plan,'מניקה: להגביר רק מתוך התרופות שההנחיה מגדירה כבטוחות: אמלודיפין, ניפדיפין, מתילדופה'+(okACE?', קפטופריל ואנלפריל':'')+'.',P(249),'key');
+    let next;
+    if(!S.t_ccb) next=S.t_ndhp?'להחליף את ה-NDHP לאמלודיפין או ניפדיפין':'להוסיף אמלודיפין או ניפדיפין';
+    else if(okACE&&!S.t_acei) next=S.t_arb?'להחליף את ה-ARB לאנלפריל או קפטופריל':'להוסיף אנלפריל או קפטופריל';
+    else next='להוסיף מתילדופה';
+    it(O.plan,'הצעד הבא: '+(S.maxdose!=='yes'&&n>=2?'קודם להעלות למינון המרבי הנסבל, ואחר כך ':'')+next+'. אם כבר מקבלת את כולן: התייעצות, ההנחיה לא מפרטת מעבר לכך.','החלטה; '+P(249),'key');
+    if(S.t_thz) it(O.plan,'תיאזיד אינו ברשימת ההנחיה להנקה. לפי LactMed מינון נמוך מקובל; משתן במינון גבוה עלול להפחית את ייצור החלב.','LactMed','',true);
+    O.drugs=['ccb'].concat(okACE?['acei']:[],['central']); bbIndications(x); return;
+  }
   if(n===1){
     let add, drugs;
-    if(ras){ add=F.gout?'CCB (DHP)':'CCB (DHP) או '+F.diuTxt; drugs=['ccb'].concat(F.gout?[]:[F.diuKey]).concat(['spc']); }
-    else if(F.noRAS){ add=ccb?F.diuTxt:'CCB (DHP)'; drugs=ccb?[F.diuKey]:['ccb']; add+=' (לא ACEi/ARB: היצרות דו״צ)'; }
+    if(ras){ add=(F.gout||F.naThz)?'CCB (DHP)':'CCB (DHP) או '+F.diuTxt; drugs=['ccb'].concat((F.gout||F.naThz)?[]:[F.diuKey]).concat(['spc']); }
+    else if(F.noRAS){
+      if(ccb&&F.naThz){ const t=thirdOptions(x,true); add=t.opt.length?t.opt.join(' או '):'תרופה מחוץ לקו הראשון, אחרי בירור'; drugs=t.cards; }
+      else { add=ccb?F.diuTxt:'CCB (DHP)'; drugs=ccb?[F.diuKey]:['ccb']; }
+      add+=' (לא ACEi/ARB: '+F.noRASwhy+(ccb&&F.naThz?'; לא תיאזיד: Na מתחת ל-130':'')+')';
+    }
     else { add=F.rasTxt; drugs=F.rasKeys.concat(['spc']); }
     const lead=(S.t_acei&&S.t_arb)?'להשאיר '+(F.noACE?'ARB':'ACEi או ARB')+' בלבד, ולהוסיף ':'מונותרפיה לא מספיקה: מעבר מהיר לשתי תרופות. להוסיף ';
     it(O.plan,lead+add+', ואחר כך להעלות מינון.',P(66),'key');
@@ -1359,30 +1430,25 @@ function escalate(x,status){
   }
   if(n===2){
     if(!ras&&F.noRAS){
-      // v4: offer only the third-drug options that the tool's own rules allow for this patient
-      const opt=[], cards=[], no=[], K=S.k, eGFR=S.egfr;
-      if(S.t_mra) no.push('ספירונולקטון (כבר מקבל MRA)');
-      else if(K==null) no.push('ספירונולקטון (צריך קודם K ו-eGFR)');
-      else if(K>5) no.push('ספירונולקטון (K מעל 5)');
-      else if(eGFR!=null&&eGFR<30) no.push('ספירונולקטון (eGFR מתחת ל-30)');
-      else if(K>4.5) opt.push('ספירונולקטון בזהירות בלבד (K בין 4.5 ל-5)');
-      else { opt.push(eGFR!=null&&eGFR<=45?'ספירונולקטון במינון נמוך, בניטור K וקריאטינין (eGFR 30-45)':'ספירונולקטון'+(eGFR==null?' (לוודא eGFR מעל 45)':'')); cards.push('mra'); }
-      if(S.t_bb) no.push('BB (כבר מקבל)');
-      else if(S.asthma) no.push('BB (אסתמה)');
-      else if(S.t_ndhp) no.push('BB (מקבל NDHP)');
-      else { opt.push('BB'); cards.push('bb'); }
-      if(S.t_alpha) no.push('חוסם אלפא (כבר מקבל)');
-      else { opt.push('חוסם אלפא'); cards.push('alpha'); }
-      it(O.plan,'CCB + משתן, ו-ACEi/ARB לא אפשריים (היצרות דו״צ). ההנחיה לא מפרטת תרופה שלישית במצב זה. '+(opt.length?'אפשרויות: '+opt.join(', ')+'.':'אין אפשרות מתאימה מהרשימה.'),'הערכה; '+P(84),'key');
+      // v4/v7: offer only the third-drug options that the tool's own rules allow for this patient
+      const {opt,cards,no}=thirdOptions(x,false);
+      it(O.plan,'CCB + משתן, ו-ACEi/ARB לא אפשריים ('+F.noRASwhy+'). ההנחיה לא מפרטת תרופה שלישית במצב זה. '+(opt.length?'אפשרויות: '+opt.join(', ')+'.':'אין אפשרות מתאימה מהרשימה.'),'הערכה; '+P(84),'key');
       if(no.length) it(O.plan,'לא מוצע כאן: '+no.join(', ')+'.','החלטה; '+P('63, 70, 74, 83'));
-      it(O.plan,'היצרות דו״צ עם יל״ד עמיד או בצקת ריאות חוזרת: הפניה לשקילת רה-וסקולריזציה.',P(157));
+      if(S.ras) it(O.plan,'היצרות דו״צ עם יל״ד עמיד או בצקת ריאות חוזרת: הפניה לשקילת רה-וסקולריזציה.',P(157));
+      O.drugs=cards; tail(); return;
+    }
+    if(ras&&ccb&&F.naThz){   // v7 (Nov 2026 decision): Na below 130, no thiazide as the third drug
+      const {opt,cards,no}=thirdOptions(x,true);
+      it(O.plan,'RAS + CCB, ו-Na מתחת ל-130: לא להוסיף תיאזיד. לברר את ההיפונתרמיה. ההנחיה לא מפרטת תרופה שלישית במצב זה. '+(opt.length?'אפשרויות: '+opt.join(', ')+'.':'אין אפשרות מתאימה מהרשימה.'),'הערכה; '+P('71, 84'),'key');
+      if(no.length) it(O.plan,'לא מוצע כאן: '+no.join(', ')+'.','החלטה; '+P('63, 70, 74, 83'));
       O.drugs=cards; tail(); return;
     }
     let miss, drugs;
     if(!ras){ miss=F.rasTxt; drugs=F.rasKeys.slice(); }
     else if(!ccb){ miss='CCB (DHP)'; drugs=['ccb']; }
     else { miss=F.loopInstead?'משתן לולאה':(F.gout?'thiazide-like (עדיף אינדפמיד), רק עם אלופורינול או פבוקסוסטט':'thiazide-like (עדיף אינדפמיד)'); drugs=[F.diuKey]; }
-    it(O.plan,'להוסיף '+miss+' לטיפול משולש: RAS + CCB + משתן, עדיף בכדור אחד. להוסיף תוך חודש.',P('66, 77'),'key');
+    const swapLoop=ras&&ccb&&loopOnly;   // v7
+    it(O.plan,(swapLoop?'להחליף את משתן הלולאה ל-':'להוסיף ')+miss+' לטיפול משולש: RAS + CCB + משתן, עדיף בכדור אחד. '+(swapLoop?'תוך חודש.':'להוסיף תוך חודש.'),P('66, 77'),'key');
     O.drugs=drugs; tail(); return;
   }
   if(ndhpSwap){
@@ -1527,7 +1593,8 @@ function renderCore(){
   $('w-preg').hidden=!pregShown;
   $('w-func').hidden=!(S.age>=80);
   $('w-visits').hidden=S.mode!=='new';
-  $('fs-acute').hidden=!(has(os,od)&&(os>=180||od>=110));
+  $('fs-acute').hidden=!acuteShown(os,od,S.preg);   // v7: same rule as the engine
+  if(has(os,od)) $('acute-hint').textContent=(os>=180||od>=110)?'ל״ד 180/110 ומעלה: יש אחד מאלה? (עמ׳ 183-184)':((S.preg==='pregnant'||S.preg==='postpartum')&&os<160&&od<100?'הריון או אחרי לידה עם 140/90 ומעלה: יש אחד מאלה? (חשד לרעלת)':'160/100 ומעלה: יש אחד מאלה? תסמין חריף מחייב הערכה דחופה.');
   document.querySelectorAll('.bpin').forEach(el=>{const p=parseBP(el.value);el.classList.toggle('bad',el.value.trim()!==''&&p[0]==null&&document.activeElement!==el);});
   document.querySelectorAll('details[data-count]').forEach(d=>{const n=filled(d);d.querySelector('.cnt').textContent=n?n+' '+(d.dataset.count||'מסומנים'):'';});
   document.querySelectorAll('.cat-btn[data-cat]').forEach(btn=>{
@@ -1612,7 +1679,7 @@ const RULES=[
  ['התחלת טיפול, כללי','מדרגה 1 מיד, בלי קשר לסיכון. חריג: 140-149/90-94 עם סיכון נמוך, 3 חודשי אורח חיים. ל״ד גבוה מחוץ למרפאה בחריג הזה, או MH בסיכון נמוך-בינוני: בלי ABPM, סיסטולי בבית עד 150, ABPM לפני החלטה; מעל 150, לשקול מונותרפיה ו/או ABPM. עם ABPM: גבוה, מונותרפיה; תקין, מעקב. MH בסיכון גבוה: להתחיל טיפול או לאשר ב-ABPM.','פרק 6, '+P(50)+'; החלטה'],
  ['ל״ד 130-139/80-89 עם סיכון גבוה','טיפול מיד. מחלה כלילית: מ-130/80. אחרי שבץ בלבד: לא בטווח הזה. DBP 80-84 עם SBP מתחת ל-130 לא מפעיל את המסלול (בסיווג זה ל״ד תקין).',P('50-52')+'; החלטה'],
  ['סוכרת או CKD','140/90 ומעלה: מיד (בסוכרת שתי תרופות). 130-139/80-89: 3 חודשי אורח חיים ואז תרופה. DBP 80-84 עם SBP מתחת ל-130: לא מפעיל.','החלטה; '+P('52, 139, 201')],
- ['גיל 80 ומעלה, סף','140-160 לפי שבריריות ותחלואה. SBP 160 ומעלה: לטפל. 140-159: עם מחלת כליה, לב או שבץ לטפל, אחרת לשקול. אובדן ADL חלקי: מעל 160. אובדן קשה: פרטני. מתחת ל-140: בלי תרופה.',P('51, 92-93, 96')],
+ ['גיל 80 ומעלה, סף','140-160 לפי שבריריות ותחלואה. SBP 160 ומעלה: לטפל. 140-159: עם מחלת כליה, לב או שבץ לטפל, אחרת לשקול. אובדן ADL חלקי: מעל 160, או ל״ד חמור (180/110 ומעלה). אובדן קשה: פרטני. מתחת ל-140: בלי תרופה.',P('51, 92-93, 96')+'; החלטה'],
  ['יעד','במרפאה 130/80, בבית ובניטור יום מתחת ל-130/80, בלילה מתחת ל-120/70.',P(13)],
  ['רצפה','120/70 בכל גיל עד 80, כולל 65-79. מגיל 80: מתחת ל-120/70 לשקול הפחתה, DBP 60-69 בזהירות. שבריריות או דמנציה: הפחתה הדרגתית מתחת ל-130 או ב-OH. מחלה כלילית: DBP מעל 60 והורדה איטית. CKD עם סיכון CV: מתחת ל-120/80 כחריג. בכל ערך: להפחית בתסמיני תת-זילוח.',P('52, 92-94, 96, 140, 222')],
  ['דמנציה','כמו שבריריות בכל גיל: יעד סביב 140-150/70-80, מונותרפיה, מדידה בעמידה.','החלטה; '+P(94)],
@@ -1620,12 +1687,14 @@ const RULES=[
  ['יעד ב-CKD','מתחת ל-130/80. עם סיכון CV נוסף: לשקול מתחת ל-120/80, כחריג לרצפה 120/70. שבריריות, OH או eGFR מתחת ל-30: מתחת ל-140/90.',P('52, 140-141')],
  ['WCH עם סיכון גבוה או HMOD','ABPM לאישור, ואז לשקול מונותרפיה.','החלטה; '+P('9, 12')],
  ['היצרות דו״צ של עורקי הכליה','בלי חוסמי RAS (ACEi, ARB), אותו מנגנון. CCB ומשתן, ובעמידות: הפניה לשקילת רה-וסקולריזציה. תרופה שלישית (ספירונולקטון, BB, אלפא) מוצעת רק כשהכללים שלה מתקיימים: K, eGFR, אסתמה, NDHP ותרופות קיימות.','החלטה; '+P('71-72, 156-157')],
- ['אלקטרוליטים','Na מתחת ל-135 או K מתחת ל-3.5: אזהרה בולטת על משתנים. היפונתרמיה מתיאזיד: להפסיק ולבחור חלופה; משתן לולאה רק באי-ספיקת לב. K מעל 5: אזהרה על ACEi/ARB, ולא MRA.','החלטה; '+P('63, 71, 73')],
+ ['אלקטרוליטים','Na מתחת ל-135 או K מתחת ל-3.5: אזהרה בולטת על משתנים. היפונתרמיה מתיאזיד: להפסיק ולבחור חלופה; משתן לולאה רק באי-ספיקת לב. K מעל 5: לא להתחיל ACEi/ARB עד בדיקה חוזרת ובירור, ולא MRA. Na מתחת ל-130: לא להתחיל תיאזיד ולברר; 130-134: זהירות.','החלטה; '+P('63, 71, 73')],
+ ['תסמינים חריפים','נשאלים מ-160/100, ובהריון או אחרי לידה מ-140/90. הריון או אחרי לידה עם תסמין: חשד לרעלת, הפניה דחופה לחדר לידה. אחרים מתחת ל-180/110: הערכה דחופה של התסמין עצמו.','החלטה; '+P('183-184, 245, 249')],
+ ['הנקה במטופלת שכבר מקבלת טיפול','הגברה רק מתוך הרשימה הבטוחה: אמלודיפין, ניפדיפין, מתילדופה, קפטופריל ואנלפריל. ARB: לשקול מעבר לאנלפריל או קפטופריל.','החלטה; '+P(249)],
  ['ל״ד 130-139/80-89 במרפאה, תקין מחוץ למרפאה','ABPM לפני החלטה על טיפול. ABPM תקין: בלי תרופה, מעקב שנתי.','החלטה; '+P('9, 12')],
  ['הערכת תפקוד','גיל 65-79: שאלה אם צריך הערכת ADL. מגיל 80: שדה תפקוד שקובע סף ויעד.',P('91, 93, 95-96')],
  ['מונו מול שילוב','מונותרפיה: SBP 140-150 עם סיכון נמוך, גיל 80 ומעלה, או שבריריות. אחרים: שתי תרופות, עדיף בכדור אחד.',P(65)],
  ['תרופה ראשונה מגיל 85 או בשבריריות','CCB או RAS, אחר כך משתן במינון נמוך. לא BB ולא אלפא כקו ראשון.','החלטה; '+P(93)+'; ESC 2024'],
- ['יל״ד עמיד','לא ביעד 130/80 על RAS + CCB + משתן במינון מרבי, 3-6 חודשים, באישור ABPM/HBPM.',P('8, 82')],
+ ['יל״ד עמיד','לא ביעד 130/80 על RAS + CCB + משתן במינון מרבי, 3-6 חודשים, באישור ABPM/HBPM. משתן לולאה נספר רק ב-eGFR מתחת ל-45; מעל זה להחליף ל-thiazide-like.',P('8, 82, 84')+'; החלטה'],
  ['תרופה רביעית','K עד 4.5 ו-eGFR מעל 45: ספירונולקטון 12.5-25 עד 50 (ב-eGFR 30-45 בזהירות; מתחת ל-30 להימנע בשגרה). דופק מעל 80: BB. דופק מתחת ל-60 ו-K מעל 4.5: אלפא.','החלטה; ESC 2024; '+P('63, 73, 83-84')],
  ['הגנה כלייתית: קרנדיה ו-SGLT2i','ב-CKD עם אלבומינוריה או סוכרת (eGFR 20 ומעלה): לשקול SGLT2i. בסוכרת עם CKD ואלבומינוריה על RAS מרבי (eGFR 25 ומעלה ו-K עד 4.8, ללא MRA סטרואידלי): לשקול finerenone (קרנדיה).','ADA/KDIGO 2024; '+P(143)],
  ['BB באסתמה','להימנע. עם התוויה מחייבת: סלקטיבי ללב, עם אזהרה.','החלטה; '+P('70, 74')],
