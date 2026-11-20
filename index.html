@@ -854,6 +854,11 @@ function evaluate(S0){
 function sanitizeDrugs(x){
   const {S,O,preg}=x; const F=regimenFlags(x);
   let d=O.drugs||[];
+  if(bbGate(x)==='no') d=d.filter(k=>k!=='bb');   // v8: no BB card below heart rate 60 (HFrEF: 55)
+  if((preg==='pregnant'||preg==='nocontra')&&S.hr!=null&&S.hr<60&&!O.plan.some(i=>i.t.indexOf('לא לבטלול')>=0)){
+    let i=0; while(i<O.plan.length&&O.plan[i].l==='crit') i++;
+    O.plan.splice(i,0,{t:'דופק '+S.hr+': לא לבטלול (BB). ניפדיפין ארוך טווח או מתילדופה.',r:'ESH 2023; החלטה',l:'warn',ext:true});
+  }
   if(F.noACE) d=d.filter(k=>k!=='acei');
   if(F.noRAS) d=d.filter(k=>k!=='acei'&&k!=='arb');
   if(preg==='pregnant'||preg==='nocontra'||(S.k!=null&&S.k>5)) d=d.filter(k=>k!=='mra');
@@ -1184,7 +1189,8 @@ function initialRegimen(x,act,elevRange,ph){
   const ras=F.noACE?'ARB (לא ACEi, אנגיואדמה בעבר; ARB רק 6 שבועות אחרי)':'ACEi או ARB';
   const second=(F.gout||F.naThz)?'CCB (DHP)':(F.loopInstead?'CCB (DHP), או משתן לולאה ב-eGFR מתחת ל-30':'CCB (DHP) או thiazide-like');   // v7: Na below 130 drops the thiazide
   if(S.hfref){
-    it(O.plan,'HFrEF: BB, '+(F.noACE?'ARB':'ACEi/ARB/ARNI')+', MRA, SGLT2i ומשתנים לפי הנחיות אי-ספיקת לב.',P('70, 222'),'key');
+    const gb=bbGate(x);   // v8
+    it(O.plan,'HFrEF: '+(gb==='no'?'':(gb==='caution'?'BB (בדופק 55-59 בזהירות, מינון נמוך), ':'BB, '))+(F.noACE?'ARB':'ACEi/ARB/ARNI')+', MRA, SGLT2i ומשתנים לפי הנחיות אי-ספיקת לב.'+(gb==='no'?' BB לא בדופק מתחת ל-55.':''),P('70, 222')+(gb==='ok'?'':'; החלטה'),'key');
   }
   const diuK=(F.gout||F.naThz)?[]:[F.diuKey];
   let monoKeys=F.rasKeys.concat(['ccb'],diuK);
@@ -1208,7 +1214,7 @@ function initialRegimen(x,act,elevRange,ph){
   bbIndications(x);
   if(old) it(O.plan,'מגיל 80: לא ממליצים על ירידה במשקל או הגבלת מלח, אלא בהשמנה חולנית או צריכת מלח קיצונית.',P(92));
   O.drugs=mono?monoKeys:F.rasKeys.concat(['ccb'],diuK,['spc']);
-  if(S.hfref||S.af||S.mi||S.cad) O.drugs.push('bb');
+  if((S.hfref||S.af||S.mi||S.cad)&&bbGate(x)!=='no') O.drugs.push('bb');   // v8
 }
 
 function cardioRenalProtection(x){
@@ -1226,13 +1232,24 @@ function cardioRenalProtection(x){
   }
 }
 
+// v8 (Nov 2026 decision): no new BB below heart rate 60 (ESH 2023, Table 15). HFrEF: not below 55; 55-59 with caution.
+function bbGate(x){
+  const hr=x.S.hr;
+  if(hr==null||hr>=60) return 'ok';
+  if(x.S.hfref&&hr>=55) return 'caution';
+  return 'no';
+}
+
 function bbIndications(x){
-  const {S,O,it}=x; const F=regimenFlags(x); const ind=[];
+  const {S,O,it}=x; const F=regimenFlags(x); const ind=[]; const g=bbGate(x);
   if(S.af)ind.push('פרפור פרוזדורים'); if(S.mi)ind.push('אחרי אוטם'); if(S.cad)ind.push('מחלה כלילית / תעוקה'); if(S.hfref)ind.push('HFrEF'); if(S.hr!=null&&S.hr>80&&x.age&&x.age<50)ind.push('טכיקרדיה בצעיר');
-  if(ind.length&&!S.t_bb&&!S.asthma) it(O.plan,'להוסיף BB בכל שלב בגלל התוויה: '+ind.join(', ')+'.',P('66, 70'));
-  if(ind.length&&!S.t_bb&&S.asthma) it(O.plan,'יש התוויה ל-BB ('+ind.join(', ')+') ויש אסתמה: רק BB סלקטיבי ללב (ביסופרולול, אטנולול, מטופרולול), עם אזהרה.','החלטה; '+P('70, 74'),'warn');
-  if(S.af) it(O.plan,'פרפור פרוזדורים: BB לבקרת קצב. NDHP חלופה רק בלי ירידה בתפקוד הסיסטולי, ולא יחד עם BB.',P('70, 221'));
-  if(S.aorta) it(O.plan,'הרחבת אאורטה: '+(F.noRAS?'BB מועדף':(F.noACE?'ARB ו-BB מועדפים':'ACEi/ARB ו-BB מועדפים'))+'.'+(x.old?'':' יעד מתחת ל-130/80.'),P(224));
+  if(ind.length&&!S.t_bb&&g==='no') it(O.plan,'דופק '+S.hr+': לא להתחיל BB'+(S.hfref?' (ב-HFrEF לא מתחת ל-55)':' (התווית נגד מתחת ל-60)')+', למרות ההתוויה: '+ind.join(', ')+'.','ESH 2023; '+P(84)+'; החלטה','warn',true);
+  else if(ind.length&&!S.t_bb&&g==='caution') it(O.plan,'HFrEF עם דופק '+S.hr+': BB בזהירות'+(S.asthma?', סלקטיבי ללב בלבד (אסתמה)':'')+', מינון התחלתי נמוך וניטור דופק, לפי הנחיות אי-ספיקת לב.','החלטה','warn');
+  else if(ind.length&&!S.t_bb&&!S.asthma) it(O.plan,'להוסיף BB בכל שלב בגלל התוויה: '+ind.join(', ')+'.',P('66, 70'));
+  else if(ind.length&&!S.t_bb&&S.asthma) it(O.plan,'יש התוויה ל-BB ('+ind.join(', ')+') ויש אסתמה: רק BB סלקטיבי ללב (ביסופרולול, אטנולול, מטופרולול), עם אזהרה.','החלטה; '+P('70, 74'),'warn');
+  if(S.af&&S.hr!=null&&S.hr<60) it(O.plan,'פרפור פרוזדורים עם דופק '+S.hr+': לא להתחיל BB או NDHP לבקרת קצב.','ESH 2023; החלטה','',true);   // v8
+  else if(S.af) it(O.plan,'פרפור פרוזדורים: BB לבקרת קצב. NDHP חלופה רק בלי ירידה בתפקוד הסיסטולי, ולא יחד עם BB.',P('70, 221'));
+  if(S.aorta) it(O.plan,'הרחבת אאורטה: '+(F.noRAS?'BB מועדף':(F.noACE?'ARB ו-BB מועדפים':'ACEi/ARB ו-BB מועדפים'))+(g==='no'?' (BB לא בדופק '+S.hr+')':'')+'.'+(x.old?'':' יעד מתחת ל-130/80.'),P(224));
 }
 
 function commonAvoid(x){
@@ -1379,7 +1396,8 @@ function thirdOptions(x,naNote){
   if(S.t_bb) no.push('BB (כבר מקבל)');
   else if(S.asthma) no.push('BB (אסתמה)');
   else if(S.t_ndhp) no.push('BB (מקבל NDHP)');
-  else { opt.push('BB'); cards.push('bb'); }
+  else if(bbGate(x)==='no') no.push('BB (דופק '+S.hr+')');   // v8
+  else { opt.push(bbGate(x)==='caution'?'BB בזהירות (HFrEF, דופק '+S.hr+')':'BB'); cards.push('bb'); }
   if(S.t_alpha) no.push('חוסם אלפא (כבר מקבל)');
   else { opt.push('חוסם אלפא'); cards.push('alpha'); }
   return {opt,cards,no};
@@ -1698,6 +1716,7 @@ const RULES=[
  ['תרופה רביעית','K עד 4.5 ו-eGFR מעל 45: ספירונולקטון 12.5-25 עד 50 (ב-eGFR 30-45 בזהירות; מתחת ל-30 להימנע בשגרה). דופק מעל 80: BB. דופק מתחת ל-60 ו-K מעל 4.5: אלפא.','החלטה; ESC 2024; '+P('63, 73, 83-84')],
  ['הגנה כלייתית: קרנדיה ו-SGLT2i','ב-CKD עם אלבומינוריה או סוכרת (eGFR 20 ומעלה): לשקול SGLT2i. בסוכרת עם CKD ואלבומינוריה על RAS מרבי (eGFR 25 ומעלה ו-K עד 4.8, ללא MRA סטרואידלי): לשקול finerenone (קרנדיה).','ADA/KDIGO 2024; '+P(143)],
  ['BB באסתמה','להימנע. עם התוויה מחייבת: סלקטיבי ללב, עם אזהרה.','החלטה; '+P('70, 74')],
+ ['BB ודופק','דופק מתחת ל-60: לא להתחיל BB (התווית נגד ב-ESH 2023), גם עם התוויה. HFrEF: מתחת ל-55 לא; 55-59 בזהירות, מינון נמוך וניטור. AF עם דופק מתחת ל-60: לא BB ולא NDHP לבקרת קצב. בהריון: לא לבטלול.','ESH 2023; '+P(84)+'; החלטה'],
  ['מעקב אחרי שינוי','מעבדה אחרי 2-3 שבועות, ביקור אחרי 2-4 שבועות, חודשי עד איזון.',P('66, 86')],
  ['מעקב אחרי איזון','2-4 ביקורים בשנה הראשונה, אחר כך 1-2 בשנה. מעבדה שנתית.',P('86-87')],
  ['הערכת סיכון','גבוה אוטומטית: סוכרת, CKD, CVD, HMOD, FH, SCORE2 10% ומעלה. בשאר המקרים: שיקול קליני. SCORE2/SCORE2-OP ככלי עזר.',P(17)+'; ESC 2024'],
